@@ -42,16 +42,20 @@ PlayGround.prototype={
 // Setup the example
     create:function() {
         console.log('PlayGround: create');
+
         //Start arcade physics
         game.physics.startSystem(Phaser.Physics.ARCADE);
+
         //adding background and immovable black walls
         game.add.image(0,0, 'atlas', 'GameBack');
 
+        //Create the player object
         player = new Player(game, 'atlas', 'Player', 1, 0);
         players=game.add.group();
         game.add.existing(player);
         players.add(player);
 
+        //Create the guards group
 		guards=game.add.group();
         guard = new Guard(game, 'atlas', 'Enemy', 1, 0);
         game.add.existing(guard);
@@ -68,31 +72,20 @@ PlayGround.prototype={
         this.bitmap.context.strokeStyle = 'rgb(255, 255, 255)';
         lightBitmap = this.game.add.image(0, 0, this.bitmap);
         game.physics.enable(lightBitmap);
-        // This bitmap is drawn onto the screen using the MULTIPLY blend mode.
-        // Since this bitmap is over the background, dark areas of the bitmap
-        // will make the background darker. White areas of the bitmap will allow
-        // the normal colors of the background to show through. Blend modes are
-        // only supported in WebGL. If your browser doesn't support WebGL then
-        // you'll see gray shadows and white light instead of colors and it
-        // generally won't look nearly as cool. So use a browser with WebGL.
+
+        /* This bitmap is drawn onto the screen using the MULTIPLY blend mode.
+        Since this bitmap is over the background, dark areas of the bitmap
+        will make the background darker. White areas of the bitmap will allow
+        the normal colors of the background to show through. Blend modes are
+        only supported in WebGL. If your browser doesn't support WebGL then
+        you'll see gray shadows and white light instead of colors and it
+        generally won't look nearly as cool. So use a browser with WebGL. */
         lightBitmap.blendMode = Phaser.blendModes.MULTIPLY;
 
-        /*
-        // Build some walls. These will block line of sight.
-        var NUMBER_OF_WALLS = 4;
-        this.walls = this.game.add.group();
-        var i, x, y;
-        for(i = 0; i < NUMBER_OF_WALLS; i++) {
-            x = i * this.game.width/NUMBER_OF_WALLS + 50;
-            y = this.game.rnd.integerInRange(50, this.game.height - 200);
-            this.game.add.image(x, y, 'block', 0, this.walls).scale.setTo(4, 1);
-        }
-        */
-
-
-
+        //Create generic game walls before the sprites are ready
         walls = game.add.group();
         walls.enableBody = true;
+
         BlackWall = walls.create(0, 180, 'atlas', 'Wall');
         BlackWall.scale.setTo(10,1);
         BlackWall.body.immovable = true;
@@ -105,7 +98,6 @@ PlayGround.prototype={
         BlackWall = walls.create(440, game.height-188,'atlas', 'Wall');
         BlackWall.scale.setTo(4,1);
         BlackWall.body.immovable = true;
-
         BlackWall = walls.create(64, 240,'atlas', 'Wall');
         BlackWall.scale.setTo(1,1);
         BlackWall.body.immovable = true;
@@ -120,7 +112,7 @@ PlayGround.prototype={
         BlackWall.body.immovable = true;
 
         //adding moveable walls
-        //adding green walls
+        //adding Push Walls (Green)
         Gwalls = game.add.group();
         Gwalls.enableBody = true;
         GreenWall = Gwalls.create(360, 180,'atlas', 'GreenWall');
@@ -132,7 +124,9 @@ PlayGround.prototype={
         GreenWall.body.allowRotation=true;
         GreenWall.body.collideWorldBounds = true;
         GreenWall.body.drag.set(175);
+
         //adding pink walls
+        //Sliding walls (Pink)
         Pwalls = game.add.group();
         Pwalls.enableBody = true;
         PinkWall = Pwalls.create(300, 240,'atlas', 'PinkWall');
@@ -145,18 +139,9 @@ PlayGround.prototype={
         for(var i =0; i<5; i++){
             var Coin = Coins.create(Math.random()*800,Math.random()*600,'atlas', 'Coin');
         }
-        
-        
-        //adding guards
-       
-
+        //Update Coin display text
         coinText=game.add.text(16,16,'', {fontSize: '32px', fill:'#000'});
 		coinsCollected=0;
-
-
-        // Simulate a pointer click/tap input at the center of the stage
-        // when the example begins running.
-
     },
 
 // The update() method is called every frame
@@ -167,8 +152,7 @@ PlayGround.prototype={
         var hitGwalls=game.physics.arcade.collide(player, Gwalls);
         var hitPwalls=game.physics.arcade.collide(player, Pwalls);
         var hitCoins=game.physics.arcade.overlap(player, Coins, collectCoin, null, this);
-        //guard collision
-        
+ 
         //green wall collision
         var GwallHitWalls=game.physics.arcade.collide(Gwalls, walls);
         var GwallHitGwall=game.physics.arcade.collide(Gwalls, Gwalls);
@@ -177,31 +161,17 @@ PlayGround.prototype={
         var PwallhitPwall=game.physics.arcade.collide(Pwalls, Pwalls);
         //color wall collisions
         var PwallHitGwall=game.physics.arcade.collide(Pwalls, Gwalls);
-        //coin collisions
-        
-        // guard "AI"
-       
-        
-        //player controls
-        
 
-        //debug info
-        
         coinText.text="coins: "+coinsCollected;
-        //game over condition
-        //if(player.body.touching && GhitPlayer){
-        //    game.state.start('GameOver');
-        //}
-        //collecting coins
+
         function collectCoin(player, Coin){
             Coin.kill();
             coinsCollected+=1;
         }
 
-
-
-
-        // Move the light to the pointer/touch location
+/*----------------------------------------------------------------------
+                             Start of the Light Code
+----------------------------------------------------------------------*/
 
         // Next, fill the entire light bitmap with a dark shadow color.
         this.bitmap.context.fillStyle = 'rgb(100, 100, 100)';
@@ -365,6 +335,9 @@ function getWallIntersection (ray) {
          return closestIntersection;
      }
 
+/*----------------------------------------------------------------------
+End of the Light Code
+----------------------------------------------------------------------*/
 
 
 /*-------------------------------------------------------------------------------*/
