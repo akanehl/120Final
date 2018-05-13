@@ -1,6 +1,8 @@
 function Player(game, key, frame, scale, rotation){
+    //Set up the Sprite call
 	Phaser.Sprite.call(this, game, 30, 30, key, frame);
 
+    //Set some player properties
 	this.anchor.set(0,0);
 	this.scale.x = scale;
 	this.scale.y = scale;
@@ -9,9 +11,11 @@ function Player(game, key, frame, scale, rotation){
 	game.physics.enable(this);
 	this.body.collideWorldBounds = true;
 }
+//Override constructor methods
 Player.prototype = Object.create(Phaser.Sprite.prototype);
 Player.prototype.constructor = Player;
 
+//Override the update function for player to have the movement keys
 Player.prototype.update=function() {
 	cursors = game.input.keyboard.createCursorKeys();
         player.body.velocity.x=0;

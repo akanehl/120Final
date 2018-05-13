@@ -1,6 +1,8 @@
  function Guard(game, key, frame, scale, rotation){
+ 	//Set up the sprite call for the guard
 	Phaser.Sprite.call(this, game, 300, 400, key, frame);
 
+	//Set up basic guard stats
 	this.anchor.set(0.5, 0.5);
 	this.scale.x = scale;
 	this.scale.y = scale;
@@ -11,27 +13,48 @@
 	this.body.collideWorldBounds = true;
 	this.body.allowRotation=true;
 }
+
+//Override the guard constructor
 Guard.prototype = Object.create(Phaser.Sprite.prototype);
 Guard.prototype.constructor = Guard;
 
+//Override the update function for guard
 Guard.prototype.update=function() {
+
+	//Collision booleans for AI 
 	var GhitWalls=game.physics.arcade.collide(guard, walls);
 	var GhitPlayer=game.physics.arcade.collide(guard, player);
 	var GhitGwalls=game.physics.arcade.collide(guard, Gwalls);
 	var GhitPwalls=game.physics.arcade.collide(guard, Pwalls);
+
 	if(GhitPlayer){
+		//End game upon guard collision with player
 		game.state.start('GameOver');
 	}
+
+	//AI for guard chase
 	if(chase==true){
+		//Draw line between the guard and the player every frame
 		line=new Phaser.Line(guard.body.x,guard.body.y,player.body.x,player.body.y);
+		//Update the guards angle to the line
 		guard.angle=(line.angle/Math.PI)*180;
 		console.log(guard.angle);
 
+		//Update the velocity of the guard
 		guard.body.velocity.copyFrom(game.physics.arcade.velocityFromAngle(guard.angle, 135));
-	}else{
+	}
+	//Guard is idle
+	else{
+		//Standard velocity
 		guard.body.velocity.copyFrom(game.physics.arcade.velocityFromAngle(guard.angle, 60));
 
-        
+			/* Guard AI: 
+				If (Guard is approaching a wall) {
+					Determine which angle is smaller (Guard and wall)
+					Update angle to move away from wall. 
+				}
+				NOTE: Following are several cases that adjust based on which wall it is checking.*/
+				 
 			if(guard.body.x>700){
 				if(Math.abs(guard.angle-(-90))<Math.abs(guard.angle-(90))){
 					guard.body.angularVelocity=-60;
