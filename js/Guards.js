@@ -20,7 +20,7 @@ Guard.prototype.constructor = Guard;
 
 //Override the update function for guard
 Guard.prototype.update=function() {
-
+	guards.forEach(function(guard){
 	//Collision booleans for AI 
 	var GhitWalls=game.physics.arcade.collide(guard, walls);
 	var GhitPlayer=game.physics.arcade.collide(guard, player);
@@ -38,7 +38,6 @@ Guard.prototype.update=function() {
 		line=new Phaser.Line(guard.body.x,guard.body.y,player.body.x,player.body.y);
 		//Update the guards angle to the line
 		guard.angle=(line.angle/Math.PI)*180;
-		console.log(guard.angle);
 
 		//Update the velocity of the guard
 		guard.body.velocity.copyFrom(game.physics.arcade.velocityFromAngle(guard.angle, 135));
@@ -103,6 +102,10 @@ Guard.prototype.update=function() {
 			}else{
 				guard.body.angularVelocity=0;
 			}
+			if(GhitWalls){
+				guard.body.angularVelocity+=30;
+			}
 	}
+}, this);
 }
 

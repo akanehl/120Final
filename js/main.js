@@ -12,6 +12,9 @@ Mainmenu.prototype ={
     preload:function(){
         console.log('Mainmenu: preload');
         game.load.atlas('atlas', 'assets/img/atlas.png', 'assets/img/atlas.json');
+        game.load.audio('safe', 'assets/sound/safe.mp3');
+        game.load.audio('alert', 'assets/sound/alert.mp3');
+        game.load.audio('coinPU', 'assets/sound/CoinPickUp.mp3');
     },
     create:function(){
         console.log('Mainmenu: create');
@@ -46,6 +49,7 @@ PlayGround.prototype={
 // Setup the example
     create:function() {
         console.log('PlayGround: create');
+<<<<<<< HEAD
 
         map = this.add.tilemap('map',64,64);
         map.addTilesetImage('tileset');
@@ -53,6 +57,11 @@ PlayGround.prototype={
         layer.resizeWorld();
         
 
+=======
+        Alert = game.add.audio('alert');
+    	Safe = game.add.audio('safe');
+    	CoinPU = game.add.audio('coinPU');
+>>>>>>> 4b5b386673d63ddc56e36182306def1ea9ab5073
         //Start arcade physics
         game.physics.startSystem(Phaser.Physics.ARCADE);
 
@@ -71,6 +80,8 @@ PlayGround.prototype={
         game.add.existing(guard);
 		guards.add(guard);
 		chase=false;
+
+		
 
         // Add the light
 
@@ -97,17 +108,18 @@ PlayGround.prototype={
         walls.enableBody = true;
 
         BlackWall = walls.create(0, 180, 'atlas', 'Wall');
-        BlackWall.scale.setTo(10,1);
+        BlackWall.scale.setTo(30,1);
         BlackWall.body.immovable = true;
         BlackWall = walls.create(30, game.height-188, 'atlas','Wall');
-        BlackWall.scale.setTo(10,3);
+        BlackWall.scale.setTo(30,1);
         BlackWall.body.immovable = true;
         BlackWall = walls.create(440, 180,'atlas', 'Wall');
-        BlackWall.scale.setTo(10,1);
+        BlackWall.scale.setTo(30,1);
         BlackWall.body.immovable = true;
         BlackWall = walls.create(440, game.height-188,'atlas', 'Wall');
-        BlackWall.scale.setTo(4,1);
+        BlackWall.scale.setTo(30,1);
         BlackWall.body.immovable = true;
+
         BlackWall = walls.create(64, 240,'atlas', 'Wall');
         BlackWall.scale.setTo(1,1);
         BlackWall.body.immovable = true;
@@ -175,8 +187,25 @@ PlayGround.prototype={
         coinText.text="coins: "+coinsCollected;
 
         function collectCoin(player, Coin){
+        	CoinPU.play();
             Coin.kill();
             coinsCollected+=1;
+        }
+        function addGuard(){
+        	guard = new Guard(game, 'atlas', 'Enemy', 1, 0);
+        	game.add.existing(guard);
+			guards.add(guard);
+        }
+        //if all 5 coins are collected, the player pos is reset and another guard is spawned with 5 more coins.
+        if(coinsCollected==5){
+        	coinsCollected=0;
+        	player.body.x=30;
+        	player.body.y=30;
+        	chase=false;
+        	addGuard();
+        	for(var i =0; i<5; i++){
+            var Coin = Coins.create(Math.random()*800,Math.random()*600,'atlas', 'Coin');
+        }
         }
 
 /*----------------------------------------------------------------------
@@ -190,7 +219,8 @@ PlayGround.prototype={
         // Ray casting!
         // Cast rays at intervals in a large circle around the light.
         // Save all of the intersection points or ray end points if there was no intersection.
-        var points = [];
+        var points=[];
+        guards.forEach(function(guard){
         for(var a = 0; a < Math.PI*2; a += Math.PI/360) {
             // Create a ray from the light to a point on the circle
             var ray = new Phaser.Line(guard.x, guard.y, guard.x+Math.cos(a)*125, guard.y+Math.sin(a)*125);
@@ -205,15 +235,20 @@ PlayGround.prototype={
                 points.push(ray.end);
             }
         }
-		
+    }, this);
 		
         // Connect the dots and fill in the shape, which are cones of light,
         // with a bright white color. When multiplied with the background,
         // the white color will allow the full color of the background to
         // shine through.
+        for(var j=0; j<1; j++){
         this.bitmap.context.beginPath();
         this.bitmap.context.fillStyle = 'rgb(255, 255, 255)';
-        this.bitmap.context.moveTo(points[0].x, points[0].y);
+
+
+        //^^^THIS IS WHAT CAUSES THE LINE TO BE DRAWN FROM ONE GUARD TO ANOTHER^^^
+
+
         for(var i = 0; i < points.length; i++) {
             this.bitmap.context.lineTo(points[i].x, points[i].y);
         }
@@ -223,6 +258,7 @@ PlayGround.prototype={
         // This just tells the engine it should update the texture cache
         this.bitmap.dirty = true;
     }
+}
 };
 
 // Given a ray, this function iterates through all of the walls and
@@ -335,8 +371,16 @@ function getWallIntersection (ray) {
                     if (distance < distanceToWall) {
                         distanceToWall = distance;
                         closestIntersection = intersect;
-						chase=true;
+                        Chase();
 					}else{
+						NoChase();
+					}
+					function Chase(){
+						Alert.play();
+						chase=true;
+					}
+					function NoChase(){
+						Safe.play();
 						chase=false;
 					}
                 }
