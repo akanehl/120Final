@@ -35,38 +35,24 @@ var PlayGround = function(game) {};
 
 // Load images and sounds
 
-
-var map, layer;
-
 PlayGround.prototype={
     preload:function(){
         console.log('PlayGround: preload');
-        game.load.tilemap('map','assets/img/tilemaps/Bank.csv');
-        game.load.image('tileset', 'assets/img/pngformat/wallset.png');
+        
     },
 
 
 // Setup the example
     create:function() {
         console.log('PlayGround: create');
-<<<<<<< HEAD
-
-        map = this.add.tilemap('map',64,64);
-        map.addTilesetImage('tileset');
-        layer = map.createLayer(0);
-        layer.resizeWorld();
-        
-
-=======
         Alert = game.add.audio('alert');
     	Safe = game.add.audio('safe');
     	CoinPU = game.add.audio('coinPU');
->>>>>>> 4b5b386673d63ddc56e36182306def1ea9ab5073
         //Start arcade physics
         game.physics.startSystem(Phaser.Physics.ARCADE);
 
         //adding background and immovable black walls
-        //game.add.image(0,0, 'atlas', 'GameBack');
+        game.add.image(0,0, 'atlas', 'GameBack');
 
         //Create the player object
         player = new Player(game, 'atlas', 'Player', 1, 0);
@@ -376,15 +362,16 @@ function getWallIntersection (ray) {
 						NoChase();
 					}
 					function Chase(){
+                        if(chase==false){
 						Alert.play();
 						chase=true;
+                    }
 					}
 					function NoChase(){
-						Safe.play();
 						chase=false;
+                    }
 					}
                 }
-            }
         }, this);
          return closestIntersection;
      }
