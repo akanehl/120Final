@@ -41,27 +41,24 @@ var map, layer;
 PlayGround.prototype={
     preload:function(){
         console.log('PlayGround: preload');
-        game.load.tilemap('map','assets/img/tilemaps/Bank.csv');
-        game.load.image('tileset', 'assets/img/pngformat/wallset.png');
+        game.load.image('floor', 'assets/img/pngformat/floor.png');
+        game.load.image('Wall', 'assets/img/pngformat/top-wall.png');
     },
 
 
 // Setup the example
     create:function() {
         console.log('PlayGround: create');
-<<<<<<< HEAD
 
-        map = this.add.tilemap('map',64,64);
-        map.addTilesetImage('tileset');
-        layer = map.createLayer(0);
-        layer.resizeWorld();
-        
 
-=======
+        //game.add.sprite(0,0, 'atlas','background')
+        game.add.tileSprite(0,0,800,600,'floor');
+
+
         Alert = game.add.audio('alert');
     	Safe = game.add.audio('safe');
     	CoinPU = game.add.audio('coinPU');
->>>>>>> 4b5b386673d63ddc56e36182306def1ea9ab5073
+
         //Start arcade physics
         game.physics.startSystem(Phaser.Physics.ARCADE);
 
@@ -107,30 +104,30 @@ PlayGround.prototype={
         walls = game.add.group();
         walls.enableBody = true;
 
-        BlackWall = walls.create(0, 180, 'atlas', 'Wall');
-        BlackWall.scale.setTo(30,1);
+        BlackWall = walls.create(0, 180, 'Wall');
+        BlackWall.scale.setTo(4,.5);
         BlackWall.body.immovable = true;
-        BlackWall = walls.create(30, game.height-188, 'atlas','Wall');
-        BlackWall.scale.setTo(30,1);
+        BlackWall = walls.create(0, game.height-188,'Wall');
+        BlackWall.scale.setTo(4,.5);
         BlackWall.body.immovable = true;
-        BlackWall = walls.create(440, 180,'atlas', 'Wall');
-        BlackWall.scale.setTo(30,1);
+        BlackWall = walls.create(440, 180, 'Wall');
+        BlackWall.scale.setTo(4,.5);
         BlackWall.body.immovable = true;
-        BlackWall = walls.create(440, game.height-188,'atlas', 'Wall');
-        BlackWall.scale.setTo(30,1);
+        BlackWall = walls.create(440, game.height-188, 'Wall');
+        BlackWall.scale.setTo(4,.5);
         BlackWall.body.immovable = true;
 
-        BlackWall = walls.create(64, 240,'atlas', 'Wall');
-        BlackWall.scale.setTo(1,1);
+        BlackWall = walls.create(64, 240, 'Wall');
+        BlackWall.scale.setTo(.25,.25);
         BlackWall.body.immovable = true;
-        BlackWall = walls.create(64, 360,'atlas', 'Wall');
-        BlackWall.scale.setTo(1,1);
+        BlackWall = walls.create(64, 360,'Wall');
+        BlackWall.scale.setTo(.25,.25);
         BlackWall.body.immovable = true;
-        BlackWall = walls.create(625, 240,'atlas', 'Wall');
-        BlackWall.scale.setTo(1,1);
+        BlackWall = walls.create(625, 240, 'Wall');
+        BlackWall.scale.setTo(.25,.25);
         BlackWall.body.immovable = true;
-        BlackWall = walls.create(625, 360,'atlas', 'Wall');
-        BlackWall.scale.setTo(1,1);
+        BlackWall = walls.create(625, 360, 'Wall');
+        BlackWall.scale.setTo(.25,.25);
         BlackWall.body.immovable = true;
 
         //adding moveable walls
@@ -264,6 +261,7 @@ PlayGround.prototype={
 // Given a ray, this function iterates through all of the walls and
 // returns the closest wall intersection from the start of the ray
 // or null if the ray does not intersect any walls.
+var soundplay = false; 
 function getWallIntersection (ray) {
         var distanceToWall = Number.POSITIVE_INFINITY;
         var closestIntersection = null;
@@ -371,16 +369,20 @@ function getWallIntersection (ray) {
                     if (distance < distanceToWall) {
                         distanceToWall = distance;
                         closestIntersection = intersect;
+                          if (!soundplay) {
+                        Alert.play();
+                        soundplay = true;
+                        }   
                         Chase();
 					}else{
 						NoChase();
 					}
 					function Chase(){
-						Alert.play();
 						chase=true;
 					}
 					function NoChase(){
 						Safe.play();
+                        soundplay = false;
 						chase=false;
 					}
                 }
