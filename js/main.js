@@ -261,6 +261,7 @@ PlayGround.prototype={
 // Given a ray, this function iterates through all of the walls and
 // returns the closest wall intersection from the start of the ray
 // or null if the ray does not intersect any walls.
+var soundplay = false; 
 function getWallIntersection (ray) {
         var distanceToWall = Number.POSITIVE_INFINITY;
         var closestIntersection = null;
@@ -368,16 +369,20 @@ function getWallIntersection (ray) {
                     if (distance < distanceToWall) {
                         distanceToWall = distance;
                         closestIntersection = intersect;
+                          if (!soundplay) {
+                        Alert.play();
+                        soundplay = true;
+                        }   
                         Chase();
 					}else{
 						NoChase();
 					}
 					function Chase(){
-						Alert.play();
 						chase=true;
 					}
 					function NoChase(){
 						Safe.play();
+                        soundplay = false;
 						chase=false;
 					}
                 }
