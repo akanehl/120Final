@@ -7,6 +7,9 @@
 	this.scale.x = scale;
 	this.scale.y = scale;
 	this.angle=Math.random()*30;
+	this.chase=false;
+	this.alert=false;
+	this.safe=false;
 	
 
 	game.physics.enable(this);
@@ -31,16 +34,37 @@ Guard.prototype.update=function() {
 		//End game upon guard collision with player
 		game.state.start('GameOver');
 	}
-
+	//Guard Chase AI
+        guards.forEach(function(guard){
+        	var LoS= new Phaser.Line(guard.x, guard.y, player.x, player.y);
+        	var LoSInter = getWallIntersection(LoS);
+        	if(LoSInter){
+        		guard.chase=false;
+        		if(guard.safe==false){
+        			guard.safe=true;
+        			guard.alert=false;
+        			Safe.play();
+        			console.log('safe');
+        		}
+        	}else if(LoS.length<=127){
+        		guard.chase=true;
+        		if(guard.alert==false){
+        			guard.alert=true;
+        			guard.safe=false;
+        			Alert.play();
+        			console.log('alert');
+        		}
+        	}
+        }, this);
 	//AI for guard chase
-	if(chase==true){
+	if(guard.chase==true){
 		//Draw line between the guard and the player every frame
 		line=new Phaser.Line(guard.body.x,guard.body.y,player.body.x,player.body.y);
 		//Update the guards angle to the line
 		guard.angle=(line.angle/Math.PI)*180;
 
 		//Update the velocity of the guard
-		guard.body.velocity.copyFrom(game.physics.arcade.velocityFromAngle(guard.angle, 135));
+		guard.body.velocity.copyFrom(game.physics.arcade.velocityFromAngle(guard.angle, 130));
 	}
 	//Guard is idle
 	else{
