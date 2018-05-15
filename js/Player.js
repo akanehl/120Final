@@ -3,7 +3,7 @@ function Player(game, key, frame, scale, rotation){
 	Phaser.Sprite.call(this, game, 30, 300, key, frame);
 
     //Set some player properties
-	this.anchor.set(0,0);
+	this.anchor.set(0.5,0.5);
 	this.scale.x = scale;
 	this.scale.y = scale;
 	this.rotation = rotation;

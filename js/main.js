@@ -72,7 +72,7 @@ PlayGround.prototype={
 
         //Create the guards group
 		guards=game.add.group();
-        guard = new Guard(game, 'atlas', 'Enemy', 1, 0);
+        guard = new Guard(game, 'atlas', 'Enemy', 1, 0, 300, 300);
         game.add.existing(guard);
 		guards.add(guard);
 
@@ -165,11 +165,13 @@ PlayGround.prototype={
     update:function() {
         //collision
         //player collision
-        var hitBlackWalls=game.physics.arcade.collide(player, walls);
-        var hitGwalls=game.physics.arcade.collide(player, Gwalls);
-        var hitPwalls=game.physics.arcade.collide(player, Pwalls);
-        var hitCoins=game.physics.arcade.overlap(player, Coins, collectCoin, null, this);
- 
+        var hitBlackWalls = game.physics.arcade.collide(player, walls);
+        var hitGwalls = game.physics.arcade.collide(player, Gwalls);
+        var hitPwalls = game.physics.arcade.collide(player, Pwalls);
+        var hitCoins = game.physics.arcade.overlap(player, Coins, collectCoin, null, this);
+        // if a coin was spawned in a wall, respawn the coin with new coordinates
+        var respawnCoin = game.physics.arcade.overlap(Coins, walls, respawnCoin, null, this);
+
         //green wall collision
         var GwallHitWalls=game.physics.arcade.collide(Gwalls, walls);
         var GwallHitGwall=game.physics.arcade.collide(Gwalls, Gwalls);
@@ -181,13 +183,23 @@ PlayGround.prototype={
 
         coinText.text="coins: "+coinsCollected;
 
+        // if a coin is in a wall, kill the coin and create a new one in its place
+        function respawnCoin( coin, walls ) {
+        	coin.kill();
+        	Coin = Coins.create(Math.random()*800,Math.random()*600,'atlas', 'Coin');
+        	console.log('another coin was respawned');
+        	respawnCoin = game.physics.arcade.overlap(Coin, walls, respawnCoin, null, this);
+
+        }
+
         function collectCoin(player, Coin){
         	CoinPU.play();
             Coin.kill();
             coinsCollected+=1;
         }
         function addGuard(){
-        	guard = new Guard(game, 'atlas', 'Enemy', 1, 0);
+        	guard = new Guard(game, 'atlas', 'Enemy', 1, 0, 600,600);
+        	console.log('new guard spawned: x ' + guard.x + ' and y: ' + guard.y);
         	game.add.existing(guard);
 			guards.add(guard);
         }
