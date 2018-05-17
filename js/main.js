@@ -3,7 +3,7 @@
 // Copyright © 2014 John Watson
 // Licensed under the terms of the MIT License
 
-var game = new Phaser.Game(800,600,Phaser.AUTO);
+var game = new Phaser.Game(1024,800,Phaser.AUTO);
 var coinsCollected=0;
 var coinText;
 var Mainmenu = function(game){};
@@ -35,13 +35,15 @@ var PlayGround = function(game) {};
 // Load images and sounds
 
 
-var map, layer;
+var map, Walllayer, Floorlayer;
 
 PlayGround.prototype={
     preload:function(){
         console.log('PlayGround: preload');
         game.load.image('floor', 'assets/img/pngformat/floor.png');
         game.load.image('Wall', 'assets/img/pngformat/top-wall.png');
+        game.load.tilemap('bank','assets/img/Bank.json',null, Phaser.Tilemap.TILED_JSON);
+        game.load.image('tiles','assets/img/pngformat/TotalTileset.png');
     },
 
 
@@ -51,7 +53,13 @@ PlayGround.prototype={
 
 
         //game.add.sprite(0,0, 'atlas','background')
-        game.add.tileSprite(0,0,800,600,'floor');
+        //game.add.tileSprite(0,0,800,600,'floor');
+
+        map = game.add.tilemap('bank');
+        map.addTilesetImage('TotalTileset','tiles');
+        Floorlayer = map.createLayer('Floor');
+        Walllayer = map.createLayer('Walls');
+
 
 
         Alert = game.add.audio('alert');
