@@ -1,6 +1,6 @@
 function Player(game, key, frame, scale, rotation){
     //Set up the Sprite call
-	Phaser.Sprite.call(this, game, 30, 300, key, frame);
+	Phaser.Sprite.call(this, game, 75, 300, key, frame);
 
     //Set some player properties
 	this.anchor.set(0,0);

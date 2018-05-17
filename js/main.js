@@ -51,17 +51,11 @@ PlayGround.prototype={
     create:function() {
         console.log('PlayGround: create');
 
-
-
-
         map = game.add.tilemap('bank');
         map.addTilesetImage('TotalTileset','tiles');
         Floorlayer = map.createLayer('Floor');
         Walllayer = map.createLayer('Walls');
-
-
-
-
+        map.setCollisionBetween(0,999,true,'Walls');
 
         Alert = game.add.audio('alert');
     	Safe = game.add.audio('safe');
@@ -178,6 +172,7 @@ PlayGround.prototype={
         var hitGwalls=game.physics.arcade.collide(player, Gwalls);
         var hitPwalls=game.physics.arcade.collide(player, Pwalls);
         var hitCoins=game.physics.arcade.overlap(player, Coins, collectCoin, null, this);
+        var hitWalls = game.physics.arcade.overlap(player, Walllayer);
  
         //green wall collision
         var GwallHitWalls=game.physics.arcade.collide(Gwalls, walls);
