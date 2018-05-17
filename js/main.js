@@ -3,7 +3,7 @@
 // Copyright © 2014 John Watson
 // Licensed under the terms of the MIT License
 
-var game = new Phaser.Game(800,600,Phaser.AUTO);
+var game = new Phaser.Game(1024,800,Phaser.AUTO);
 var coinsCollected=0;
 var coinText;
 var Mainmenu = function(game){};
@@ -51,7 +51,7 @@ PlayGround.prototype={
 
 
         //game.add.sprite(0,0, 'atlas','background')
-        game.add.tileSprite(0,0,800,600,'floor');
+        game.add.tileSprite(0,0,game.height,game.width,'floor');
 
 
         Alert = game.add.audio('alert');
