@@ -3,17 +3,16 @@
 // Copyright © 2014 John Watson
 // Licensed under the terms of the MIT License
 
-var game = new Phaser.Game(800,600,Phaser.AUTO);
+var game = new Phaser.Game(1024,800,Phaser.AUTO);
 var coinsCollected=0;
 var coinText;
-var chase=false;
 var Mainmenu = function(game){};
 Mainmenu.prototype ={
     preload:function(){
         console.log('Mainmenu: preload');
         game.load.atlas('atlas', 'assets/img/atlas.png', 'assets/img/atlas.json');
-        game.load.audio('safe', 'assets/sound/safe.mp3');
-        game.load.audio('alert', 'assets/sound/alert.mp3');
+        game.load.audio('safe', 'assets/sound/Safe.mp3');
+        game.load.audio('alert', 'assets/sound/Alert.mp3');
         game.load.audio('coinPU', 'assets/sound/CoinPickUp.mp3');
     },
     create:function(){
@@ -52,7 +51,7 @@ PlayGround.prototype={
 
 
         //game.add.sprite(0,0, 'atlas','background')
-        game.add.tileSprite(0,0,800,600,'floor');
+        game.add.tileSprite(0,0,game.height,game.width,'floor');
 
 
         Alert = game.add.audio('alert');
@@ -76,7 +75,6 @@ PlayGround.prototype={
         guard = new Guard(game, 'atlas', 'Enemy', 1, 0);
         game.add.existing(guard);
 		guards.add(guard);
-		chase=false;
 
 		
 
@@ -197,13 +195,17 @@ PlayGround.prototype={
         if(coinsCollected==5){
         	coinsCollected=0;
         	player.body.x=30;
-        	player.body.y=30;
-        	chase=false;
+        	player.body.y=300;
         	addGuard();
         	for(var i =0; i<5; i++){
-            var Coin = Coins.create(Math.random()*800,Math.random()*600,'atlas', 'Coin');
+            	var Coin = Coins.create(Math.random()*800,Math.random()*600,'atlas', 'Coin');
+        	}
         }
+        if(game.input.keyboard.justPressed(Phaser.Keyboard.G)){
+            addGuard();
         }
+        
+        
 
 /*----------------------------------------------------------------------
                              Start of the Light Code
@@ -232,13 +234,13 @@ PlayGround.prototype={
                 points.push(ray.end);
             }
         }
-    }, this);
+    });
 		
         // Connect the dots and fill in the shape, which are cones of light,
         // with a bright white color. When multiplied with the background,
         // the white color will allow the full color of the background to
         // shine through.
-        for(var j=0; j<1; j++){
+
         this.bitmap.context.beginPath();
         this.bitmap.context.fillStyle = 'rgb(255, 255, 255)';
 
@@ -246,7 +248,7 @@ PlayGround.prototype={
         //^^^THIS IS WHAT CAUSES THE LINE TO BE DRAWN FROM ONE GUARD TO ANOTHER^^^
 
 
-        for(var i = 0; i < points.length; i++) {
+        for(var i = 0; i < points.length-1; i++) {
             this.bitmap.context.lineTo(points[i].x, points[i].y);
         }
         this.bitmap.context.closePath();
@@ -255,13 +257,12 @@ PlayGround.prototype={
         // This just tells the engine it should update the texture cache
         this.bitmap.dirty = true;
     }
-}
 };
 
 // Given a ray, this function iterates through all of the walls and
 // returns the closest wall intersection from the start of the ray
 // or null if the ray does not intersect any walls.
-var soundplay = false; 
+
 function getWallIntersection (ray) {
         var distanceToWall = Number.POSITIVE_INFINITY;
         var closestIntersection = null;
@@ -344,47 +345,6 @@ function getWallIntersection (ray) {
                         distanceToWall = distance;
                         closestIntersection = intersect;
                     }
-                }
-            }
-        }, this);
-        this.players.forEach(function(player) {
-            // Create an array of lines that represent the four edges of each wall
-            var lines = [
-                new Phaser.Line(player.x, player.y, player.x + player.width, player.y),
-                new Phaser.Line(player.x, player.y, player.x, player.y + player.height),
-                new Phaser.Line(player.x + player.width, player.y,
-                    player.x + player.width, player.y + player.height),
-                new Phaser.Line(player.x, player.y + player.height,
-                    player.x + player.width, player.y + player.height)
-            ];
-
-            // Test each of the edges in this wall against the ray.
-            // If the ray intersects any of the edges then the wall must be in the way.
-            for(var i = 0; i < lines.length; i++) {
-                var intersect = Phaser.Line.intersects(ray, lines[i]);
-                if (intersect) {
-                    // Find the closest intersection
-                    distance =
-                        this.game.math.distance(ray.start.x, ray.start.y, intersect.x, intersect.y);
-                    if (distance < distanceToWall) {
-                        distanceToWall = distance;
-                        closestIntersection = intersect;
-                          if (!soundplay) {
-                        Alert.play();
-                        soundplay = true;
-                        }   
-                        Chase();
-					}else{
-						NoChase();
-					}
-					function Chase(){
-						chase=true;
-					}
-					function NoChase(){
-						Safe.play();
-                        soundplay = false;
-						chase=false;
-					}
                 }
             }
         }, this);
