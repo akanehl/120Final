@@ -52,13 +52,14 @@ PlayGround.prototype={
         console.log('PlayGround: create');
 
 
-        //game.add.sprite(0,0, 'atlas','background')
-        //game.add.tileSprite(0,0,800,600,'floor');
+
 
         map = game.add.tilemap('bank');
         map.addTilesetImage('TotalTileset','tiles');
         Floorlayer = map.createLayer('Floor');
         Walllayer = map.createLayer('Walls');
+
+
 
 
 
