@@ -3,7 +3,7 @@
 // Copyright © 2014 John Watson
 // Licensed under the terms of the MIT License
 
-var game = new Phaser.Game(800,600,Phaser.AUTO);
+var game = new Phaser.Game(1024,800,Phaser.AUTO);
 var coinsCollected=0;
 var coinText;
 var Mainmenu = function(game){};
@@ -35,13 +35,15 @@ var PlayGround = function(game) {};
 // Load images and sounds
 
 
-var map, layer;
+var map, Walllayer, Floorlayer;
 
 PlayGround.prototype={
     preload:function(){
         console.log('PlayGround: preload');
         game.load.image('floor', 'assets/img/pngformat/floor.png');
         game.load.image('Wall', 'assets/img/pngformat/top-wall.png');
+        game.load.tilemap('bank','assets/img/Bank.json',null, Phaser.Tilemap.TILED_JSON);
+        game.load.image('tiles','assets/img/pngformat/TotalTileset.png');
     },
 
 
@@ -49,10 +51,11 @@ PlayGround.prototype={
     create:function() {
         console.log('PlayGround: create');
 
-
-        //game.add.sprite(0,0, 'atlas','background')
-        game.add.tileSprite(0,0,800,600,'floor');
-
+        map = game.add.tilemap('bank');
+        map.addTilesetImage('TotalTileset','tiles');
+        Floorlayer = map.createLayer('Floor');
+        Walllayer = map.createLayer('Walls');
+        map.setCollisionBetween(0,999,true,'Walls');
 
         Alert = game.add.audio('alert');
     	Safe = game.add.audio('safe');
@@ -172,6 +175,12 @@ PlayGround.prototype={
         // if a coin was spawned in a wall, respawn the coin with new coordinates
         var respawnCoin = game.physics.arcade.overlap(Coins, walls, respawnCoin, null, this);
 
+        var hitBlackWalls=game.physics.arcade.collide(player, walls);
+        var hitGwalls=game.physics.arcade.collide(player, Gwalls);
+        var hitPwalls=game.physics.arcade.collide(player, Pwalls);
+        var hitCoins=game.physics.arcade.overlap(player, Coins, collectCoin, null, this);
+        var hitWalls = game.physics.arcade.overlap(player, Walllayer);
+ 
         //green wall collision
         var GwallHitWalls=game.physics.arcade.collide(Gwalls, walls);
         var GwallHitGwall=game.physics.arcade.collide(Gwalls, Gwalls);
