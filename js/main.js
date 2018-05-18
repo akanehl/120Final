@@ -86,10 +86,10 @@ PlayGround.prototype={
         // Set the pivot point of the light to the center of the texture
 
         // Create a bitmap texture for drawing light cones
-        this.bitmap = this.game.add.bitmapData(this.game.width, this.game.height);
-        this.bitmap.context.fillStyle = 'rgb(255, 255, 255)';
-        this.bitmap.context.strokeStyle = 'rgb(255, 255, 255)';
-        lightBitmap = this.game.add.image(0, 0, this.bitmap);
+        bitmap = this.game.add.bitmapData(this.game.width, this.game.height);
+        bitmap.context.fillStyle = 'rgb(255, 255, 255)';
+        bitmap.context.strokeStyle = 'rgb(255, 255, 255)';
+        lightBitmap = this.game.add.image(0, 0, bitmap);
         game.physics.enable(lightBitmap);
 
         /* This bitmap is drawn onto the screen using the MULTIPLY blend mode.
@@ -166,6 +166,8 @@ PlayGround.prototype={
 
 // The update() method is called every frame
     update:function() {
+        bitmap.context.fillStyle = 'rgb(100, 100, 100)';
+        bitmap.context.fillRect(0, 0, this.game.width, this.game.height);
         //collision
         //player collision
         var hitBlackWalls=game.physics.arcade.collide(player, walls);
@@ -209,24 +211,28 @@ PlayGround.prototype={
             addGuard();
         }
         
-        
+        guards.forEach(function(guard){
+        	setFill(guard.x,guard.y);
+        },this);
 
 /*----------------------------------------------------------------------
                              Start of the Light Code
 ----------------------------------------------------------------------*/
 
         // Next, fill the entire light bitmap with a dark shadow color.
-        this.bitmap.context.fillStyle = 'rgb(100, 100, 100)';
-        this.bitmap.context.fillRect(0, 0, this.game.width, this.game.height);
+        
 
         // Ray casting!
         // Cast rays at intervals in a large circle around the light.
         // Save all of the intersection points or ray end points if there was no intersection.
+        
+///////////////////////////////////////////////////////////////////////////////////////
+
+    function setFill(x,y){
         var points=[];
-        guards.forEach(function(guard){
         for(var a = 0; a < Math.PI*2; a += Math.PI/360) {
             // Create a ray from the light to a point on the circle
-            var ray = new Phaser.Line(guard.x, guard.y, guard.x+Math.cos(a)*125, guard.y+Math.sin(a)*125);
+            var ray = new Phaser.Line(x, y, x+Math.cos(a)*125, y+Math.sin(a)*125);
 
             // Check if the ray intersected any walls
             var intersect = getWallIntersection(ray);
@@ -238,30 +244,30 @@ PlayGround.prototype={
                 points.push(ray.end);
             }
         }
-    });
-		
+        draw(points);
+    }
+////////////////////////////////////////////////////////////////////////////////////////
         // Connect the dots and fill in the shape, which are cones of light,
         // with a bright white color. When multiplied with the background,
         // the white color will allow the full color of the background to
         // shine through.
-
-        this.bitmap.context.beginPath();
-        this.bitmap.context.fillStyle = 'rgb(255, 255, 255)';
-
-
-        //^^^THIS IS WHAT CAUSES THE LINE TO BE DRAWN FROM ONE GUARD TO ANOTHER^^^
+function draw(points){
+        bitmap.context.beginPath();
+        bitmap.context.fillStyle = 'rgb(255, 255, 255)';
 
 
         for(var i = 0; i < points.length-1; i++) {
-            this.bitmap.context.lineTo(points[i].x, points[i].y);
+            bitmap.context.lineTo(points[i].x, points[i].y);
         }
-        this.bitmap.context.closePath();
-        this.bitmap.context.fill();
+        bitmap.context.closePath();
+        bitmap.context.fill();
+
 
         // This just tells the engine it should update the texture cache
-        this.bitmap.dirty = true;
+        bitmap.dirty = true;
     }
-};
+}
+}
 
 // Given a ray, this function iterates through all of the walls and
 // returns the closest wall intersection from the start of the ray
