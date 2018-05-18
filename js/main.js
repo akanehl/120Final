@@ -17,7 +17,8 @@ Mainmenu.prototype ={
     },
     create:function(){
         console.log('Mainmenu: create');
-        game.add.sprite(0,0,'atlas', 'Menu');
+        MainMenu=game.add.sprite(0,0,'atlas', 'Menu');
+        MainMenu.scale.setTo(1.28,1.34);
     },
     update:function(){
         if(game.input.keyboard.isDown(Phaser.Keyboard.SPACEBAR)){
@@ -377,7 +378,8 @@ GameOver.prototype={
     },
     create:function(){
         console.log('GameOver: create');
-        game.add.sprite(0,0,'atlas', 'GameOver');
+        OverScreen=game.add.sprite(0,0,'atlas', 'GameOver');
+        OverScreen.scale.setTo(1.28,1.34);
 
     },
     update:function(){
