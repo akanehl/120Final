@@ -17,7 +17,8 @@ Mainmenu.prototype ={
     },
     create:function(){
         console.log('Mainmenu: create');
-        game.add.sprite(0,0,'atlas', 'Menu');
+        Menu = game.add.sprite(0,0,'atlas', 'Menu');
+		Menu.scale.setTo(1.28, 1.34);
     },
     update:function(){
         if(game.input.keyboard.isDown(Phaser.Keyboard.SPACEBAR)){
@@ -35,13 +36,15 @@ var PlayGround = function(game) {};
 // Load images and sounds
 
 
-var map, layer;
+var map, Walllayer, Floorlayer;
 
 PlayGround.prototype={
     preload:function(){
         console.log('PlayGround: preload');
         game.load.image('floor', 'assets/img/pngformat/floor.png');
         game.load.image('Wall', 'assets/img/pngformat/top-wall.png');
+        game.load.tilemap('bank','assets/img/Bank.json',null, Phaser.Tilemap.TILED_JSON);
+        game.load.image('tiles','assets/img/pngformat/TotalTileset.png');
     },
 
 
@@ -50,8 +53,15 @@ PlayGround.prototype={
         console.log('PlayGround: create');
 
 
-        //game.add.sprite(0,0, 'atlas','background')
-        game.add.tileSprite(0,0,game.height,game.width,'floor');
+
+
+        map = game.add.tilemap('bank');
+        map.addTilesetImage('TotalTileset','tiles');
+        Floorlayer = map.createLayer('Floor');
+        Walllayer = map.createLayer('Walls');
+
+
+
 
 
         Alert = game.add.audio('alert');
@@ -215,17 +225,20 @@ PlayGround.prototype={
         this.bitmap.context.fillStyle = 'rgb(100, 100, 100)';
         this.bitmap.context.fillRect(0, 0, this.game.width, this.game.height);
 
-        // Ray casting!
-        // Cast rays at intervals in a large circle around the light.
-        // Save all of the intersection points or ray end points if there was no intersection.
-        var points=[];
         guards.forEach(function(guard){
+            this.setFill(guard.x,guard.y);
+        },this);
+    },
+
+
+setFill:function(x,y){
+    var points=[];
         for(var a = 0; a < Math.PI*2; a += Math.PI/360) {
             // Create a ray from the light to a point on the circle
             var ray = new Phaser.Line(guard.x, guard.y, guard.x+Math.cos(a)*125, guard.y+Math.sin(a)*125);
 
             // Check if the ray intersected any walls
-            var intersect = getWallIntersection(ray);
+            var intersect = this.getWallIntersection(ray);
 
             // Save the intersection or the end of the ray
             if (intersect) {
@@ -234,13 +247,14 @@ PlayGround.prototype={
                 points.push(ray.end);
             }
         }
-    });
+        this.draw(points);
+},
 		
         // Connect the dots and fill in the shape, which are cones of light,
         // with a bright white color. When multiplied with the background,
         // the white color will allow the full color of the background to
         // shine through.
-
+draw:function (points){
         this.bitmap.context.beginPath();
         this.bitmap.context.fillStyle = 'rgb(255, 255, 255)';
 
@@ -256,21 +270,21 @@ PlayGround.prototype={
 
         // This just tells the engine it should update the texture cache
         this.bitmap.dirty = true;
-    }
-};
+    },
 
 // Given a ray, this function iterates through all of the walls and
 // returns the closest wall intersection from the start of the ray
 // or null if the ray does not intersect any walls.
 
-function getWallIntersection (ray) {
+getWallIntersection:function (ray) {
         var distanceToWall = Number.POSITIVE_INFINITY;
         var closestIntersection = null;
 		
 		
 		
         // For each of the walls...
-        this.walls.forEach(function(wall) {
+        if(walls){
+        walls.forEach(function(wall) {
             // Create an array of lines that represent the four edges of each wall
             var lines = [
                 new Phaser.Line(wall.x, wall.y, wall.x + wall.width, wall.y),
@@ -296,7 +310,7 @@ function getWallIntersection (ray) {
                 }
             }
         }, this);
-        this.Gwalls.forEach(function(Gwall) {
+        Gwalls.forEach(function(Gwall) {
             // Create an array of lines that represent the four edges of each wall
             var lines = [
                 new Phaser.Line(Gwall.x, Gwall.y, Gwall.x + Gwall.width, Gwall.y),
@@ -322,7 +336,7 @@ function getWallIntersection (ray) {
                 }
             }
         }, this);
-        this.Pwalls.forEach(function(Pwall) {
+        Pwalls.forEach(function(Pwall) {
             // Create an array of lines that represent the four edges of each wall
             var lines = [
                 new Phaser.Line(Pwall.x, Pwall.y, Pwall.x + Pwall.width, Pwall.y),
@@ -350,6 +364,9 @@ function getWallIntersection (ray) {
         }, this);
          return closestIntersection;
      }
+ }
+}
+ 
 
 /*----------------------------------------------------------------------
 End of the Light Code
@@ -367,8 +384,8 @@ GameOver.prototype={
     },
     create:function(){
         console.log('GameOver: create');
-        game.add.sprite(0,0,'atlas', 'GameOver');
-
+        Over =game.add.sprite(0,0,'atlas', 'GameOver');
+		Over.scale.setTo(1.28, 1.34);
     },
     update:function(){
         if(game.input.keyboard.isDown(Phaser.Keyboard.SPACEBAR)){
