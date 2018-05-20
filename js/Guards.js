@@ -77,58 +77,88 @@ Guard.prototype.update=function() {
 					Update angle to move away from wall. 
 				}
 				NOTE: Following are several cases that adjust based on which wall it is checking.*/
-				 
-			if(guard.body.x>700){
-				if(Math.abs(guard.angle-(-90))<Math.abs(guard.angle-(90))){
-					guard.body.angularVelocity=-60;
-				}
-				else if(Math.abs(guard.angle-(-90))>Math.abs(guard.angle-(90))){
-					guard.body.angularVelocity=60;
-				}
-				else{
-					guard.body.angularVelocity=0;
-				}
-			}else if(guard.body.x<100){
-				if(Math.abs(guard.angle-(-90))<Math.abs(guard.angle-(90))){
-					guard.body.angularVelocity=60;
-				}
-				else if(Math.abs(guard.angle-(-90))>Math.abs(guard.angle-(90))){
-					guard.body.angularVelocity=-60;
-				}
-				else{
-					guard.body.angularVelocity=0;
-				}
-			}else if(guard.body.y>500){
-				if(Math.abs(guard.angle-(180))<Math.abs(guard.angle-(0))){
-					guard.body.angularVelocity=60;
-				}
-				else if(Math.abs(guard.angle-(180))>Math.abs(guard.angle-(0))){
-					guard.body.angularVelocity=-60;
-				}
-				else{
-					guard.body.angularVelocity=0;
-				}
-			}else if(guard.body.y<100&&guard.body.x>100){
-				if(Math.abs(guard.angle-(-180))<Math.abs(guard.angle-(0))){
-					guard.body.angularVelocity=-60;
-				}
-				else if(Math.abs(guard.angle-(-180))>Math.abs(guard.angle-(0))){
-					guard.body.angularVelocity=60;
-				}
-				else if(guard.body.angle==180||-180)
-				{
-					guard.angle=90;
-				}else{
-					guard.body.angularVelocity=0;
-				}
-			}else if(GhitWalls){
-				guard.body.angularVelocity=100;
+				
+		if(guard.body.x>game.width-100){
+			if(guard.angle<0){
+				guard.body.angularVelocity=-60;
 			}else{
-				guard.body.angularVelocity=0;
+				guard.body.angularVelocity=60;
 			}
-			if(GhitWalls){
-				guard.body.angularVelocity+=30;
+		}else if(guard.body.x<100){
+			if(guard.angle<0){
+				guard.body.angularVelocity=60;
+			}else{
+				guard.body.angularVelocity=-60;
 			}
+		}else if(guard.body.y>game.height-100){
+			if(guard.angle>90||guard.angle<-90){
+				guard.body.angularVelocity=60;
+			}else{
+				guard.body.angularVelocity=-60;
+			}
+		}else if(guard.body.y<100){
+			if(guard.angle<-90||guard.angle>90){
+				guard.body.angularVelocity=-60;
+			}else{
+				guard.body.angularVelocity=60;
+			}
+		}else{
+			guard.body.angularVelocity=0;
+		}
+
+
+
+			// if(guard.body.x>700){
+			// 	if(Math.abs(guard.angle-(-90))<Math.abs(guard.angle-(90))){
+			// 		guard.body.angularVelocity=-60;
+			// 	}
+			// 	else if(Math.abs(guard.angle-(-90))>Math.abs(guard.angle-(90))){
+			// 		guard.body.angularVelocity=60;
+			// 	}
+			// 	else{
+			// 		guard.body.angularVelocity=0;
+			// 	}
+			// }else if(guard.body.x<100){
+			// 	if(Math.abs(guard.angle-(-90))<Math.abs(guard.angle-(90))){
+			// 		guard.body.angularVelocity=60;
+			// 	}
+			// 	else if(Math.abs(guard.angle-(-90))>Math.abs(guard.angle-(90))){
+			// 		guard.body.angularVelocity=-60;
+			// 	}
+			// 	else{
+			// 		guard.body.angularVelocity=0;
+			// 	}
+			// }else if(guard.body.y>500){
+			// 	if(Math.abs(guard.angle-(180))<Math.abs(guard.angle-(0))){
+			// 		guard.body.angularVelocity=60;
+			// 	}
+			// 	else if(Math.abs(guard.angle-(180))>Math.abs(guard.angle-(0))){
+			// 		guard.body.angularVelocity=-60;
+			// 	}
+			// 	else{
+			// 		guard.body.angularVelocity=0;
+			// 	}
+			// }else if(guard.body.y<100&&guard.body.x>100){
+			// 	if(Math.abs(guard.angle-(-180))<Math.abs(guard.angle-(0))){
+			// 		guard.body.angularVelocity=-60;
+			// 	}
+			// 	else if(Math.abs(guard.angle-(-180))>Math.abs(guard.angle-(0))){
+			// 		guard.body.angularVelocity=60;
+			// 	}
+			// 	else if(guard.body.angle==180||-180)
+			// 	{
+			// 		guard.angle=90;
+			// 	}else{
+			// 		guard.body.angularVelocity=0;
+			// 	}
+			// }else if(GhitWalls){
+			// 	guard.body.angularVelocity=100;
+			// }else{
+			// 	guard.body.angularVelocity=0;
+			// }
+			// if(GhitWalls){
+			// 	guard.body.angularVelocity+=30;
+			// }
 	}
 }, this);
 }
