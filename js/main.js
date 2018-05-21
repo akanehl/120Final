@@ -59,7 +59,10 @@ PlayGround.prototype={
         map.addTilesetImage('TotalTileset','tiles');
         Floorlayer = map.createLayer('Floor');
         Walllayer = map.createLayer('Walls');
-        map.setCollisionBetween(0,999,true,'Walls');
+        //the lower the second number is the better performance we have. 
+        //but it has to. be high enough to include all the tiles we want collision with.
+        //map.setCollisionBetween(1,THIS NUMBER, true, 'Walls');
+        map.setCollisionBetween(1,28,true,'Walls');
 
         Alert = game.add.audio('alert');
     	Safe = game.add.audio('safe');
@@ -79,7 +82,7 @@ PlayGround.prototype={
 
         //Create the guards group
 		guards=game.add.group();
-        guard = new Guard(game, 'atlas', 'Enemy', 1, 0);
+        guard = new Guard(game, 'atlas', 'Enemy', 1, 0, 400, 500);
         game.add.existing(guard);
 		guards.add(guard);
 
@@ -106,34 +109,7 @@ PlayGround.prototype={
         lightBitmap.blendMode = Phaser.blendModes.MULTIPLY;
 
         //Create generic game walls before the sprites are ready
-        walls = game.add.group();
-        walls.enableBody = true;
-
-        BlackWall = walls.create(0, 180, 'Wall');
-        BlackWall.scale.setTo(4,.5);
-        BlackWall.body.immovable = true;
-        BlackWall = walls.create(0, game.height-188,'Wall');
-        BlackWall.scale.setTo(4,.5);
-        BlackWall.body.immovable = true;
-        BlackWall = walls.create(440, 180, 'Wall');
-        BlackWall.scale.setTo(4,.5);
-        BlackWall.body.immovable = true;
-        BlackWall = walls.create(440, game.height-188, 'Wall');
-        BlackWall.scale.setTo(4,.5);
-        BlackWall.body.immovable = true;
-
-        BlackWall = walls.create(64, 240, 'Wall');
-        BlackWall.scale.setTo(.25,.25);
-        BlackWall.body.immovable = true;
-        BlackWall = walls.create(64, 360,'Wall');
-        BlackWall.scale.setTo(.25,.25);
-        BlackWall.body.immovable = true;
-        BlackWall = walls.create(625, 240, 'Wall');
-        BlackWall.scale.setTo(.25,.25);
-        BlackWall.body.immovable = true;
-        BlackWall = walls.create(625, 360, 'Wall');
-        BlackWall.scale.setTo(.25,.25);
-        BlackWall.body.immovable = true;
+        
 
         //adding moveable walls
         //adding Push Walls (Green)
@@ -173,27 +149,27 @@ PlayGround.prototype={
 
 // The update() method is called every frame
     update:function() {
-        game.physics.arcade.collide(player, Walllayer);
-        game.physics.arcade.collide(guard, Walllayer);
+    	game.physics.arcade.collide(player, Walllayer);
+        
+
 
         // constantly fill the bitmap 
         bitmap.context.fillStyle = 'rgb(100, 100, 100)';
         bitmap.context.fillRect(0, 0, this.game.width, this.game.height);
 
         // Player collision with all walls and coins
-        var hitBlackWalls=game.physics.arcade.collide(player, walls);
         var hitGwalls=game.physics.arcade.collide(player, Gwalls);
         var hitPwalls=game.physics.arcade.collide(player, Pwalls);
         var hitCoins=game.physics.arcade.overlap(player, Coins, collectCoin, null, this);
         var hitWalls = game.physics.arcade.overlap(player, Walllayer);
         // if a coin was spawned in a wall, respawn the coin with new coordinates
-        var respawnCoin = game.physics.arcade.overlap(Coins, walls, respawnCoin, null, this);
+        
  
         //green wall collision
-        var GwallHitWalls=game.physics.arcade.collide(Gwalls, walls);
+        var GwallHitWalls=game.physics.arcade.collide(Gwalls, Walllayer);
         var GwallHitGwall=game.physics.arcade.collide(Gwalls, Gwalls);
         //pink wall collision
-        var PwallHitWalls=game.physics.arcade.collide(Pwalls, walls);
+        var PwallHitWalls=game.physics.arcade.collide(Pwalls, Walllayer);
         var PwallhitPwall=game.physics.arcade.collide(Pwalls, Pwalls);
         //color wall collisions
         var PwallHitGwall=game.physics.arcade.collide(Pwalls, Gwalls);
@@ -203,7 +179,7 @@ PlayGround.prototype={
         // if a coin is in a wall, kill the coin and create a new one in its place
         function respawnCoin( coin, walls ) {
             coin.kill();
-            Coin = Coins.create(Math.random()*800,Math.random()*600,'atlas', 'Coin');
+            Coin = Coins.create(Math.random()*game.width,Math.random()*game.height,'atlas', 'Coin');
             console.log('another coin was respawned');
             respawnCoin = game.physics.arcade.overlap(Coin, walls, respawnCoin, null, this);
         }
@@ -215,18 +191,18 @@ PlayGround.prototype={
         }
 
         function addGuard(){
-        	guard = new Guard(game, 'atlas', 'Enemy', 1, 0);
+        	guard = new Guard(game, 'atlas', 'Enemy', 1, 0, Math.random()*800+100,Math.random()*600+100);
         	game.add.existing(guard);
 			guards.add(guard);
         }
         //if all 5 coins are collected, the player pos is reset and another guard is spawned with 5 more coins.
         if(coinsCollected==5){
         	coinsCollected=0;
-        	player.body.x=30;
+        	player.body.x=75;
         	player.body.y=300;
         	addGuard();
         	for(var i =0; i<5; i++){
-            	var Coin = Coins.create(Math.random()*800,Math.random()*600,'atlas', 'Coin');
+            	var Coin = Coins.create(Math.random()*game.width,Math.random()*game.height,'atlas', 'Coin');
         	}
         }
         if(game.input.keyboard.justPressed(Phaser.Keyboard.G)){
@@ -287,33 +263,8 @@ function getWallIntersection (ray) {
         var closestIntersection = null;
 		
         // For each of the walls...
-        this.walls.forEach(function(wall) {
-            // Create an array of lines that represent the four edges of each wall
-            var lines = [
-                new Phaser.Line(wall.x, wall.y, wall.x + wall.width, wall.y),
-                new Phaser.Line(wall.x, wall.y, wall.x, wall.y + wall.height),
-                new Phaser.Line(wall.x + wall.width, wall.y,
-                    wall.x + wall.width, wall.y + wall.height),
-                new Phaser.Line(wall.x, wall.y + wall.height,
-                    wall.x + wall.width, wall.y + wall.height)
-            ];
-
-            // Test each of the edges in this wall against the ray.
-            // If the ray intersects any of the edges then the wall must be in the way.
-            for(var i = 0; i < lines.length; i++) {
-                var intersect = Phaser.Line.intersects(ray, lines[i]);
-                if (intersect) {
-                    // Find the closest intersection
-                    distance =
-                        this.game.math.distance(ray.start.x, ray.start.y, intersect.x, intersect.y);
-                    if (distance < distanceToWall) {
-                        distanceToWall = distance;
-                        closestIntersection = intersect;
-                    }
-                }
-            }
-        }, this);
-        /*this.forEach(function(Walllayer) {
+        
+        /*function Walllayer (){
             // Create an array of lines that represent the four edges of each wall
             var lines = [
                 new Phaser.Line(Walllayer.x, Walllayer.y, Walllayer.x + Walllayer.width, Walllayer.y),
@@ -338,8 +289,7 @@ function getWallIntersection (ray) {
                     }
                 }
             }
-        }, this);
-        */
+        }*/
         this.Gwalls.forEach(function(Gwall) {
             // Create an array of lines that represent the four edges of each wall
             var lines = [
