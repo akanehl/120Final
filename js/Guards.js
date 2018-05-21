@@ -58,7 +58,6 @@ Guard.prototype.update=function() {
         			console.log('alert');
         		}
         	}
-        }, this);
 	//AI for guard chase
 	if(guard.chase==true){
 		//Draw line between the guard and the player every frame
@@ -99,19 +98,15 @@ Guard.prototype.update=function() {
 			}else{
 				guard.body.angularVelocity=-60;
 			}
-		}else if(guard.body.y<100){
-			if(guard.angle<-90||guard.angle>90){
+		}else if(guard.body.x>game.width-100){
+			if(guard.angle<0){
 				guard.body.angularVelocity=-60;
 			}else{
 				guard.body.angularVelocity=60;
 			}
-		}else if(GhitWalls){
-			console.log('hitwall');
-			guard.body.angularVelocity=90;
 		}else{
 			guard.body.angularVelocity=0;
 		}
-		
 	}
 }, this);
 }
