@@ -38,6 +38,7 @@ Guard.prototype.update=function() {
 		game.state.start('GameOver');
 	}
 	//Guard Chase AI
+        guards.forEach(function(guard){
         	var LoS= new Phaser.Line(guard.x, guard.y, player.x, player.y);
         	var LoSInter = getWallIntersection(LoS);
         	if(LoSInter||LoS.length>127){
@@ -107,5 +108,6 @@ Guard.prototype.update=function() {
 			guard.body.angularVelocity=0;
 		}
 	}
-},this);
+}, this);
 }
+
