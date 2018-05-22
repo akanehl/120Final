@@ -1,7 +1,10 @@
-// This example uses the Phaser 2.2.2 framework
-
+/* Version Notes:
+Guard Wanders
+Tiled BG implemented but no wall collision
+Light ray bug fixed
 // Copyright © 2014 John Watson
-// Licensed under the terms of the MIT License
+*/
+
 
 var game = new Phaser.Game(1024,800,Phaser.AUTO);
 var coinsCollected=0;
@@ -17,7 +20,8 @@ Mainmenu.prototype ={
     },
     create:function(){
         console.log('Mainmenu: create');
-        game.add.sprite(0,0,'atlas', 'Menu');
+        MainMenu=game.add.sprite(0,0,'atlas', 'Menu');
+        MainMenu.scale.setTo(1.28,1.34);
     },
     update:function(){
         if(game.input.keyboard.isDown(Phaser.Keyboard.SPACEBAR)){
@@ -54,7 +58,14 @@ PlayGround.prototype={
         map.addTilesetImage('TotalTileset','tiles');
         Floorlayer = map.createLayer('Floor');
         Walllayer = map.createLayer('Walls');
-        map.setCollisionByExclusion([], true, this.Walllayer);
+
+        
+
+        //the lower the second number is the better performance we have. 
+        //but it has to. be high enough to include all the tiles we want collision with.
+        //map.setCollisionBetween(1,THIS NUMBER, true, 'Walls');
+        map.setCollisionBetween(1,28,true,'Walls');
+
 
         Alert = game.add.audio('alert');
     	Safe = game.add.audio('safe');
@@ -71,7 +82,7 @@ PlayGround.prototype={
 
         //Create the guards group
 		guards=game.add.group();
-        guard = new Guard(game, 'atlas', 'Enemy', 1, 0);
+        guard = new Guard(game, 'atlas', 'Enemy', 1, 0, 400, 500);
         game.add.existing(guard);
 		guards.add(guard);
 
@@ -82,10 +93,10 @@ PlayGround.prototype={
         // Set the pivot point of the light to the center of the texture
 
         // Create a bitmap texture for drawing light cones
-        this.bitmap = this.game.add.bitmapData(this.game.width, this.game.height);
-        this.bitmap.context.fillStyle = 'rgb(255, 255, 255)';
-        this.bitmap.context.strokeStyle = 'rgb(255, 255, 255)';
-        lightBitmap = this.game.add.image(0, 0, this.bitmap);
+        bitmap = this.game.add.bitmapData(this.game.width, this.game.height);
+        bitmap.context.fillStyle = 'rgb(255, 255, 255)';
+        bitmap.context.strokeStyle = 'rgb(255, 255, 255)';
+        lightBitmap = this.game.add.image(0, 0, bitmap);
         game.physics.enable(lightBitmap);
 
         /* This bitmap is drawn onto the screen using the MULTIPLY blend mode.
@@ -98,34 +109,7 @@ PlayGround.prototype={
         lightBitmap.blendMode = Phaser.blendModes.MULTIPLY;
 
         //Create generic game walls before the sprites are ready
-        walls = game.add.group();
-        walls.enableBody = true;
-
-        BlackWall = walls.create(0, 180, 'Wall');
-        BlackWall.scale.setTo(4,.5);
-        BlackWall.body.immovable = true;
-        BlackWall = walls.create(0, game.height-188,'Wall');
-        BlackWall.scale.setTo(4,.5);
-        BlackWall.body.immovable = true;
-        BlackWall = walls.create(440, 180, 'Wall');
-        BlackWall.scale.setTo(4,.5);
-        BlackWall.body.immovable = true;
-        BlackWall = walls.create(440, game.height-188, 'Wall');
-        BlackWall.scale.setTo(4,.5);
-        BlackWall.body.immovable = true;
-
-        BlackWall = walls.create(64, 240, 'Wall');
-        BlackWall.scale.setTo(.25,.25);
-        BlackWall.body.immovable = true;
-        BlackWall = walls.create(64, 360,'Wall');
-        BlackWall.scale.setTo(.25,.25);
-        BlackWall.body.immovable = true;
-        BlackWall = walls.create(625, 240, 'Wall');
-        BlackWall.scale.setTo(.25,.25);
-        BlackWall.body.immovable = true;
-        BlackWall = walls.create(625, 360, 'Wall');
-        BlackWall.scale.setTo(.25,.25);
-        BlackWall.body.immovable = true;
+        
 
         //adding moveable walls
         //adding Push Walls (Green)
@@ -148,6 +132,9 @@ PlayGround.prototype={
         PinkWall = Pwalls.create(300, 240,'atlas', 'PinkWall');
         PinkWall.scale.setTo(2,16);
         PinkWall.body.collideWorldBounds=true;
+
+        //Twalls = game.add.group();
+
         
         //adding coins
         Coins = game.add.group();
@@ -162,123 +149,134 @@ PlayGround.prototype={
 
 // The update() method is called every frame
     update:function() {
-        //collision
-        //player collision
-        var hitBlackWalls=game.physics.arcade.collide(player, walls);
+    	game.physics.arcade.collide(player, Walllayer);
+        
+
+
+        // constantly fill the bitmap 
+        bitmap.context.fillStyle = 'rgb(100, 100, 100)';
+        bitmap.context.fillRect(0, 0, this.game.width, this.game.height);
+
+        // Player collision with all walls and coins
         var hitGwalls=game.physics.arcade.collide(player, Gwalls);
         var hitPwalls=game.physics.arcade.collide(player, Pwalls);
         var hitCoins=game.physics.arcade.overlap(player, Coins, collectCoin, null, this);
+<<<<<<< HEAD
         game.physics.arcade.collide(player, Walllayer);
+=======
+        var hitWalls = game.physics.arcade.overlap(player, Walllayer);
+        // if a coin was spawned in a wall, respawn the coin with new coordinates
+        
+>>>>>>> 5e1b7d2c026fd68ad2cbdb8bfb904b778b46f60b
  
         //green wall collision
-        var GwallHitWalls=game.physics.arcade.collide(Gwalls, walls);
+        var GwallHitWalls=game.physics.arcade.collide(Gwalls, Walllayer);
         var GwallHitGwall=game.physics.arcade.collide(Gwalls, Gwalls);
         //pink wall collision
-        var PwallHitWalls=game.physics.arcade.collide(Pwalls, walls);
+        var PwallHitWalls=game.physics.arcade.collide(Pwalls, Walllayer);
         var PwallhitPwall=game.physics.arcade.collide(Pwalls, Pwalls);
         //color wall collisions
         var PwallHitGwall=game.physics.arcade.collide(Pwalls, Gwalls);
 
         coinText.text="coins: "+coinsCollected;
 
+        // if a coin is in a wall, kill the coin and create a new one in its place
+        function respawnCoin( coin, walls ) {
+            coin.kill();
+            Coin = Coins.create(Math.random()*game.width,Math.random()*game.height,'atlas', 'Coin');
+            console.log('another coin was respawned');
+            respawnCoin = game.physics.arcade.overlap(Coin, walls, respawnCoin, null, this);
+        }
+
         function collectCoin(player, Coin){
         	CoinPU.play();
             Coin.kill();
             coinsCollected+=1;
         }
+
         function addGuard(){
-        	guard = new Guard(game, 'atlas', 'Enemy', 1, 0);
+        	guard = new Guard(game, 'atlas', 'Enemy', 1, 0, Math.random()*800+100,Math.random()*600+100);
         	game.add.existing(guard);
 			guards.add(guard);
         }
         //if all 5 coins are collected, the player pos is reset and another guard is spawned with 5 more coins.
         if(coinsCollected==5){
         	coinsCollected=0;
-        	player.body.x=30;
+        	player.body.x=75;
         	player.body.y=300;
         	addGuard();
         	for(var i =0; i<5; i++){
-            	var Coin = Coins.create(Math.random()*800,Math.random()*600,'atlas', 'Coin');
+            	var Coin = Coins.create(Math.random()*game.width,Math.random()*game.height,'atlas', 'Coin');
         	}
         }
         if(game.input.keyboard.justPressed(Phaser.Keyboard.G)){
             addGuard();
         }
         
-        
+        guards.forEach(function(guard){
+        	setFill(guard.x,guard.y);
+        },this);
 
 /*----------------------------------------------------------------------
                              Start of the Light Code
 ----------------------------------------------------------------------*/
+        function setFill(x,y){
+            var points=[];
+            for(var a = 0; a < Math.PI*2; a += Math.PI/360) {
+                // Create a ray from the light to a point on the circle
+                var ray = new Phaser.Line(x, y, x+Math.cos(a)*125, y+Math.sin(a)*125);
 
-        // Next, fill the entire light bitmap with a dark shadow color.
-        this.bitmap.context.fillStyle = 'rgb(100, 100, 100)';
-        this.bitmap.context.fillRect(0, 0, this.game.width, this.game.height);
+                // Check if the ray intersected any walls
+                var intersect = getWallIntersection(ray);
 
-        // Ray casting!
-        // Cast rays at intervals in a large circle around the light.
-        // Save all of the intersection points or ray end points if there was no intersection.
-        var points=[];
-        guards.forEach(function(guard){
-        for(var a = 0; a < Math.PI*2; a += Math.PI/360) {
-            // Create a ray from the light to a point on the circle
-            var ray = new Phaser.Line(guard.x, guard.y, guard.x+Math.cos(a)*125, guard.y+Math.sin(a)*125);
-
-            // Check if the ray intersected any walls
-            var intersect = getWallIntersection(ray);
-
-            // Save the intersection or the end of the ray
-            if (intersect) {
-                points.push(intersect);
-            } else {
-                points.push(ray.end);
+                // Save the intersection or the end of the ray
+                if (intersect) {
+                    points.push(intersect);
+                } else {
+                    points.push(ray.end);
+                }
             }
+            draw(points);
         }
-    });
-		
-        // Connect the dots and fill in the shape, which are cones of light,
-        // with a bright white color. When multiplied with the background,
-        // the white color will allow the full color of the background to
-        // shine through.
-
-        this.bitmap.context.beginPath();
-        this.bitmap.context.fillStyle = 'rgb(255, 255, 255)';
+            // Connect the dots and fill in the shape, which are cones of light,
+            // with a bright white color. When multiplied with the background,
+            // the white color will allow the full color of the background to
+            // shine through.
+        function draw(points){
+                bitmap.context.beginPath();
+                bitmap.context.fillStyle = 'rgb(255, 255, 255)';
 
 
-        //^^^THIS IS WHAT CAUSES THE LINE TO BE DRAWN FROM ONE GUARD TO ANOTHER^^^
+                for(var i = 0; i < points.length-1; i++) {
+                    bitmap.context.lineTo(points[i].x, points[i].y);
+                }
+                bitmap.context.closePath();
+                bitmap.context.fill();
 
-
-        for(var i = 0; i < points.length-1; i++) {
-            this.bitmap.context.lineTo(points[i].x, points[i].y);
+                // This just tells the engine it should update the texture cache
+                bitmap.dirty = true;
         }
-        this.bitmap.context.closePath();
-        this.bitmap.context.fill();
-
-        // This just tells the engine it should update the texture cache
-        this.bitmap.dirty = true;
-    }
-};
+    } // end of update function
+} // end of playground
 
 // Given a ray, this function iterates through all of the walls and
 // returns the closest wall intersection from the start of the ray
 // or null if the ray does not intersect any walls.
-
 function getWallIntersection (ray) {
         var distanceToWall = Number.POSITIVE_INFINITY;
         var closestIntersection = null;
 		
-		
-		
         // For each of the walls...
-        this.walls.forEach(function(wall) {
+        
+        /*function Walllayer (){
             // Create an array of lines that represent the four edges of each wall
             var lines = [
-                new Phaser.Line(wall.x, wall.y, wall.x + wall.width, wall.y),
-                new Phaser.Line(wall.x, wall.y, wall.x, wall.y + wall.height),
-                new Phaser.Line(wall.x + wall.width, wall.y,
-                    wall.x + wall.width, wall.y + wall.height),
-                new Phaser.Line(wall.x, wall.y + wall.height,
-                    wall.x + wall.width, wall.y + wall.height)
+                new Phaser.Line(Walllayer.x, Walllayer.y, Walllayer.x + Walllayer.width, Walllayer.y),
+                new Phaser.Line(Walllayer.x, Walllayer.y, Walllayer.x, Walllayer.y + Walllayer.height),
+                new Phaser.Line(Walllayer.x + Walllayer.width, Walllayer.y,
+                    Walllayer.x + Walllayer.width, Walllayer.y + Walllayer.height),
+                new Phaser.Line(Walllayer.x, Walllayer.y + Walllayer.height,
+                    Walllayer.x + Walllayer.width, Walllayer.y + Walllayer.height)
             ];
 
             // Test each of the edges in this wall against the ray.
@@ -295,7 +293,7 @@ function getWallIntersection (ray) {
                     }
                 }
             }
-        }, this);
+        }*/
         this.Gwalls.forEach(function(Gwall) {
             // Create an array of lines that represent the four edges of each wall
             var lines = [
@@ -367,7 +365,8 @@ GameOver.prototype={
     },
     create:function(){
         console.log('GameOver: create');
-        game.add.sprite(0,0,'atlas', 'GameOver');
+        OverScreen=game.add.sprite(0,0,'atlas', 'GameOver');
+        OverScreen.scale.setTo(1.28,1.34);
 
     },
     update:function(){
