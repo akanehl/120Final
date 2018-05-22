@@ -161,14 +161,12 @@ PlayGround.prototype={
         var hitGwalls=game.physics.arcade.collide(player, Gwalls);
         var hitPwalls=game.physics.arcade.collide(player, Pwalls);
         var hitCoins=game.physics.arcade.overlap(player, Coins, collectCoin, null, this);
-<<<<<<< HEAD
-        game.physics.arcade.collide(player, Walllayer);
-=======
+
+
         var hitWalls = game.physics.arcade.overlap(player, Walllayer);
         // if a coin was spawned in a wall, respawn the coin with new coordinates
         
->>>>>>> 5e1b7d2c026fd68ad2cbdb8bfb904b778b46f60b
- 
+
         //green wall collision
         var GwallHitWalls=game.physics.arcade.collide(Gwalls, Walllayer);
         var GwallHitGwall=game.physics.arcade.collide(Gwalls, Gwalls);
