@@ -1,6 +1,6 @@
- function Guard(game, key, frame, scale, rotation){
+ function Guard(game, key, frame, scale, rotation, x, y){
  	//Set up the sprite call for the guard
-	Phaser.Sprite.call(this, game, 300, 400, key, frame);
+	Phaser.Sprite.call(this, game, x, y, key, frame);
 
 	//Set up basic guard stats
 	this.anchor.set(0.5, 0.5);
@@ -25,7 +25,10 @@ Guard.prototype.constructor = Guard;
 Guard.prototype.update=function() {
 	guards.forEach(function(guard){
 	//Collision booleans for AI 
-	var GhitWalls=game.physics.arcade.collide(guard, walls);
+	//Has to be guards with an 's' if not in the guards.forEach loop
+	//because we want the whole group to collide, not just one
+	
+	var GhitWalls=game.physics.arcade.collide(guard, Walllayer);
 	var GhitPlayer=game.physics.arcade.collide(guard, player);
 	var GhitGwalls=game.physics.arcade.collide(guard, Gwalls);
 	var GhitPwalls=game.physics.arcade.collide(guard, Pwalls);
@@ -35,10 +38,9 @@ Guard.prototype.update=function() {
 		game.state.start('GameOver');
 	}
 	//Guard Chase AI
-        guards.forEach(function(guard){
         	var LoS= new Phaser.Line(guard.x, guard.y, player.x, player.y);
         	var LoSInter = getWallIntersection(LoS);
-        	if(LoSInter){
+        	if(LoSInter||LoS.length>127){
         		guard.chase=false;
         		if(guard.safe==false){
         			guard.safe=true;
@@ -55,7 +57,6 @@ Guard.prototype.update=function() {
         			console.log('alert');
         		}
         	}
-        }, this);
 	//AI for guard chase
 	if(guard.chase==true){
 		//Draw line between the guard and the player every frame
@@ -78,57 +79,33 @@ Guard.prototype.update=function() {
 				}
 				NOTE: Following are several cases that adjust based on which wall it is checking.*/
 				 
-			if(guard.body.x>700){
-				if(Math.abs(guard.angle-(-90))<Math.abs(guard.angle-(90))){
-					guard.body.angularVelocity=-60;
-				}
-				else if(Math.abs(guard.angle-(-90))>Math.abs(guard.angle-(90))){
-					guard.body.angularVelocity=60;
-				}
-				else{
-					guard.body.angularVelocity=0;
-				}
-			}else if(guard.body.x<100){
-				if(Math.abs(guard.angle-(-90))<Math.abs(guard.angle-(90))){
-					guard.body.angularVelocity=60;
-				}
-				else if(Math.abs(guard.angle-(-90))>Math.abs(guard.angle-(90))){
-					guard.body.angularVelocity=-60;
-				}
-				else{
-					guard.body.angularVelocity=0;
-				}
-			}else if(guard.body.y>500){
-				if(Math.abs(guard.angle-(180))<Math.abs(guard.angle-(0))){
-					guard.body.angularVelocity=60;
-				}
-				else if(Math.abs(guard.angle-(180))>Math.abs(guard.angle-(0))){
-					guard.body.angularVelocity=-60;
-				}
-				else{
-					guard.body.angularVelocity=0;
-				}
-			}else if(guard.body.y<100&&guard.body.x>100){
-				if(Math.abs(guard.angle-(-180))<Math.abs(guard.angle-(0))){
-					guard.body.angularVelocity=-60;
-				}
-				else if(Math.abs(guard.angle-(-180))>Math.abs(guard.angle-(0))){
-					guard.body.angularVelocity=60;
-				}
-				else if(guard.body.angle==180||-180)
-				{
-					guard.angle=90;
-				}else{
-					guard.body.angularVelocity=0;
-				}
-			}else if(GhitWalls){
-				guard.body.angularVelocity=100;
+		if(guard.body.x>game.width-100){
+			if(guard.angle<0){
+				guard.body.angularVelocity=-60;
 			}else{
-				guard.body.angularVelocity=0;
+				guard.body.angularVelocity=60;
 			}
-			if(GhitWalls){
-				guard.body.angularVelocity+=30;
+		}else if(guard.body.x<100){
+			if(guard.angle<0){
+				guard.body.angularVelocity=60;
+			}else{
+				guard.body.angularVelocity=-60;
 			}
+		}else if(guard.body.y>game.height-100){
+			if(guard.angle>90||guard.angle<-90){
+				guard.body.angularVelocity=60;
+			}else{
+				guard.body.angularVelocity=-60;
+			}
+		}else if(guard.body.x>game.width-100){
+			if(guard.angle<0){
+				guard.body.angularVelocity=-60;
+			}else{
+				guard.body.angularVelocity=60;
+			}
+		}else{
+			guard.body.angularVelocity=0;
+		}
 	}
 }, this);
 }
