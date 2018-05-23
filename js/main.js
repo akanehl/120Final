@@ -50,6 +50,7 @@ PlayGround.prototype={
         game.load.image('Wall', 'assets/img/pngformat/top-wall.png');
         game.load.tilemap('bank','assets/img/Bank.json',null, Phaser.Tilemap.TILED_JSON);
         game.load.image('tiles','assets/img/pngformat/TotalTileset.png');
+        game.load.atlas('camera', 'assets/img/camera.png', 'assets/img/camera.json');
     },
 
 
@@ -84,7 +85,7 @@ PlayGround.prototype={
         game.physics.startSystem(Phaser.Physics.ARCADE);
 
         //Create the player object
-        player = new Player(game, 'atlas', 'Player', 1, 0);
+        player = new Player(game, 'atlas', 'Player', 1, 0, 100, 350);
         players=game.add.group();
         game.add.existing(player);
         players.add(player);
@@ -124,16 +125,16 @@ PlayGround.prototype={
         //adding Push Walls (Green)
         Gwalls = game.add.group();
         Gwalls.enableBody = true;
-        GreenWall = Gwalls.create(360, 180,'atlas', 'GreenWall');
-        GreenWall.scale.setTo(10,2);
+        GreenWall = Gwalls.create(288, 200,'atlas', 'GreenWall');
+        GreenWall.scale.setTo(16,2);
         GreenWall.body.collideWorldBounds = true;
         GreenWall.body.drag.set(175);
-        GreenWall = Gwalls.create(360, game.height-188,'atlas', 'GreenWall');
-        GreenWall.scale.setTo(10,2);
+        GreenWall = Gwalls.create(288, 550, 'atlas', 'GreenWall');
+        GreenWall.scale.setTo(16,2);
         GreenWall.body.allowRotation=true;
         GreenWall.body.collideWorldBounds = true;
         GreenWall.body.drag.set(175);
-
+        
         //adding pink walls
         //Sliding walls (Pink)
         Pwalls = game.add.group();
@@ -142,6 +143,9 @@ PlayGround.prototype={
         PinkWall.scale.setTo(2,16);
         PinkWall.body.collideWorldBounds=true;
 
+        Cameras = game.add.group();
+        var camera = Cameras.create( 300, 300, 'camera');
+
         //Twalls = game.add.group();
 
         
@@ -149,7 +153,7 @@ PlayGround.prototype={
         Coins = game.add.group();
         Coins.enableBody=true;
         for(var i =0; i<5; i++){
-            var Coin = Coins.create(Math.random()*800,Math.random()*600,'atlas', 'Coin');
+            var Coin = Coins.create(game.rnd.integerInRange(150, 900),game.rnd.integerInRange(150, 700),'atlas', 'Coin');
         }
         //Update Coin display text
         coinText=game.add.text(16,16,'', {fontSize: '32px', fill:'#000'});
@@ -216,7 +220,7 @@ PlayGround.prototype={
         	player.body.y=300;
         	addGuard();
         	for(var i =0; i<5; i++){
-            	var Coin = Coins.create(Math.random()*game.width,Math.random()*game.height,'atlas', 'Coin');
+            	var Coin = Coins.create(game.rnd.integerInRange(150, 900),game.rnd.integerInRange(150, 700),'atlas', 'Coin');
         	}
         }
         if(game.input.keyboard.justPressed(Phaser.Keyboard.G)){
