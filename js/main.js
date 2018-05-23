@@ -222,6 +222,9 @@ PlayGround.prototype={
         if(game.input.keyboard.justPressed(Phaser.Keyboard.G)){
             addGuard();
         }
+        if(game.input.keyboard.justPressed(Phaser.Keyboard.C)){
+            coinsCollected+=1;
+        }
         
         guards.forEach(function(guard){
         	setFill(guard.x,guard.y);
