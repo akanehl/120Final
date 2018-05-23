@@ -43,6 +43,7 @@ var PlayGround = function(game) {};
 
 
 var map, Walllayer, Floorlayer;
+var camera;
 
 PlayGround.prototype={
     preload:function(){
@@ -51,6 +52,7 @@ PlayGround.prototype={
         game.load.tilemap('bank','assets/img/Bank.json',null, Phaser.Tilemap.TILED_JSON);
         game.load.image('tiles','assets/img/pngformat/TotalTileset.png');
         game.load.atlas('camera', 'assets/img/camera.png', 'assets/img/camera.json');
+        game.load.atlas('cameralight', 'assets/img/cameralight.png', 'assets/img/cameralight.json');
     },
 
 
@@ -134,7 +136,7 @@ PlayGround.prototype={
         GreenWall.body.allowRotation=true;
         GreenWall.body.collideWorldBounds = true;
         GreenWall.body.drag.set(175);
-        
+
         //adding pink walls
         //Sliding walls (Pink)
         Pwalls = game.add.group();
@@ -205,10 +207,20 @@ PlayGround.prototype={
             coinsCollected+=1;
         }
 
+        // should take x, y coordinates so we can manually place guards
         function addGuard(){
         	guard = new Guard(game, 'atlas', 'Enemy', 1, 0, Math.random()*800+100,Math.random()*600+100);
         	game.add.existing(guard);
 			guards.add(guard);
+        }
+
+        function addCamera(x,y) {
+            camera = game.add.sprite( x, y, 'camera');
+            var record = camera.animations.add('record');
+            camera.animations.play('record', 3, true);
+
+            
+
         }
         //if all 5 coins are collected, the player pos is reset and another guard is spawned with 5 more coins.
         if(coinsCollected==5){
@@ -228,6 +240,10 @@ PlayGround.prototype={
         }
         if(game.input.keyboard.justPressed(Phaser.Keyboard.C)){
             coinsCollected+=1;
+        }
+        
+        if(game.input.keyboard.justPressed(Phaser.Keyboard.S)){
+            addCamera(500,500);
         }
         
         guards.forEach(function(guard){
