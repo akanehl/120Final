@@ -17,6 +17,9 @@ Mainmenu.prototype ={
         game.load.audio('safe', 'assets/sound/Safe.mp3');
         game.load.audio('alert', 'assets/sound/Alert.mp3');
         game.load.audio('coinPU', 'assets/sound/CoinPickUp.mp3');
+        game.load.audio('level1', 'assets/sound/Level1.mp3');
+        game.load.audio('level2', 'assets/sound/Level2.mp3');
+        game.load.audio('rewind', 'assets/sound/Rewind.mp3');
     },
     create:function(){
         console.log('Mainmenu: create');
@@ -67,6 +70,12 @@ PlayGround.prototype={
         Alert = game.add.audio('alert');
     	Safe = game.add.audio('safe');
     	CoinPU = game.add.audio('coinPU');
+    	Level1 = game.add.audio('level1');
+    	Level2 = game.add.audio('level2');
+    	Rewind = game.add.audio('rewind');
+    	Level1.loop=true;
+    	Level2.loop=true;
+    	Level1.play();
 
         //Start arcade physics
         game.physics.startSystem(Phaser.Physics.ARCADE);
@@ -197,6 +206,9 @@ PlayGround.prototype={
         }
         //if all 5 coins are collected, the player pos is reset and another guard is spawned with 5 more coins.
         if(coinsCollected==5){
+        	Rewind.play();
+        	Level1.stop();
+        	Level2.play();
         	coinsCollected=0;
         	player.body.x=75;
         	player.body.y=300;

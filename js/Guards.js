@@ -34,6 +34,8 @@ Guard.prototype.update=function() {
 	var GhitPwalls=game.physics.arcade.collide(guard, Pwalls);
 
 	if(GhitPlayer){
+		Level1.stop();
+		Level2.stop();
 		//End game upon guard collision with player
 		game.state.start('GameOver');
 	}
