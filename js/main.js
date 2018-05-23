@@ -47,7 +47,6 @@ var map, Walllayer, Floorlayer;
 PlayGround.prototype={
     preload:function(){
         console.log('PlayGround: preload');
-        game.load.image('floor', 'assets/img/pngformat/floor.png');
         game.load.image('Wall', 'assets/img/pngformat/top-wall.png');
         game.load.tilemap('bank','assets/img/Bank.json',null, Phaser.Tilemap.TILED_JSON);
         game.load.image('tiles','assets/img/pngformat/TotalTileset.png');
@@ -62,10 +61,14 @@ PlayGround.prototype={
         map.addTilesetImage('TotalTileset','tiles');
         Floorlayer = map.createLayer('Floor');
         Walllayer = map.createLayer('Walls');
+
+        
+
         //the lower the second number is the better performance we have. 
         //but it has to. be high enough to include all the tiles we want collision with.
         //map.setCollisionBetween(1,THIS NUMBER, true, 'Walls');
         map.setCollisionBetween(1,28,true,'Walls');
+
 
         Alert = game.add.audio('alert');
     	Safe = game.add.audio('safe');
@@ -79,9 +82,6 @@ PlayGround.prototype={
 
         //Start arcade physics
         game.physics.startSystem(Phaser.Physics.ARCADE);
-
-        //adding background and immovable black walls
-        //game.add.image(0,0, 'atlas', 'GameBack');
 
         //Create the player object
         player = new Player(game, 'atlas', 'Player', 1, 0);
@@ -170,10 +170,12 @@ PlayGround.prototype={
         var hitGwalls=game.physics.arcade.collide(player, Gwalls);
         var hitPwalls=game.physics.arcade.collide(player, Pwalls);
         var hitCoins=game.physics.arcade.overlap(player, Coins, collectCoin, null, this);
+
+
         var hitWalls = game.physics.arcade.overlap(player, Walllayer);
         // if a coin was spawned in a wall, respawn the coin with new coordinates
         
- 
+
         //green wall collision
         var GwallHitWalls=game.physics.arcade.collide(Gwalls, Walllayer);
         var GwallHitGwall=game.physics.arcade.collide(Gwalls, Gwalls);
