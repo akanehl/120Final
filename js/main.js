@@ -208,7 +208,8 @@ PlayGround.prototype={
         //Update Coin display text
         coinText=game.add.text(16,16,'', {fontSize: '32px', fill:'#000'});
 		coinsCollected=0;
-		
+		door = game.add.sprite( -50, -50, 'door');
+        game.physics.arcade.enable(door);
 		
     },
 
@@ -229,8 +230,8 @@ PlayGround.prototype={
 
 
         var hitWalls = game.physics.arcade.overlap(player, Walllayer);
-        // if a coin was spawned in a wall, respawn the coin with new coordinates
-    
+        
+        var Pexit = game.physics.arcade.collide(player, door);
         
 
         //green wall collision
@@ -271,9 +272,7 @@ PlayGround.prototype={
             camera.animations.play('record', 3, true);
         }
 
-        function addDoor(x,y) {
-        	door = game.add.sprite( x, y, 'door');
-        }
+       
         function addExitArrow(x,y) {
         	exitArrow = game.add.sprite( x, y - 50, 'exitArrow');
            	var arrow = exitArrow.animations.add('arrow');
@@ -281,14 +280,24 @@ PlayGround.prototype={
         }
 
         if( level == 0 ) {
-        	doorX = 700;
-        	doorY = 700;
-        	addDoor(doorX,doorY);
-
-        	if(coinsCollected == 5) {
-        		addExitArrow(doorX,doorY);
-           	}
+        	door.x = 700;
+        	door.y = 700;
         }
+        	if(coinsCollected >= 5) {
+        		addExitArrow(door.x,door.y);
+                if(Pexit==true){
+                    Rewind.play();
+                    Level1.stop();
+                    Level2.play();
+                    coinsCollected=0;
+                    player.body.x=75;
+                    player.body.y=300;
+                    addGuard(300,200);
+                    for(var i =0; i<5; i++){
+                        var Coin = Coins.create(game.rnd.integerInRange(150, 900),game.rnd.integerInRange(150, 700),'atlas', 'Coin');
+                    }
+                }
+           	}
         if(coinsCollected == 5) {
 
         	
