@@ -87,7 +87,7 @@ Guard.prototype.update=function() {
 				guard.body.angularVelocity=60;
 			}
 		}else if(guard.body.x<128){
-			if(guard.angle<0){
+			if(guard.angle<0||guard.angle==180){
 				guard.body.angularVelocity=60;
 			}else{
 				guard.body.angularVelocity=-60;

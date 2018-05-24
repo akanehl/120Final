@@ -18,7 +18,7 @@ Mainmenu.prototype ={
         game.load.atlas('atlas', 'assets/img/atlas.png', 'assets/img/atlas.json');
 		game.load.atlas('MenuAtlas', 'assets/img/MenuSprites/menuSheet.png', 'assets/img/MenuSprites/menuSprites.json');
 		
-		game.load.image('Wall', 'assets/img/pngformat/top-wall.png');
+		game.load.image('Wall', 'assets/img/pngformat/Walls/topwall.png');
         game.load.tilemap('bank','assets/img/Bank.json',null, Phaser.Tilemap.TILED_JSON);
         game.load.image('tiles','assets/img/pngformat/TotalTileset.png');
         game.load.atlas('camera', 'assets/img/camera.png', 'assets/img/camera.json');
@@ -88,13 +88,13 @@ var PlayGround = function(game) {};
 var map, Walllayer, Floorlayer;
 var camera, exitArrow;
 var level = 0;
-var doorX, doorY;
+var isSign=false;
 
 PlayGround.prototype={
     preload:function(){
         console.log('PlayGround: preload');
 
-        game.load.image('Wall', 'assets/img/pngformat/top-wall.png');
+        game.load.image('Wall', 'assets/img/pngformat/Walls/topwall.png');
         game.load.tilemap('bank','assets/img/Bank.json',null, Phaser.Tilemap.TILED_JSON);
         game.load.image('tiles','assets/img/pngformat/TotalTileset.png');
         game.load.atlas('camera', 'assets/img/camera.png', 'assets/img/camera.json');
@@ -142,7 +142,7 @@ PlayGround.prototype={
 
         //Create the guards group
 		guards=game.add.group();
-        guard = new Guard(game, 'atlas', 'Enemy', 1, 0, 400, 500);
+        guard = new Guard(game, 'atlas', 'Enemy', 1, 0, 400, 400);
         game.add.existing(guard);
 		guards.add(guard);
 
@@ -210,7 +210,7 @@ PlayGround.prototype={
 		coinsCollected=0;
 		door = game.add.sprite( -50, -50, 'door');
         game.physics.arcade.enable(door);
-		
+		door.body.immovable=true;
     },
 
 // The update() method is called every frame
@@ -283,9 +283,19 @@ PlayGround.prototype={
         	door.x = 700;
         	door.y = 700;
         }
+
+        if(level == 1) {
+
+        }
+
         	if(coinsCollected >= 5) {
-        		addExitArrow(door.x,door.y);
+                if(!isSign){
+                    addExitArrow(door.x,door.y);
+                    isSign=true;
+                }
                 if(Pexit==true){
+                    exitArrow.kill();
+                    isSign=false;
                     Rewind.play();
                     Level1.stop();
                     Level2.play();
@@ -296,6 +306,7 @@ PlayGround.prototype={
                     for(var i =0; i<5; i++){
                         var Coin = Coins.create(game.rnd.integerInRange(150, 900),game.rnd.integerInRange(150, 700),'atlas', 'Coin');
                     }
+                    level += 1;
                 }
            	}
         if(coinsCollected == 5) {
@@ -330,7 +341,7 @@ PlayGround.prototype={
         }
         */
         if(game.input.keyboard.justPressed(Phaser.Keyboard.G)){
-            addGuard();
+            addGuard(500,500);
         }
         if(game.input.keyboard.justPressed(Phaser.Keyboard.C)){
             coinsCollected+=1;
