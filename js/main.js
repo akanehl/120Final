@@ -9,6 +9,7 @@ Light ray bug fixed
 var game = new Phaser.Game(1024,800,Phaser.AUTO);
 var coinsCollected=0;
 var coinText;
+
 var Mainmenu = function(game){};
 Mainmenu.prototype ={
     preload:function(){
@@ -43,7 +44,9 @@ var PlayGround = function(game) {};
 
 
 var map, Walllayer, Floorlayer;
-var camera;
+var camera, exitArrow;
+var level = 0;
+var doorX, doorY;
 
 PlayGround.prototype={
     preload:function(){
@@ -53,6 +56,8 @@ PlayGround.prototype={
         game.load.image('tiles','assets/img/pngformat/TotalTileset.png');
         game.load.atlas('camera', 'assets/img/camera.png', 'assets/img/camera.json');
         game.load.atlas('cameralight', 'assets/img/cameralight.png', 'assets/img/cameralight.json');
+        game.load.atlas('exitArrow', 'assets/img/ExitArrow.png', 'assets/img/ExitArrow.json');
+        game.load.atlas('door', 'assets/img/tempdoor.png', 'assets/img/tempdoor.json');
     },
 
 
@@ -145,10 +150,6 @@ PlayGround.prototype={
         PinkWall.scale.setTo(2,16);
         PinkWall.body.collideWorldBounds=true;
 
-        Cameras = game.add.group();
-        var camera = Cameras.create( 300, 300, 'camera');
-
-        //Twalls = game.add.group();
 
         
         //adding coins
@@ -180,6 +181,7 @@ PlayGround.prototype={
 
         var hitWalls = game.physics.arcade.overlap(player, Walllayer);
         // if a coin was spawned in a wall, respawn the coin with new coordinates
+    
         
 
         //green wall collision
@@ -208,8 +210,8 @@ PlayGround.prototype={
         }
 
         // should take x, y coordinates so we can manually place guards
-        function addGuard(){
-        	guard = new Guard(game, 'atlas', 'Enemy', 1, 0, Math.random()*800+100,Math.random()*600+100);
+        function addGuard(x,y){
+        	guard = new Guard(game, 'atlas', 'Enemy', 1, 0, x, y);
         	game.add.existing(guard);
 			guards.add(guard);
         }
@@ -218,10 +220,43 @@ PlayGround.prototype={
             camera = game.add.sprite( x, y, 'camera');
             var record = camera.animations.add('record');
             camera.animations.play('record', 3, true);
-
-            
-
         }
+
+        function addDoor(x,y) {
+        	door = game.add.sprite( x, y, 'door');
+        }
+        function addExitArrow(x,y) {
+        	exitArrow = game.add.sprite( x, y - 50, 'exitArrow');
+           	var arrow = exitArrow.animations.add('arrow');
+           	exitArrow.animations.play('arrow', 1, true);
+        }
+
+        if( level == 0 ) {
+        	doorX = 700;
+        	doorY = 700;
+        	addDoor(doorX,doorY);
+
+        	if(coinsCollected == 5) {
+        		addExitArrow(doorX,doorY);
+           	}
+        }
+        if(coinsCollected == 5) {
+
+        	
+        	/*
+        	Rewind.play();
+        	Level1.stop();
+        	Level2.play();
+        	coinsCollected=0;
+        	player.body.x=75;
+        	player.body.y=300;
+        	addGuard(300,200);
+        	for(var i =0; i<5; i++){
+            	var Coin = Coins.create(game.rnd.integerInRange(150, 900),game.rnd.integerInRange(150, 700),'atlas', 'Coin');
+        	}
+		*/
+        }
+        /*
         //if all 5 coins are collected, the player pos is reset and another guard is spawned with 5 more coins.
         if(coinsCollected==5){
         	Rewind.play();
@@ -235,6 +270,7 @@ PlayGround.prototype={
             	var Coin = Coins.create(game.rnd.integerInRange(150, 900),game.rnd.integerInRange(150, 700),'atlas', 'Coin');
         	}
         }
+        */
         if(game.input.keyboard.justPressed(Phaser.Keyboard.G)){
             addGuard();
         }
