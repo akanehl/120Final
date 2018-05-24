@@ -10,10 +10,19 @@ var game = new Phaser.Game(1024,800,Phaser.AUTO);
 var coinsCollected=0;
 var coinText;
 var Mainmenu = function(game){};
+var map, Floorlayer;
 Mainmenu.prototype ={
     preload:function(){
         console.log('Mainmenu: preload');
         game.load.atlas('atlas', 'assets/img/atlas.png', 'assets/img/atlas.json');
+		game.load.atlas('MenuAtlas', 'assets/img/MenuSprites/menuSheet.png', 'assets/img/MenuSprites/menuSprites.json');
+		
+		game.load.image('Wall', 'assets/img/pngformat/top-wall.png');
+        game.load.tilemap('bank','assets/img/Bank.json',null, Phaser.Tilemap.TILED_JSON);
+        game.load.image('tiles','assets/img/pngformat/TotalTileset.png');
+        game.load.atlas('camera', 'assets/img/camera.png', 'assets/img/camera.json');
+        game.load.atlas('cameralight', 'assets/img/cameralight.png', 'assets/img/cameralight.json');
+		
         game.load.audio('safe', 'assets/sound/Safe.mp3');
         game.load.audio('alert', 'assets/sound/Alert.mp3');
         game.load.audio('coinPU', 'assets/sound/CoinPickUp.mp3');
@@ -23,12 +32,45 @@ Mainmenu.prototype ={
     },
     create:function(){
         console.log('Mainmenu: create');
-        MainMenu=game.add.sprite(0,0,'atlas', 'Menu');
-        MainMenu.scale.setTo(1.28,1.34);
+        selected=0;
+        map = game.add.tilemap('bank');
+        map.addTilesetImage('TotalTileset','tiles');
+        Floorlayer = map.createLayer('Floor');
+		MenuGroup = game.add.group();
+		GameName=MenuGroup.create(47,100,'MenuAtlas', 'GameName');
+		Play=MenuGroup.create(50,200, 'MenuAtlas', 'Play');
+		Credits=MenuGroup.create(49,250, 'MenuAtlas', 'Credits');
+		Coin=MenuGroup.create(25, 225,'atlas','Coin');
+		Controls=MenuGroup.create(48,400, 'MenuAtlas', 'Controls');
+		textStyle={
+			font:'Character',
+			fontSize:25,
+			fill: '#ffffff',
+		};
+		controlsText= game.add.text(48,450, 'Arrow Keys to move things \n Spacebar to do things', textStyle);
     },
     update:function(){
-        if(game.input.keyboard.isDown(Phaser.Keyboard.SPACEBAR)){
-            game.state.start('PlayGround');
+    	if(game.input.keyboard.justPressed(Phaser.Keyboard.UP)){
+            if(selected>0){
+            	selected--;
+            	Coin.y-=50;
+            }
+        }
+        if(game.input.keyboard.justPressed(Phaser.Keyboard.DOWN)){
+            if(selected<1){
+            	selected++;
+            	Coin.y+=50
+            }
+        }
+        if(game.input.keyboard.justPressed(Phaser.Keyboard.SPACEBAR)){
+            if(selected==0){
+            	game.state.start('PlayGround');
+            }else if(selected==1){
+            	console.log('credits');
+            }else{
+            	console.log('error with selected');
+            }
+            
         }
     }
 }
@@ -48,11 +90,7 @@ var camera;
 PlayGround.prototype={
     preload:function(){
         console.log('PlayGround: preload');
-        game.load.image('Wall', 'assets/img/pngformat/top-wall.png');
-        game.load.tilemap('bank','assets/img/Bank.json',null, Phaser.Tilemap.TILED_JSON);
-        game.load.image('tiles','assets/img/pngformat/TotalTileset.png');
-        game.load.atlas('camera', 'assets/img/camera.png', 'assets/img/camera.json');
-        game.load.atlas('cameralight', 'assets/img/cameralight.png', 'assets/img/cameralight.json');
+        
     },
 
 
@@ -133,7 +171,6 @@ PlayGround.prototype={
         GreenWall.body.drag.set(175);
         GreenWall = Gwalls.create(288, 550, 'atlas', 'GreenWall');
         GreenWall.scale.setTo(16,2);
-        GreenWall.body.allowRotation=true;
         GreenWall.body.collideWorldBounds = true;
         GreenWall.body.drag.set(175);
 
@@ -146,7 +183,6 @@ PlayGround.prototype={
         PinkWall.body.collideWorldBounds=true;
 
         Cameras = game.add.group();
-        var camera = Cameras.create( 300, 300, 'camera');
 
         //Twalls = game.add.group();
 
@@ -160,6 +196,8 @@ PlayGround.prototype={
         //Update Coin display text
         coinText=game.add.text(16,16,'', {fontSize: '32px', fill:'#000'});
 		coinsCollected=0;
+		
+		
     },
 
 // The update() method is called every frame
@@ -243,52 +281,20 @@ PlayGround.prototype={
         }
         
         if(game.input.keyboard.justPressed(Phaser.Keyboard.S)){
-            addCamera(500,500);
+           addCamera(500,500); 
         }
         
-        guards.forEach(function(guard){
-        	setFill(guard.x,guard.y);
-        },this);
+
 
 /*----------------------------------------------------------------------
                              Start of the Light Code
 ----------------------------------------------------------------------*/
-        function setFill(x,y){
-            var points=[];
-            for(var a = 0; a < Math.PI*2; a += Math.PI/360) {
-                // Create a ray from the light to a point on the circle
-                var ray = new Phaser.Line(x, y, x+Math.cos(a)*125, y+Math.sin(a)*125);
-
-                // Check if the ray intersected any walls
-                var intersect = getWallIntersection(ray);
-
-                // Save the intersection or the end of the ray
-                if (intersect) {
-                    points.push(intersect);
-                } else {
-                    points.push(ray.end);
-                }
-            }
-            draw(points);
-        }
+        
             // Connect the dots and fill in the shape, which are cones of light,
             // with a bright white color. When multiplied with the background,
             // the white color will allow the full color of the background to
             // shine through.
-        function draw(points){
-                bitmap.context.beginPath();
-                bitmap.context.fillStyle = 'rgb(255, 255, 255)';
-
-
-                for(var i = 0; i < points.length-1; i++) {
-                    bitmap.context.lineTo(points[i].x, points[i].y);
-                }
-                bitmap.context.closePath();
-                bitmap.context.fill();
-
-                // This just tells the engine it should update the texture cache
-                bitmap.dirty = true;
-        }
+        
     } // end of update function
 } // end of playground
 
@@ -300,33 +306,6 @@ function getWallIntersection (ray) {
         var closestIntersection = null;
 		
         // For each of the walls...
-        
-        /*function Walllayer (){
-            // Create an array of lines that represent the four edges of each wall
-            var lines = [
-                new Phaser.Line(Walllayer.x, Walllayer.y, Walllayer.x + Walllayer.width, Walllayer.y),
-                new Phaser.Line(Walllayer.x, Walllayer.y, Walllayer.x, Walllayer.y + Walllayer.height),
-                new Phaser.Line(Walllayer.x + Walllayer.width, Walllayer.y,
-                    Walllayer.x + Walllayer.width, Walllayer.y + Walllayer.height),
-                new Phaser.Line(Walllayer.x, Walllayer.y + Walllayer.height,
-                    Walllayer.x + Walllayer.width, Walllayer.y + Walllayer.height)
-            ];
-
-            // Test each of the edges in this wall against the ray.
-            // If the ray intersects any of the edges then the wall must be in the way.
-            for(var i = 0; i < lines.length; i++) {
-                var intersect = Phaser.Line.intersects(ray, lines[i]);
-                if (intersect) {
-                    // Find the closest intersection
-                    distance =
-                        this.game.math.distance(ray.start.x, ray.start.y, intersect.x, intersect.y);
-                    if (distance < distanceToWall) {
-                        distanceToWall = distance;
-                        closestIntersection = intersect;
-                    }
-                }
-            }
-        }*/
         this.Gwalls.forEach(function(Gwall) {
             // Create an array of lines that represent the four edges of each wall
             var lines = [
@@ -379,6 +358,7 @@ function getWallIntersection (ray) {
                 }
             }
         }, this);
+        
          return closestIntersection;
      }
 

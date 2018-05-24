@@ -16,7 +16,6 @@
 	this.body.collideWorldBounds = true;
 	this.body.allowRotation=true;
 }
-
 //Override the guard constructor
 Guard.prototype = Object.create(Phaser.Sprite.prototype);
 Guard.prototype.constructor = Guard;
@@ -81,25 +80,25 @@ Guard.prototype.update=function() {
 				}
 				NOTE: Following are several cases that adjust based on which wall it is checking.*/
 				 
-		if(guard.body.x>game.width-100){
+		if(guard.body.x>game.width-128){
 			if(guard.angle<0){
 				guard.body.angularVelocity=-60;
 			}else{
 				guard.body.angularVelocity=60;
 			}
-		}else if(guard.body.x<100){
+		}else if(guard.body.x<128){
 			if(guard.angle<0){
 				guard.body.angularVelocity=60;
 			}else{
 				guard.body.angularVelocity=-60;
 			}
-		}else if(guard.body.y>game.height-100){
+		}else if(guard.body.y>game.height-128){
 			if(guard.angle>90||guard.angle<-90){
 				guard.body.angularVelocity=60;
 			}else{
 				guard.body.angularVelocity=-60;
 			}
-		}else if(guard.body.x>game.width-100){
+		}else if(guard.body.y<128){
 			if(guard.angle<0){
 				guard.body.angularVelocity=-60;
 			}else{
@@ -109,6 +108,75 @@ Guard.prototype.update=function() {
 			guard.body.angularVelocity=0;
 		}
 	}
+	
+	setFill(guard.x,guard.y);
+	
 }, this);
+//camera start here
+setFillCamera(516,510);
+if(game.input.keyboard.justPressed(Phaser.Keyboard.SPACEBAR)){
+	guards.remove(guards.children[1]);
+}
+function setFillCamera(x,y){
+			var PointPush=false;
+            var points=[];
+            for(var a = x-100; a < x+100; a++) {
+                // Create a ray from the light to a point on the circle
+                var ray = new Phaser.Line(x, y, a, y-257);
+
+                // Check if the ray intersected any walls
+                var intersect = getWallIntersection(ray);
+
+                // Save the intersection or the end of the ray
+                if (intersect) {
+                if(PointPush==false){
+                    	points.push(ray.start);
+                    	PointPush=true;
+                    }
+                    points.push(intersect);
+                } else {
+                if(PointPush==false){
+                    	points.push(ray.start);
+                    	PointPush=true;
+                    }
+                    points.push(ray.end);
+                    
+                }
+            }
+            
+            draw(points);
+        }
+function setFill(x,y){
+            var points=[];
+            for(var a = 0; a < Math.PI*2; a += Math.PI/360) {
+                // Create a ray from the light to a point on the circle
+                var ray = new Phaser.Line(x, y, x+Math.cos(a)*125, y+Math.sin(a)*125);
+
+                // Check if the ray intersected any walls
+                var intersect = getWallIntersection(ray);
+
+                // Save the intersection or the end of the ray
+                if (intersect) {
+                    points.push(intersect);
+                } else {
+                    points.push(ray.end);
+                }
+            }
+            draw(points);
+        }
+		function draw(points){
+                bitmap.context.beginPath();
+                bitmap.context.fillStyle = 'rgb(255, 255, 255)';
+
+
+                for(var i = 0; i < points.length-1; i++) {
+                    bitmap.context.lineTo(points[i].x, points[i].y);
+                }
+                bitmap.context.closePath();
+                bitmap.context.fill();
+
+                // This just tells the engine it should update the texture cache
+                bitmap.dirty = true;
+        }
 }
 
