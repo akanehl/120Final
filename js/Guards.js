@@ -37,6 +37,7 @@ Guard.prototype.update=function() {
 		Level2.stop();
 		//End game upon guard collision with player
 		game.state.start('GameOver');
+		coinsCollected = 0;
 	}
 	//Guard Chase AI
         	var LoS= new Phaser.Line(guard.x, guard.y, player.x, player.y);

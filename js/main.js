@@ -90,6 +90,7 @@ var map, Walllayer, Floorlayer;
 var camera, exitArrow;
 var level = 0;
 var isSign=false;
+var coinReset = false;
 
 PlayGround.prototype={
     preload:function(){
@@ -115,8 +116,6 @@ PlayGround.prototype={
         map.addTilesetImage('TotalTileset','tiles');
         Floorlayer = map.createLayer('Floor');
         Walllayer = map.createLayer('Walls');
-
-        
 
         //the lower the second number is the better performance we have. 
         //but it has to. be high enough to include all the tiles we want collision with.
@@ -151,10 +150,6 @@ PlayGround.prototype={
 
 		
 
-        // Add the light
-
-        // Set the pivot point of the light to the center of the texture
-
         // Create a bitmap texture for drawing light cones
         bitmap = this.game.add.bitmapData(this.game.width, this.game.height);
         bitmap.context.fillStyle = 'rgb(255, 255, 255)';
@@ -179,7 +174,7 @@ PlayGround.prototype={
         NormWall = NormalWalls.create(400, 400,'wallAtlas', 'shortwall');
 
         */
-        
+
         //adding moveable walls
         //adding Push Walls (Green)
         Gwalls = game.add.group();
@@ -201,19 +196,16 @@ PlayGround.prototype={
         PinkWall.scale.setTo(2,16);
         PinkWall.body.collideWorldBounds=true;
 
-
         Cameras = game.add.group();
-
-        //Twalls = game.add.group();
-
-
         
         //adding coins
         Coins = game.add.group();
         Coins.enableBody=true;
+        /*
         for(var i =0; i<5; i++){
             var Coin = Coins.create(game.rnd.integerInRange(150, 900),game.rnd.integerInRange(150, 700),'coin');
         }
+        */
         //Update Coin display text
         coinText=game.add.text(16,16,'', {fontSize: '32px', fill:'#000'});
 		coinsCollected=0;
@@ -225,8 +217,6 @@ PlayGround.prototype={
 // The update() method is called every frame
     update:function() {
     	game.physics.arcade.collide(player, Walllayer);
-        
-
 
         // constantly fill the bitmap 
         bitmap.context.fillStyle = 'rgb(100, 100, 100)';
@@ -237,12 +227,10 @@ PlayGround.prototype={
         var hitPwalls=game.physics.arcade.collide(player, Pwalls);
         var hitCoins=game.physics.arcade.overlap(player, Coins, collectCoin, null, this);
 
-
         var hitWalls = game.physics.arcade.overlap(player, Walllayer);
         
         var Pexit = game.physics.arcade.collide(player, door);
         
-
         //green wall collision
         var GwallHitWalls=game.physics.arcade.collide(Gwalls, Walllayer);
         var GwallHitGwall=game.physics.arcade.collide(Gwalls, Gwalls);
@@ -262,6 +250,7 @@ PlayGround.prototype={
             respawnCoin = game.physics.arcade.overlap(Coin, walls, respawnCoin, null, this);
         }
 
+        // when the player collects a coin, play a sound, kill coin, update score
         function collectCoin(player, Coin){
         	CoinPU.play();
             Coin.kill();
@@ -275,81 +264,187 @@ PlayGround.prototype={
 			guards.add(guard);
         }
 
+        // places camera animation/sprite at x and y
         function addCamera(x,y) {
             camera = game.add.sprite( x, y, 'camera');
             var record = camera.animations.add('record');
             camera.animations.play('record', 3, true);
         }
 
-       
+         // places arrow animation/sprite at x and y, above the door       
         function addExitArrow(x,y) {
-        	exitArrow = game.add.sprite( x, y - 50, 'exitArrow');
+        	exitArrow = game.add.sprite( x+1, y - 100, 'exitArrow');
            	var arrow = exitArrow.animations.add('arrow');
            	exitArrow.animations.play('arrow', 1, true);
         }
 
+        function addCoin(x,y) {
+            Coin = Coins.create( x,y, 'atlas', 'Coin');
+        }
+
+        // tutorial level
         if( level == 0 ) {
+            // set new door coordinates
         	door.x = 700;
         	door.y = 700;
-            
-        }
 
-        if(level == 1) {
-
-        }
-
-        	if(coinsCollected >= 5) {
+            // if 5 coins are collected
+            if(coinsCollected >= 5) {
+                //  if sign doesn't exist, add the exit arrow animation and set the isSign var true
                 if(!isSign){
                     addExitArrow(door.x,door.y);
                     isSign=true;
                 }
+                //  if the player collides with the door, event Pexit becomes true, level resets
                 if(Pexit==true){
+                    coinReset = true;
+                    // kill the arrow exit
                     exitArrow.kill();
+                    // set isSign to false
                     isSign=false;
+                    // play rewind sound
                     Rewind.play();
+                    // stop level1 music
                     Level1.stop();
+                    // play level2 music
                     Level2.play();
+                    // set coinsCollected to 0
                     coinsCollected=0;
+                    // set new player coordinates
                     player.body.x=75;
                     player.body.y=300;
-                    addGuard(300,200);
+                    // add a guard at these coordinates
+                    //addGuard(300,200);
+                    // generate 5 random coins
+                    /*
                     for(var i =0; i<5; i++){
                         var Coin = Coins.create(game.rnd.integerInRange(150, 900),game.rnd.integerInRange(150, 700),'atlas', 'Coin');
                     }
+                    */
+
+                    // increase the level
                     level += 1;
                 }
-           	}
-        if(coinsCollected == 5) {
+            }
+        }   // end of level 0
 
-        	
-        	/*
-        	Rewind.play();
-        	Level1.stop();
-        	Level2.play();
-        	coinsCollected=0;
-        	player.body.x=75;
-        	player.body.y=300;
-        	addGuard(300,200);
-        	for(var i =0; i<5; i++){
-            	var Coin = Coins.create(game.rnd.integerInRange(150, 900),game.rnd.integerInRange(150, 700),'atlas', 'Coin');
-        	}
-		*/
-        }
-        /*
-        //if all 5 coins are collected, the player pos is reset and another guard is spawned with 5 more coins.
-        if(coinsCollected==5){
-        	Rewind.play();
-        	Level1.stop();
-        	Level2.play();
-        	coinsCollected=0;
-        	player.body.x=75;
-        	player.body.y=300;
-        	addGuard();
-        	for(var i =0; i<5; i++){
-            	var Coin = Coins.create(game.rnd.integerInRange(150, 900),game.rnd.integerInRange(150, 700),'atlas', 'Coin');
-        	}
-        }
-        */
+        if( level == 1 ) {
+            if(coinReset == true) {
+                console.log('coin');
+                coinReset = false;
+            }
+            // if 5 coins are collected
+            if(coinsCollected >= 5) {
+                //  if sign doesn't exist, add the exit arrow animation and set the isSign var true
+                if(!isSign){
+                    addExitArrow(door.x,door.y);
+                    isSign=true;
+                }
+                //  if the player collides with the door, event Pexit becomes true, level resets
+                if(Pexit==true){
+                    coinReset = true;
+                    // kill the arrow exit
+                    exitArrow.kill();
+                    // set isSign to false
+                    isSign=false;
+                    // play rewind sound
+                    Rewind.play();
+                    // stop level1 music
+                    Level1.stop();
+                    // play level2 music
+                    Level2.play();
+                    // set coinsCollected to 0
+                    coinsCollected=0;
+                    // set new player coordinates
+                    player.body.x=75;
+                    player.body.y=300;
+                    // add a guard at these coordinates
+                    addGuard(300,200);
+                    // generate 5 random coins
+                    for(var i =0; i<5; i++){
+                        var Coin = Coins.create(game.rnd.integerInRange(150, 900),game.rnd.integerInRange(150, 700),'atlas', 'Coin');
+                    }
+                    // increase the level
+                    level += 1;
+                }
+            }
+        }   // end of level 1
+
+        if( level == 2 ) {
+            // if 5 coins are collected
+            if(coinsCollected >= 5) {
+                //  if sign doesn't exist, add the exit arrow animation and set the isSign var true
+                if(!isSign){
+                    addExitArrow(door.x,door.y);
+                    isSign=true;
+                }
+                //  if the player collides with the door, event Pexit becomes true, level resets
+                if(Pexit==true){
+                    // kill the arrow exit
+                    exitArrow.kill();
+                    // set isSign to false
+                    isSign=false;
+                    // play rewind sound
+                    Rewind.play();
+                    // stop level1 music
+                    Level1.stop();
+                    // play level2 music
+                    Level2.play();
+                    // set coinsCollected to 0
+                    coinsCollected=0;
+                    // set new player coordinates
+                    player.body.x=75;
+                    player.body.y=300;
+                    // add a guard at these coordinates
+                    addGuard(500,400);
+                    // generate 5 random coins
+                    for(var i =0; i<5; i++){
+                        var Coin = Coins.create(game.rnd.integerInRange(150, 900),game.rnd.integerInRange(150, 700),'atlas', 'Coin');
+                    }
+                    // increase the level
+                    level += 1;
+                }
+            }
+        }   // end of level 2
+
+        if( level == 3 ) {
+            // if 5 coins are collected
+            if(coinsCollected >= 5) {
+                //  if sign doesn't exist, add the exit arrow animation and set the isSign var true
+                if(!isSign){
+                    addExitArrow(door.x,door.y);
+                    isSign=true;
+                }
+                //  if the player collides with the door, event Pexit becomes true, level resets
+                if(Pexit==true){
+                    // kill the arrow exit
+                    exitArrow.kill();
+                    // set isSign to false
+                    isSign=false;
+                    // play rewind sound
+                    Rewind.play();
+                    // stop level1 music
+                    Level1.stop();
+                    // play level2 music
+                    Level2.play();
+                    // set coinsCollected to 0
+                    coinsCollected=0;
+                    // set new player coordinates
+                    player.body.x=75;
+                    player.body.y=300;
+                    // add a guard at these coordinates
+                    addGuard(800,600);
+                    // generate 5 random coins
+                    for(var i =0; i<5; i++){
+                        var Coin = Coins.create(game.rnd.integerInRange(150, 900),game.rnd.integerInRange(150, 700),'atlas', 'Coin');
+                    }
+                    // increase the level
+                    level += 1;
+                }
+            }
+        }   // end of level 2
+
+       
         if(game.input.keyboard.justPressed(Phaser.Keyboard.G)){
             addGuard(500,500);
         }
