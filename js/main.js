@@ -23,6 +23,7 @@ Mainmenu.prototype ={
         game.load.image('tiles','assets/img/pngformat/TotalTileset.png');
         game.load.atlas('camera', 'assets/img/camera.png', 'assets/img/camera.json');
         game.load.atlas('cameralight', 'assets/img/cameralight.png', 'assets/img/cameralight.json');
+        //game.load.image('player','assets/img/pngformat/player.png');
 		
         game.load.audio('safe', 'assets/sound/Safe.mp3');
         game.load.audio('alert', 'assets/sound/Alert.mp3');
@@ -100,7 +101,9 @@ PlayGround.prototype={
         game.load.atlas('camera', 'assets/img/camera.png', 'assets/img/camera.json');
         game.load.atlas('cameralight', 'assets/img/cameralight.png', 'assets/img/cameralight.json');
         game.load.atlas('exitArrow', 'assets/img/ExitArrow.png', 'assets/img/ExitArrow.json');
-        game.load.atlas('door', 'assets/img/tempdoor.png', 'assets/img/tempdoor.json');
+        game.load.image('door', 'assets/img/pngformat/door.png');
+        game.load.image('coin', 'assets/img/pngformat/coin.png');
+        game.load.atlas('wallAtlas', 'assets/img/wallatlas.png', 'assets/img/wallatlas.json');
     },
 
 
@@ -170,7 +173,13 @@ PlayGround.prototype={
 
         //Create generic game walls before the sprites are ready
         
+        /*
+        NormWalls = game.add.group();
+        NormWalls.enableBody = true;
+        NormWall = NormalWalls.create(400, 400,'wallAtlas', 'shortwall');
 
+        */
+        
         //adding moveable walls
         //adding Push Walls (Green)
         Gwalls = game.add.group();
@@ -203,7 +212,7 @@ PlayGround.prototype={
         Coins = game.add.group();
         Coins.enableBody=true;
         for(var i =0; i<5; i++){
-            var Coin = Coins.create(game.rnd.integerInRange(150, 900),game.rnd.integerInRange(150, 700),'atlas', 'Coin');
+            var Coin = Coins.create(game.rnd.integerInRange(150, 900),game.rnd.integerInRange(150, 700),'coin');
         }
         //Update Coin display text
         coinText=game.add.text(16,16,'', {fontSize: '32px', fill:'#000'});
@@ -282,6 +291,7 @@ PlayGround.prototype={
         if( level == 0 ) {
         	door.x = 700;
         	door.y = 700;
+            
         }
 
         if(level == 1) {
