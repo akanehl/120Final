@@ -286,6 +286,7 @@ PlayGround.prototype={
         }
 
         function spawnTutorialWalls() {
+            console.log('creating tutorial walls');
             var Ltopwall = solidWalls.create(62, 190, 'wallAtlas','shortwalUDl');
             Ltopwall.scale.setTo(1.18,1);
             var Lbotwall = solidWalls.create(62, 512, 'wallAtlas','shortwall');
@@ -303,11 +304,14 @@ PlayGround.prototype={
             // set new door coordinates
         	door.x = 700;
         	door.y = 700;
-            /*
+            
             if (tutorialWallsExist == false) {
                 spawnTutorialWalls();
-                //spawnTutorialWalls = true;
-            }*/
+                tutorialWallsExist = true;
+                for(var i =0; i<5; i++){
+                        var Coin = Coins.create(game.rnd.integerInRange(150, 900),game.rnd.integerInRange(150, 700),'atlas', 'Coin');
+                    }
+            }
             
             // if 5 coins are collected
             if(coinsCollected >= 5) {
@@ -338,11 +342,11 @@ PlayGround.prototype={
                     // add a guard at these coordinates
                     //addGuard(300,200);
                     // generate 5 random coins
-                    /*
+                    
                     for(var i =0; i<5; i++){
                         var Coin = Coins.create(game.rnd.integerInRange(150, 900),game.rnd.integerInRange(150, 700),'atlas', 'Coin');
                     }
-                    */
+                    
 
                     // increase the level
                     level += 1;
