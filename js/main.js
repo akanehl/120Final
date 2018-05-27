@@ -90,7 +90,8 @@ var map, Walllayer, Floorlayer;
 var camera, exitArrow;
 var level = 0;
 var isSign=false;
-var coinReset = false;
+var newLevel = false;
+var tutorialWallsExist = false;
 
 PlayGround.prototype={
     preload:function(){
@@ -175,6 +176,7 @@ PlayGround.prototype={
 
         */
 
+
         //adding moveable walls
         //adding Push Walls (Green)
         Gwalls = game.add.group();
@@ -197,6 +199,7 @@ PlayGround.prototype={
         PinkWall.body.collideWorldBounds=true;
 
         Cameras = game.add.group();
+        solidWalls = game.add.group();
         
         //adding coins
         Coins = game.add.group();
@@ -282,22 +285,41 @@ PlayGround.prototype={
             Coin = Coins.create( x,y, 'atlas', 'Coin');
         }
 
+        function spawnTutorialWalls() {
+            var Ltopwall = solidWalls.create(62, 190, 'wallAtlas','shortwalUDl');
+            Ltopwall.scale.setTo(1.18,1);
+            var Lbotwall = solidWalls.create(62, 512, 'wallAtlas','shortwall');
+            Lbotwall.scale.setTo(1.18,1);
+            var Mtopwall = solidWalls.create(417, 190, 'wallAtlas', 'shortwalUDl');
+            var Mbotwall = solidWalls.create(417, 512, 'wallAtlas', 'shortwall');
+            var Rtopwall = solidWalls.create(737, 190, 'wallAtlas', 'shortwalUDl');
+            Rtopwall.scale.setTo(1.17,1);
+            var Rbotwall = solidWalls.create(737, 512, 'wallAtlas', 'shortwall');
+            Rbotwall.scale.setTo(1.17,1);
+        }
+
         // tutorial level
         if( level == 0 ) {
             // set new door coordinates
         	door.x = 700;
         	door.y = 700;
-
+            /*
+            if (tutorialWallsExist == false) {
+                spawnTutorialWalls();
+                //spawnTutorialWalls = true;
+            }*/
+            
             // if 5 coins are collected
             if(coinsCollected >= 5) {
                 //  if sign doesn't exist, add the exit arrow animation and set the isSign var true
                 if(!isSign){
                     addExitArrow(door.x,door.y);
                     isSign=true;
+                    spawnTutorialWalls();
                 }
                 //  if the player collides with the door, event Pexit becomes true, level resets
                 if(Pexit==true){
-                    coinReset = true;
+                    newLevel = true;
                     // kill the arrow exit
                     exitArrow.kill();
                     // set isSign to false
@@ -329,9 +351,9 @@ PlayGround.prototype={
         }   // end of level 0
 
         if( level == 1 ) {
-            if(coinReset == true) {
-                console.log('coin');
-                coinReset = false;
+            if(newLevel == true) {
+                console.log('This is level 1');
+                newLevel = false;
             }
             // if 5 coins are collected
             if(coinsCollected >= 5) {
@@ -453,9 +475,9 @@ PlayGround.prototype={
         }
         
         if(game.input.keyboard.justPressed(Phaser.Keyboard.S)){
+           
            addCamera(500,500); 
-        }
-        
+        }        
 
 
 /*----------------------------------------------------------------------
@@ -478,6 +500,33 @@ function getWallIntersection (ray) {
         var closestIntersection = null;
 		
         // For each of the walls...
+        this.solidWalls.forEach(function(solidWall) {
+            // Create an array of lines that represent the four edges of each wall
+            var lines = [
+                new Phaser.Line(solidWall.x, solidWall.y, solidWall.x + solidWall.width, solidWall.y),
+                new Phaser.Line(solidWall.x, solidWall.y, solidWall.x, solidWall.y + solidWall.height),
+                new Phaser.Line(solidWall.x + solidWall.width, solidWall.y,
+                    solidWall.x + solidWall.width, solidWall.y + solidWall.height),
+                new Phaser.Line(solidWall.x, solidWall.y + solidWall.height,
+                    solidWall.x + solidWall.width, solidWall.y + solidWall.height)
+            ];
+
+            // Test each of the edges in this wall against the ray.
+            // If the ray intersects any of the edges then the wall must be in the way.
+            for(var i = 0; i < lines.length; i++) {
+                var intersect = Phaser.Line.intersects(ray, lines[i]);
+                if (intersect) {
+                    // Find the closest intersection
+                    distance =
+                        this.game.math.distance(ray.start.x, ray.start.y, intersect.x, intersect.y);
+                    if (distance < distanceToWall) {
+                        distanceToWall = distance;
+                        closestIntersection = intersect;
+                    }
+                }
+            }
+        }, this);
+
         this.Gwalls.forEach(function(Gwall) {
             // Create an array of lines that represent the four edges of each wall
             var lines = [
