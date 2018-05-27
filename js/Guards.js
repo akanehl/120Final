@@ -118,7 +118,9 @@ Guard.prototype.update=function() {
 	
 }, this);
 //camera start here
-setFillCamera(516,510);
+cameras.forEach(function(camera){
+	setFillCamera(camera.x+15,camera.y+3);
+},this);
 if(game.input.keyboard.justPressed(Phaser.Keyboard.SPACEBAR)){
 	guards.remove(guards.children[1]);
 }
