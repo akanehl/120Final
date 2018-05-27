@@ -149,6 +149,8 @@ PlayGround.prototype={
         game.add.existing(guard);
 		guards.add(guard);
 
+        cameras=game.add.group();
+
 		
 
         // Create a bitmap texture for drawing light cones
@@ -272,6 +274,7 @@ PlayGround.prototype={
             camera = game.add.sprite( x, y, 'camera');
             var record = camera.animations.add('record');
             camera.animations.play('record', 3, true);
+            cameras.add(camera);
         }
 
          // places arrow animation/sprite at x and y, above the door       
@@ -334,7 +337,7 @@ PlayGround.prototype={
                     Level1.stop();
                     // play level2 music
                     Level2.play();
-                    // set coinsCollected to 0
+                    // set coinsCollected to 0t
                     coinsCollected=0;
                     // set new player coordinates
                     player.body.x=75;
@@ -468,7 +471,7 @@ PlayGround.prototype={
                     level += 1;
                 }
             }
-        }   // end of level 2
+        }   // end of level 3
 
        
         if(game.input.keyboard.justPressed(Phaser.Keyboard.G)){
