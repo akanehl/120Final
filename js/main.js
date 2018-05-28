@@ -20,9 +20,12 @@ Mainmenu.prototype ={
 		
 		game.load.image('Wall', 'assets/img/pngformat/Walls/topwall.png');
         game.load.tilemap('bank','assets/img/Bank.json',null, Phaser.Tilemap.TILED_JSON);
+        game.load.image('floor', 'assets/img/pngformat/floor.png');
         game.load.image('tiles','assets/img/pngformat/TotalTileset.png');
         game.load.atlas('camera', 'assets/img/camera.png', 'assets/img/camera.json');
         game.load.atlas('cameralight', 'assets/img/cameralight.png', 'assets/img/cameralight.json');
+        game.load.image('door', 'assets/img/pngformat/door.png');
+        game.load.atlas('exitArrow', 'assets/img/ExitArrow.png', 'assets/img/ExitArrow.json');
         //game.load.image('player','assets/img/pngformat/player.png');
 		
         game.load.audio('safe', 'assets/sound/Safe.mp3');
@@ -34,45 +37,93 @@ Mainmenu.prototype ={
     },
     create:function(){
         console.log('Mainmenu: create');
+        move=true;
+        game.add.tileSprite(0,0,game.width,game.height,'floor');
+
+        //create sprites that run around in the background
+        fakePlayer=game.add.sprite( 300, 400, 'atlas', 'Player');
+        fakeGuard=game.add.sprite(400,300, 'atlas', 'Enemy');
+        game.physics.arcade.enable(fakeGuard);
+        game.physics.arcade.enable(fakePlayer);
+        fakePlayer.anchor.setTo(.5,.5);
+        MenuDoor=game.add.sprite(700,740, 'door');
+        game.physics.arcade.enable(MenuDoor);
+
+
+
         selected=0;
-        map = game.add.tilemap('bank');
-        map.addTilesetImage('TotalTileset','tiles');
-        Floorlayer = map.createLayer('Floor');
-		MenuGroup = game.add.group();
-		GameName=MenuGroup.create(47,100,'MenuAtlas', 'GameName');
-		Play=MenuGroup.create(50,200, 'MenuAtlas', 'Play');
-		Credits=MenuGroup.create(49,250, 'MenuAtlas', 'Credits');
-		Coin=MenuGroup.create(25, 225,'atlas','Coin');
-		Controls=MenuGroup.create(48,400, 'MenuAtlas', 'Controls');
-		textStyle={
+		Coin=game.add.sprite(375, 225,'atlas','Coin');
+        game.physics.arcade.enable(Coin);
+
+		
+		ControlsStyle={
 			font:'Character',
 			fontSize:25,
-			fill: '#ffffff',
 		};
-		controlsText= game.add.text(48,450, 'Arrow Keys to move things \n Spacebar to do things', textStyle);
+        GameNameStyle={
+            font:'Character',
+            fontSize:75,
+        };
+        MenuStyle={
+            font:'Character',
+            fontSize:50,
+        };
+        GameName=game.add.text(325, 110, 'Coin Thief',GameNameStyle);
+        PlayText=game.add.text(420, 200, 'Play',MenuStyle);
+        CreditsText=game.add.text(400,260, 'Credits', MenuStyle);
+		controlsText= game.add.text(400,450, 'Controls\nArrow Keys to move things \nSpacebar to do things', ControlsStyle);
     },
     update:function(){
-    	if(game.input.keyboard.justPressed(Phaser.Keyboard.UP)){
-            if(selected>0){
-            	selected--;
-            	Coin.y-=50;
+        coinCollide=game.physics.arcade.collide(fakePlayer, Coin);
+        playerExitDoor=game.physics.arcade.collide(fakePlayer, MenuDoor);
+        if(move){
+        	if(game.input.keyboard.justPressed(Phaser.Keyboard.UP)){
+                if(selected>0){
+                	selected--;
+                	Coin.y-=60;
+                }
             }
         }
-        if(game.input.keyboard.justPressed(Phaser.Keyboard.DOWN)){
-            if(selected<1){
-            	selected++;
-            	Coin.y+=50
+        if(move){
+            if(game.input.keyboard.justPressed(Phaser.Keyboard.DOWN)){
+                if(selected<1){
+                	selected++;
+                	Coin.y+=60
+                }
             }
         }
-        if(game.input.keyboard.justPressed(Phaser.Keyboard.SPACEBAR)){
-            if(selected==0){
-            	game.state.start('PlayGround');
-            }else if(selected==1){
-            	console.log('credits');
-            }else{
-            	console.log('error with selected');
+        if(move){
+            if(game.input.keyboard.justPressed(Phaser.Keyboard.SPACEBAR)){
+                if(selected==0){
+                    move=false;
+                    line=new Phaser.Line(fakePlayer.body.x,fakePlayer.body.y,Coin.body.x,Coin.body.y);
+                    //Update the fakePlayers angle to the line
+                    fakePlayer.angle=(line.angle/Math.PI)*180;
+                    fakePlayer.body.velocity.copyFrom(game.physics.arcade.velocityFromAngle(fakePlayer.angle, 130));
+                    
+
+                	//game.state.start('PlayGround');
+                }else if(selected==1){
+                	console.log('credits');
+                }else{
+                	console.log('error with selected');
+                }
+                
             }
-            
+        }
+        if(coinCollide){
+            console.log('collide');
+            Coin.kill();
+            exitArrow = game.add.sprite( MenuDoor.body.x+1, MenuDoor.body.y - 100, 'exitArrow');
+            var arrow = exitArrow.animations.add('arrow');
+            exitArrow.animations.play('arrow', 1, true);
+            line1=new Phaser.Line(fakePlayer.body.x,fakePlayer.body.y,MenuDoor.x,MenuDoor.y);
+            //Update the fakePlayers angle to the line
+            fakePlayer.angle=(line1.angle/Math.PI)*180;
+            fakePlayer.body.velocity.copyFrom(game.physics.arcade.velocityFromAngle(fakePlayer.angle, 130));
+        }
+        if(playerExitDoor){
+            game.state.start('PlayGround');
         }
     }
 }
@@ -102,8 +153,8 @@ PlayGround.prototype={
         game.load.image('tiles','assets/img/pngformat/TotalTileset.png');
         game.load.atlas('camera', 'assets/img/camera.png', 'assets/img/camera.json');
         game.load.atlas('cameralight', 'assets/img/cameralight.png', 'assets/img/cameralight.json');
-        game.load.atlas('exitArrow', 'assets/img/ExitArrow.png', 'assets/img/ExitArrow.json');
-        game.load.image('door', 'assets/img/pngformat/door.png');
+        
+        
         game.load.image('coin', 'assets/img/pngformat/coin.png');
         game.load.atlas('wallAtlas', 'assets/img/wallatlas.png', 'assets/img/wallatlas.json');
     },
