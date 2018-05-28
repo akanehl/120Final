@@ -154,7 +154,6 @@ PlayGround.prototype={
         game.load.atlas('camera', 'assets/img/camera.png', 'assets/img/camera.json');
         game.load.atlas('cameralight', 'assets/img/cameralight.png', 'assets/img/cameralight.json');
         
-        
         game.load.image('coin', 'assets/img/pngformat/coin.png');
         game.load.atlas('wallAtlas', 'assets/img/wallatlas.png', 'assets/img/wallatlas.json');
     },
@@ -376,34 +375,34 @@ PlayGround.prototype={
                     spawnTutorialWalls();
                 }
                 //  if the player collides with the door, event Pexit becomes true, level resets
-                if(Pexit==true){
-                    newLevel = true;
-                    // kill the arrow exit
-                    exitArrow.kill();
-                    // set isSign to false
-                    isSign=false;
-                    // play rewind sound
-                    Rewind.play();
-                    // stop level1 music
-                    Level1.stop();
-                    // play level2 music
-                    Level2.play();
-                    // set coinsCollected to 0t
-                    coinsCollected=0;
-                    // set new player coordinates
-                    player.body.x=75;
-                    player.body.y=300;
-                    // add a guard at these coordinates
-                    //addGuard(300,200);
-                    // generate 5 random coins
+            if(Pexit==true){
+                newLevel = true;
+                // kill the arrow exit
+                exitArrow.kill();
+                // set isSign to false
+                isSign=false;
+                // play rewind sound
+                Rewind.play();
+                // stop level1 music
+                Level1.stop();
+                // play level2 music
+                Level2.play();
+                // set coinsCollected to 0t
+                coinsCollected=0;
+                // set new player coordinates
+                player.body.x=75;
+                player.body.y=300;
+                // add a guard at these coordinates
+                //addGuard(300,200);
+                // generate 5 random coins
                     
-                    for(var i =0; i<5; i++){
-                        var Coin = Coins.create(game.rnd.integerInRange(150, 900),game.rnd.integerInRange(150, 700),'atlas', 'Coin');
-                    }
-                    
+                for(var i =0; i<5; i++){
+                    var Coin = Coins.create(game.rnd.integerInRange(150, 900),game.rnd.integerInRange(150, 700),'atlas', 'Coin');
+                }
+                
 
-                    // increase the level
-                    level += 1;
+                // increase the level
+                level += 1;
                 }
             }
         }   // end of level 0

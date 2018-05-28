@@ -33,10 +33,32 @@ Guard.prototype.update=function() {
 	var GhitPwalls=game.physics.arcade.collide(guard, Pwalls);
 
 	if(GhitPlayer){
+		Coins.callAll('kill');
 		Level1.stop();
 		Level2.stop();
+		if(level<0){
+			level-=1;
+		}
+		for(var i =0; i<5; i++){
+            var Coin = Coins.create(game.rnd.integerInRange(150, 900),game.rnd.integerInRange(150, 700),'atlas', 'Coin');
+        }
+        // kill the arrow exit
+            exitArrow.kill();
+            // set isSign to false
+            isSign=false;
+            // play rewind sound
+            Rewind.play();
+            // stop level1 music
+            Level1.stop();
+            // play level2 music
+            Level2.play();
+            // set coinsCollected to 0t
+            coinsCollected=0;
+            // set new player coordinates
+            player.body.x=75;
+            player.body.y=300;
 		//End game upon guard collision with player
-		game.state.start('GameOver');
+		//game.state.start('GameOver');
 		coinsCollected = 0;
 		newLevel = true;
 		if(level == 0) {
