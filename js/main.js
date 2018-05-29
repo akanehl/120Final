@@ -17,13 +17,11 @@ Mainmenu.prototype ={
         console.log('Mainmenu: preload');
         game.load.atlas('atlas', 'assets/img/atlas.png', 'assets/img/atlas.json');
 		game.load.atlas('MenuAtlas', 'assets/img/MenuSprites/menuSheet.png', 'assets/img/MenuSprites/menuSprites.json');
-		
 		game.load.image('Wall', 'assets/img/pngformat/Walls/topwall.png');
         game.load.tilemap('bank','assets/img/Bank.json',null, Phaser.Tilemap.TILED_JSON);
         game.load.image('floor', 'assets/img/pngformat/floor.png');
         game.load.image('tiles','assets/img/pngformat/TotalTileset.png');
         game.load.atlas('camera', 'assets/img/camera.png', 'assets/img/camera.json');
-        game.load.atlas('cameralight', 'assets/img/cameralight.png', 'assets/img/cameralight.json');
         game.load.image('door', 'assets/img/pngformat/door.png');
         game.load.atlas('exitArrow', 'assets/img/ExitArrow.png', 'assets/img/ExitArrow.json');
         //game.load.image('player','assets/img/pngformat/player.png');
@@ -220,14 +218,6 @@ PlayGround.prototype={
         lightBitmap.blendMode = Phaser.blendModes.MULTIPLY;
 
         //Create generic game walls before the sprites are ready
-        
-        /*
-        NormWalls = game.add.group();
-        NormWalls.enableBody = true;
-        NormWall = NormalWalls.create(400, 400,'wallAtlas', 'shortwall');
-
-        */
-
 
         //adding moveable walls
         //adding Push Walls (Green)
@@ -251,8 +241,19 @@ PlayGround.prototype={
         PinkWall.body.collideWorldBounds=true;
 
         Cameras = game.add.group();
-        solidWalls = game.add.group();
+        Swalls = game.add.group();
         
+        var Ltopwall = Swalls.create(62, 190, 'wallAtlas','shortwalUDl');
+        Ltopwall.scale.setTo(1.18,1);
+        var Lbotwall = Swalls.create(62, 512, 'wallAtlas','shortwall');
+        Lbotwall.scale.setTo(1.18,1);
+        var Mtopwall = Swalls.create(417, 190, 'wallAtlas', 'shortwalUDl');
+        var Mbotwall = Swalls.create(417, 512, 'wallAtlas', 'shortwall');
+        var Rtopwall = Swalls.create(737, 190, 'wallAtlas', 'shortwalUDl');
+        Rtopwall.scale.setTo(1.17,1);
+        var Rbotwall = Swalls.create(737, 512, 'wallAtlas', 'shortwall');
+        Rbotwall.scale.setTo(1.17,1);
+
         //adding coins
         Coins = game.add.group();
         Coins.enableBody=true;
@@ -267,6 +268,8 @@ PlayGround.prototype={
 		door = game.add.sprite( -50, -50, 'door');
         game.physics.arcade.enable(door);
 		door.body.immovable=true;
+
+
     },
 
 // The update() method is called every frame
@@ -338,26 +341,12 @@ PlayGround.prototype={
             Coin = Coins.create( x,y, 'atlas', 'Coin');
         }
 
-        function spawnTutorialWalls() {
-            console.log('creating tutorial walls');
-            var Ltopwall = solidWalls.create(62, 190, 'wallAtlas','shortwalUDl');
-            Ltopwall.scale.setTo(1.18,1);
-            var Lbotwall = solidWalls.create(62, 512, 'wallAtlas','shortwall');
-            Lbotwall.scale.setTo(1.18,1);
-            var Mtopwall = solidWalls.create(417, 190, 'wallAtlas', 'shortwalUDl');
-            var Mbotwall = solidWalls.create(417, 512, 'wallAtlas', 'shortwall');
-            var Rtopwall = solidWalls.create(737, 190, 'wallAtlas', 'shortwalUDl');
-            Rtopwall.scale.setTo(1.17,1);
-            var Rbotwall = solidWalls.create(737, 512, 'wallAtlas', 'shortwall');
-            Rbotwall.scale.setTo(1.17,1);
-        }
-
         // tutorial level
         if( level == 0 ) {
             // set new door coordinates
         	door.x = 700;
         	door.y = 700;
-            
+            /*
             if (tutorialWallsExist == false) {
                 spawnTutorialWalls();
                 tutorialWallsExist = true;
@@ -365,14 +354,14 @@ PlayGround.prototype={
                         var Coin = Coins.create(game.rnd.integerInRange(150, 900),game.rnd.integerInRange(150, 700),'atlas', 'Coin');
                     }
             }
-            
+            */
             // if 5 coins are collected
             if(coinsCollected >= 5) {
                 //  if sign doesn't exist, add the exit arrow animation and set the isSign var true
-                if(!isSign){
+                if(isSign == false ){
                     addExitArrow(door.x,door.y);
                     isSign=true;
-                    spawnTutorialWalls();
+                    //spawnTutorialWalls();
                 }
                 //  if the player collides with the door, event Pexit becomes true, level resets
             if(Pexit==true){
@@ -399,55 +388,17 @@ PlayGround.prototype={
                 for(var i =0; i<5; i++){
                     var Coin = Coins.create(game.rnd.integerInRange(150, 900),game.rnd.integerInRange(150, 700),'atlas', 'Coin');
                 }
+
                 
 
                 // increase the level
                 level += 1;
+                game.state.start('Level1')
                 }
             }
         }   // end of level 0
 
-        if( level == 1 ) {
-            if(newLevel == true) {
-                console.log('This is level 1');
-                newLevel = false;
-            }
-            // if 5 coins are collected
-            if(coinsCollected >= 5) {
-                //  if sign doesn't exist, add the exit arrow animation and set the isSign var true
-                if(!isSign){
-                    addExitArrow(door.x,door.y);
-                    isSign=true;
-                }
-                //  if the player collides with the door, event Pexit becomes true, level resets
-                if(Pexit==true){
-                    coinReset = true;
-                    // kill the arrow exit
-                    exitArrow.kill();
-                    // set isSign to false
-                    isSign=false;
-                    // play rewind sound
-                    Rewind.play();
-                    // stop level1 music
-                    Level1.stop();
-                    // play level2 music
-                    Level2.play();
-                    // set coinsCollected to 0
-                    coinsCollected=0;
-                    // set new player coordinates
-                    player.body.x=75;
-                    player.body.y=300;
-                    // add a guard at these coordinates
-                    addGuard(300,200);
-                    // generate 5 random coins
-                    for(var i =0; i<5; i++){
-                        var Coin = Coins.create(game.rnd.integerInRange(150, 900),game.rnd.integerInRange(150, 700),'atlas', 'Coin');
-                    }
-                    // increase the level
-                    level += 1;
-                }
-            }
-        }   // end of level 1
+        
 
         if( level == 2 ) {
             // if 5 coins are collected
@@ -535,6 +486,12 @@ PlayGround.prototype={
            
            addCamera(500,500); 
         }        
+        if(game.input.keyboard.justPressed(Phaser.Keyboard.L)){
+            skipToLevel1();
+        }
+        function skipToLevel1() {
+            game.state.start('Level1');
+        }
 
 
 /*----------------------------------------------------------------------
@@ -557,15 +514,15 @@ function getWallIntersection (ray) {
         var closestIntersection = null;
 		
         // For each of the walls...
-        this.solidWalls.forEach(function(solidWall) {
+        this.Swalls.forEach(function(Swall) {
             // Create an array of lines that represent the four edges of each wall
             var lines = [
-                new Phaser.Line(solidWall.x, solidWall.y, solidWall.x + solidWall.width, solidWall.y),
-                new Phaser.Line(solidWall.x, solidWall.y, solidWall.x, solidWall.y + solidWall.height),
-                new Phaser.Line(solidWall.x + solidWall.width, solidWall.y,
-                    solidWall.x + solidWall.width, solidWall.y + solidWall.height),
-                new Phaser.Line(solidWall.x, solidWall.y + solidWall.height,
-                    solidWall.x + solidWall.width, solidWall.y + solidWall.height)
+                new Phaser.Line(Swall.x, Swall.y, Swall.x + Swall.width, Swall.y),
+                new Phaser.Line(Swall.x, Swall.y, Swall.x, Swall.y + Swall.height),
+                new Phaser.Line(Swall.x + Swall.width, Swall.y,
+                    Swall.x + Swall.width, Swall.y + Swall.height),
+                new Phaser.Line(Swall.x, Swall.y + Swall.height,
+                    Swall.x + Swall.width, Swall.y + Swall.height)
             ];
 
             // Test each of the edges in this wall against the ray.
@@ -669,6 +626,8 @@ GameOver.prototype={
 game.state.add('Mainmenu', Mainmenu);
 game.state.add('PlayGround', PlayGround);
 game.state.add('GameOver', GameOver);
+//game.state.add('Level1', Level1);
+
 game.state.start('Mainmenu');
 
 
