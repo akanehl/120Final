@@ -31,6 +31,7 @@ Guard.prototype.update=function() {
 	var GhitPlayer=game.physics.arcade.collide(guard, player);
 	var GhitGwalls=game.physics.arcade.collide(guard, Gwalls);
 	var GhitPwalls=game.physics.arcade.collide(guard, Pwalls);
+	var GhitSwalls=game.physics.arcade.collide(guard, Swalls);
 
 	if(GhitPlayer){
 		Coins.callAll('kill');

@@ -34,7 +34,7 @@ Level1.prototype={
     },
     create:function(){
         console.log('Level1: create');
-        //game.stage.backgroundColor = "#4488AA";
+        game.stage.backgroundColor = "#4488AA";
 
         //Start arcade physics
         game.physics.startSystem(Phaser.Physics.ARCADE);
@@ -135,14 +135,6 @@ Level1.prototype={
 
         coinText.text="coins: "+coinsCollected;
 
-        // if a coin is in a wall, kill the coin and create a new one in its place
-        function respawnCoin( coin, walls ) {
-            coin.kill();
-            Coin = Coins.create(Math.random()*game.width,Math.random()*game.height,'atlas', 'Coin');
-            console.log('another coin was respawned');
-            respawnCoin = game.physics.arcade.overlap(Coin, walls, respawnCoin, null, this);
-        }
-
         // when the player collects a coin, play a sound, kill coin, update score
         function collectCoin(player, Coin){
         	CoinPU.play();
@@ -164,9 +156,6 @@ Level1.prototype={
            	exitArrow.animations.play('arrow', 1, true);
         }
 
-        function addCoin(x,y) {
-            Coin = Coins.create( x,y, 'atlas', 'Coin');
-        }
 
         if( level == 1 ) {
             if(newLevel == true) {
@@ -196,8 +185,52 @@ Level1.prototype={
                     // set coinsCollected to 0
                     coinsCollected=0;
                     // set new player coordinates
-                    player.body.x=75;
-                    player.body.y=300;
+                    player.body.x=125;
+                    player.body.y=125;
+                    // add a guard at these coordinates
+                    addGuard(300,200);
+                    // generate 5 coins
+					Coin = Coins.create(game.rnd.integerInRange(150, 900),game.rnd.integerInRange(150, 700),'atlas', 'coin');
+					Coin = Coins.create(game.rnd.integerInRange(150, 900),game.rnd.integerInRange(150, 700),'atlas', 'coin');
+					Coin = Coins.create(game.rnd.integerInRange(150, 900),game.rnd.integerInRange(150, 700),'atlas', 'coin');
+					Coin = Coins.create(game.rnd.integerInRange(150, 900),game.rnd.integerInRange(150, 700),'atlas', 'coin');
+					Coin = Coins.create(game.rnd.integerInRange(150, 900),game.rnd.integerInRange(150, 700),'atlas', 'coin');
+                    // increase the level
+                    level += 1;
+                }
+            }
+        }   // end of level 1
+
+        if( level == 2 ) {
+            if(newLevel == true) {
+                console.log('This is level 2');
+                newLevel = false;
+            }
+            // if 5 coins are collected
+            if(coinsCollected >= 5) {
+                //  if sign doesn't exist, add the exit arrow animation and set the isSign var true
+                if(!isSign){
+                    addExitArrow(door.x,door.y);
+                    isSign=true;
+                }
+                //  if the player collides with the door, event Pexit becomes true, level resets
+                if(Pexit==true){
+                    coinReset = true;
+                    // kill the arrow exit
+                    exitArrow.kill();
+                    // set isSign to false
+                    isSign=false;
+                    // play rewind sound
+                    Rewind.play();
+                    // stop level1 music
+                    Level1.stop();
+                    // play level2 music
+                    Level2.play();
+                    // set coinsCollected to 0
+                    coinsCollected=0;
+                    // set new player coordinates
+                    player.body.x=125;
+                    player.body.y=125;
                     // add a guard at these coordinates
                     addGuard(300,200);
                     // generate 5 random coins

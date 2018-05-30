@@ -166,11 +166,12 @@ PlayGround.prototype={
         Floorlayer = map.createLayer('Floor');
         Walllayer = map.createLayer('Walls');
 
+
+
         //the lower the second number is the better performance we have. 
         //but it has to. be high enough to include all the tiles we want collision with.
         //map.setCollisionBetween(1,THIS NUMBER, true, 'Walls');
         map.setCollisionBetween(1,28,true,'Walls');
-
 
         Alert = game.add.audio('alert');
     	Safe = game.add.audio('safe');
@@ -186,14 +187,14 @@ PlayGround.prototype={
         game.physics.startSystem(Phaser.Physics.ARCADE);
 
         //Create the player object
-        player = new Player(game, 'atlas', 'Player', 1, 0, 100, 350);
+        player = new Player(game, 'atlas', 'Player', 1, 0, 100, 400);
         players=game.add.group();
         game.add.existing(player);
         players.add(player);
 
         //Create the guards group
 		guards=game.add.group();
-        guard = new Guard(game, 'atlas', 'Enemy', 1, 0, 400, 400);
+        guard = new Guard(game, 'atlas', 'Enemy', 1, 0, 900, 650);
         game.add.existing(guard);
 		guards.add(guard);
 
@@ -257,19 +258,20 @@ PlayGround.prototype={
         //adding coins
         Coins = game.add.group();
         Coins.enableBody=true;
-        /*
-        for(var i =0; i<5; i++){
-            var Coin = Coins.create(game.rnd.integerInRange(150, 900),game.rnd.integerInRange(150, 700),'coin');
-        }
-        */
+
+        // tutorial levels coins
+        var Coin = Coins.create(200,350,'coin');	// middle left coin
+        Coin = Coins.create(150,650,'coin');		// bot left coin
+        Coin = Coins.create(150,80,'coin');			// top left coin
+        Coin = Coins.create(900,80,'coin');			// top right coin
+        Coin = Coins.create(850,350,'coin');		// mid right coin
+
         //Update Coin display text
         coinText=game.add.text(16,16,'', {fontSize: '32px', fill:'#000'});
 		coinsCollected=0;
 		door = game.add.sprite( -50, -50, 'door');
         game.physics.arcade.enable(door);
 		door.body.immovable=true;
-
-
     },
 
 // The update() method is called every frame
@@ -299,14 +301,6 @@ PlayGround.prototype={
         var PwallHitGwall=game.physics.arcade.collide(Pwalls, Gwalls);
 
         coinText.text="coins: "+coinsCollected;
-
-        // if a coin is in a wall, kill the coin and create a new one in its place
-        function respawnCoin( coin, walls ) {
-            coin.kill();
-            Coin = Coins.create(Math.random()*game.width,Math.random()*game.height,'atlas', 'Coin');
-            console.log('another coin was respawned');
-            respawnCoin = game.physics.arcade.overlap(Coin, walls, respawnCoin, null, this);
-        }
 
         // when the player collects a coin, play a sound, kill coin, update score
         function collectCoin(player, Coin){
@@ -346,15 +340,7 @@ PlayGround.prototype={
             // set new door coordinates
         	door.x = 700;
         	door.y = 700;
-            /*
-            if (tutorialWallsExist == false) {
-                spawnTutorialWalls();
-                tutorialWallsExist = true;
-                for(var i =0; i<5; i++){
-                        var Coin = Coins.create(game.rnd.integerInRange(150, 900),game.rnd.integerInRange(150, 700),'atlas', 'Coin');
-                    }
-            }
-            */
+
             // if 5 coins are collected
             if(coinsCollected >= 5) {
                 //  if sign doesn't exist, add the exit arrow animation and set the isSign var true
