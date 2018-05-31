@@ -94,6 +94,10 @@ Mainmenu.prototype ={
         if(move){
             if(game.input.keyboard.justPressed(Phaser.Keyboard.SPACEBAR)){
                 if(selected==0){
+                    //get rid of this when game is ready
+                    game.state.start('PlayGround');
+                    //^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                    
                     move=false;
                     line=new Phaser.Line(fakePlayer.body.x,fakePlayer.body.y,Coin.body.x,Coin.body.y);
                     //Update the fakePlayers angle to the line
