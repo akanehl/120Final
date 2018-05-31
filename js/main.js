@@ -9,6 +9,7 @@ Light ray bug fixed
 var game = new Phaser.Game(1024,800,Phaser.AUTO);
 var coinsCollected=0;
 var coinText;
+var Swalls;
 
 var Mainmenu = function(game){};
 var map, Floorlayer;
@@ -198,9 +199,6 @@ PlayGround.prototype={
         game.add.existing(guard);
 		guards.add(guard);
 
-        cameras=game.add.group();
-
-		
 
         // Create a bitmap texture for drawing light cones
         bitmap = this.game.add.bitmapData(this.game.width, this.game.height);
@@ -243,6 +241,7 @@ PlayGround.prototype={
 
         Cameras = game.add.group();
         Swalls = game.add.group();
+        Swalls.enableBody = true;
         
         var Ltopwall = Swalls.create(62, 190, 'wallAtlas','shortwalUDl');
         Ltopwall.scale.setTo(1.18,1);
@@ -282,10 +281,11 @@ PlayGround.prototype={
         bitmap.context.fillStyle = 'rgb(100, 100, 100)';
         bitmap.context.fillRect(0, 0, this.game.width, this.game.height);
 
-        // Player collision with all walls and coins
+        // Player collision with all walls and coins 
         var hitGwalls=game.physics.arcade.collide(player, Gwalls);
         var hitPwalls=game.physics.arcade.collide(player, Pwalls);
         var hitCoins=game.physics.arcade.overlap(player, Coins, collectCoin, null, this);
+        var hitSwalls = game.physics.arcade.overlap(player, Swalls);
 
         var hitWalls = game.physics.arcade.overlap(player, Walllayer);
         
