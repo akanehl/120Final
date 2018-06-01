@@ -97,7 +97,7 @@ Mainmenu.prototype ={
                     //get rid of this when game is ready
                     game.state.start('PlayGround');
                     //^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-                    
+
                     move=false;
                     line=new Phaser.Line(fakePlayer.body.x,fakePlayer.body.y,Coin.body.x,Coin.body.y);
                     //Update the fakePlayers angle to the line
@@ -492,10 +492,18 @@ PlayGround.prototype={
             // with a bright white color. When multiplied with the background,
             // the white color will allow the full color of the background to
             // shine through.
-        
+        debug();
     } // end of update function
+    
 } // end of playground
-
+function debug(){
+    game.debug.spriteInfo(guard, 32, 32);
+    game.debug.text('velc' + game.physics.arcade.velocityFromAngle(guard.angle, 60), 32, 168);
+    game.debug.text('angularVelocity: ' + guard.body.angularVelocity, 32, 200);
+    game.debug.text('angularAcceleration: ' + guard.body.angularAcceleration, 32, 232);
+    game.debug.text('angularDrag: ' + guard.body.angularDrag, 32, 264);
+    game.debug.text('deltaZ: ' + guard.body.deltaZ(), 32, 296);
+    }
 // Given a ray, this function iterates through all of the walls and
 // returns the closest wall intersection from the start of the ray
 // or null if the ray does not intersect any walls.
