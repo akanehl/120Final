@@ -1,4 +1,4 @@
- function Guard(game, key, frame, scale, rotation, x, y){
+621a1cc94bf3b40eef573a8a9d3d69bd60bd5fbbfunction Guard(game, key, frame, scale, rotation, x, y){
  	//Set up the sprite call for the guard
 	Phaser.Sprite.call(this, game, x, y, key, frame);
 
@@ -10,6 +10,8 @@
 	this.chase=false;
 	this.alert=false;
 	this.safe=false;
+	this.xpos=0;
+	this.ypos=0;
 	
 
 	game.physics.enable(this);
@@ -33,6 +35,10 @@ Guard.prototype.update=function() {
 	var GhitPwalls=game.physics.arcade.collide(guard, Pwalls);
 	var GhitSwalls=game.physics.arcade.collide(guard, Swalls);
 
+
+	
+	
+
 	if(GhitPlayer){
 		Coins.callAll('kill');
 		Level1.stop();
@@ -40,16 +46,9 @@ Guard.prototype.update=function() {
 		if(level<0){
 			level-=1;
 		}
-
-		if( level == 0 ) {
-			level = 0;
-			game.state.start('PlayGround');
-		}
-		if( level == 1 || level == 2 || level == 3 ) {
-			level = 1;
-			game.state.start('Level1');
-		}
-
+		for(var i =0; i<5; i++){
+            var Coin = Coins.create(game.rnd.integerInRange(150, 900),game.rnd.integerInRange(150, 700),'atlas', 'Coin');
+        }
         // kill the arrow exit
             exitArrow.kill();
             // set isSign to false
@@ -69,7 +68,9 @@ Guard.prototype.update=function() {
 		//game.state.start('GameOver');
 		coinsCollected = 0;
 		newLevel = true;
-
+		if(level == 0) {
+			spawnTutorialWalls = true;
+		}
 	}
 	//Guard Chase AI
         	var LoS= new Phaser.Line(guard.x, guard.y, player.x, player.y);
@@ -132,10 +133,10 @@ Guard.prototype.update=function() {
 				guard.body.angularVelocity=-60;
 			}
 		}else if(guard.body.y<128){
-			if(guard.angle<0){
-				guard.body.angularVelocity=-60;
-			}else{
+			if(guard.angle>-90&&guard.angle<90){
 				guard.body.angularVelocity=60;
+			}else{
+				guard.body.angularVelocity=-60;
 			}
 		}else{
 			guard.body.angularVelocity=0;
@@ -144,7 +145,59 @@ Guard.prototype.update=function() {
 	
 	setFill(guard.x,guard.y);
 	
-}, this);
+/*if y pos not move go left or right depend on angle
+	if x pos not move go up or down depend on angle*/
+		if(this.xpos==this.x){
+			if(this.angle<-90||this.angle>90){
+				//facing left
+				if(this.angle<-90){
+					//go up
+					this.angle+=10;
+				}else{
+					//go down
+					this.angle-=10;
+				}
+			}else{
+				//facing right
+				if(this.angle<0){
+					//go up
+					this.angle-=10;
+				}else{
+					//go down
+					this.angle+=10;
+				}
+			}
+		}
+		else if(this.ypos==this.y){
+			if(this.angle<0){
+				//facing up
+				if(this.angle<-90){
+					//go left
+					this.angle-=10;
+				}else{
+					//go right
+					this.angle+=10;
+				}
+			}else{
+				//facing down
+				if(this.angle>90){
+					//go left
+					this.angle+=10;
+				}else{
+					//go right
+					this.angle-=10;
+				}
+			}
+		}
+		else{
+			this.xpos=this.x;
+			this.ypos=this.y;
+		}
+	
+	//^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+	
+},this);
 
 /*
 //camera start here
@@ -217,4 +270,3 @@ function setFill(x,y){
                 bitmap.dirty = true;
         }
 }
-
