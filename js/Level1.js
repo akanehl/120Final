@@ -14,7 +14,7 @@ Level1.prototype={
         console.log('Level1: preload');
         game.load.image('coin', 'assets/img/pngformat/coin.png');
         game.load.atlas('wallAtlas', 'assets/img/wallatlas.png', 'assets/img/wallatlas.json');
-        game.load.image('wallpng','assets/img/pngformat/Walls/singlewall.png');
+        game.load.atlas('atlas', 'assets/img/atlas.png', 'assets/img/atlas.json');
     },
 
     create:function(){
@@ -131,6 +131,10 @@ Level1.prototype={
         var PwallhitPwall=game.physics.arcade.collide(Pwalls, Pwalls);
         //color wall collisions
         var PwallHitGwall=game.physics.arcade.collide(Pwalls, Gwalls);
+        // solid wall collisions
+        var SwallHitGwall = game.physics.arcade.collide(Swalls, Gwalls);
+        var SwallHitPwall = game.physics.arcade.collide(Swalls, Pwalls);
+
 
         coinText.text="coins: "+coinsCollected;
 
@@ -231,11 +235,49 @@ Level1.prototype={
                     player.body.x=125;
                     player.body.y=125;
                     // add a guard at these coordinates
-                    addGuard(300,200);
+                    addGuard(500,500);
                     // generate 5 random coins
-                    for(var i =0; i<5; i++){
-                        var Coin = Coins.create(game.rnd.integerInRange(150, 900),game.rnd.integerInRange(150, 700),'atlas', 'Coin');
-                    }
+                    Coin = Coins.create(game.rnd.integerInRange(150, 900),game.rnd.integerInRange(150, 700),'atlas', 'coin');
+                    Coin = Coins.create(game.rnd.integerInRange(150, 900),game.rnd.integerInRange(150, 700),'atlas', 'coin');
+                    Coin = Coins.create(game.rnd.integerInRange(150, 900),game.rnd.integerInRange(150, 700),'atlas', 'coin');
+                    Coin = Coins.create(game.rnd.integerInRange(150, 900),game.rnd.integerInRange(150, 700),'atlas', 'coin');
+                    Coin = Coins.create(game.rnd.integerInRange(150, 900),game.rnd.integerInRange(150, 700),'atlas', 'coin');
+                    // increase the level
+                    level += 1;
+                }
+            }
+        }   // end of level 2
+
+         if( level == 3 ) {
+            if(newLevel == true) {
+                console.log('This is level 3');
+                newLevel = false;
+            }
+            // if 5 coins are collected
+            if(coinsCollected >= 5) {
+                //  if sign doesn't exist, add the exit arrow animation and set the isSign var true
+                if(!isSign){
+                    addExitArrow(door.x,door.y);
+                    isSign=true;
+                }
+                //  if the player collides with the door, event Pexit becomes true, level resets
+                if(Pexit==true){
+                    coinReset = true;
+                    // kill the arrow exit
+                    exitArrow.kill();
+                    // set isSign to false
+                    isSign=false;
+                    // play rewind sound
+                    Rewind.play();
+                    // stop level1 music
+                    Level1.stop();
+                    // play level2 music
+                    Level2.play();
+                    // set coinsCollected to 0
+                    coinsCollected=0;
+
+                    // begin level2.js
+
                     // increase the level
                     level += 1;
                 }
@@ -243,6 +285,12 @@ Level1.prototype={
         }   // end of level 1
         if(game.input.keyboard.isDown(Phaser.Keyboard.SPACEBAR)){
             game.state.start('Mainmenu');
+        }
+        if(game.input.keyboard.justPressed(Phaser.Keyboard.G)){
+            addGuard(500,500);
+        }
+        if(game.input.keyboard.justPressed(Phaser.Keyboard.C)){
+            coinsCollected+=1;
         }
     }
 }

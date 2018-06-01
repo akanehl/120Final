@@ -94,10 +94,13 @@ Mainmenu.prototype ={
         if(move){
             if(game.input.keyboard.justPressed(Phaser.Keyboard.SPACEBAR)){
                 if(selected==0){
+<<<<<<< HEAD
                     //get rid of this when game is ready
                     game.state.start('PlayGround');
                     //^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+=======
+>>>>>>> 527f2a903231fd8973d607a778700e8e6173a040
                     move=false;
                     line=new Phaser.Line(fakePlayer.body.x,fakePlayer.body.y,Coin.body.x,Coin.body.y);
                     //Update the fakePlayers angle to the line
@@ -249,13 +252,19 @@ PlayGround.prototype={
         
         var Ltopwall = Swalls.create(62, 190, 'wallAtlas','shortwalUDl');
         Ltopwall.scale.setTo(1.18,1);
+        Ltopwall.body.immovable = true;   
         var Lbotwall = Swalls.create(62, 512, 'wallAtlas','shortwall');
         Lbotwall.scale.setTo(1.18,1);
+        Lbotwall.body.immovable = true;   
         var Mtopwall = Swalls.create(417, 190, 'wallAtlas', 'shortwalUDl');
+        Mtopwall.body.immovable = true;   
         var Mbotwall = Swalls.create(417, 512, 'wallAtlas', 'shortwall');
+        Mbotwall.body.immovable = true;   
         var Rtopwall = Swalls.create(737, 190, 'wallAtlas', 'shortwalUDl');
+        Rtopwall.body.immovable = true;   
         Rtopwall.scale.setTo(1.17,1);
         var Rbotwall = Swalls.create(737, 512, 'wallAtlas', 'shortwall');
+        Rbotwall.body.immovable = true;   
         Rbotwall.scale.setTo(1.17,1);
 
         //adding coins
@@ -303,6 +312,9 @@ PlayGround.prototype={
         var PwallhitPwall=game.physics.arcade.collide(Pwalls, Pwalls);
         //color wall collisions
         var PwallHitGwall=game.physics.arcade.collide(Pwalls, Gwalls);
+        // solid wall collisions
+        var SwallHitGwall = game.physics.arcade.collide(Swalls, Gwalls);
+        var SwallHitPwall = game.physics.arcade.collide(Swalls, Pwalls);
 
         coinText.text="coins: "+coinsCollected;
 
@@ -387,83 +399,6 @@ PlayGround.prototype={
                 }
             }
         }   // end of level 0
-
-        
-
-        if( level == 2 ) {
-            // if 5 coins are collected
-            if(coinsCollected >= 5) {
-                //  if sign doesn't exist, add the exit arrow animation and set the isSign var true
-                if(!isSign){
-                    addExitArrow(door.x,door.y);
-                    isSign=true;
-                }
-                //  if the player collides with the door, event Pexit becomes true, level resets
-                if(Pexit==true){
-                    // kill the arrow exit
-                    exitArrow.kill();
-                    // set isSign to false
-                    isSign=false;
-                    // play rewind sound
-                    Rewind.play();
-                    // stop level1 music
-                    Level1.stop();
-                    // play level2 music
-                    Level2.play();
-                    // set coinsCollected to 0
-                    coinsCollected=0;
-                    // set new player coordinates
-                    player.body.x=75;
-                    player.body.y=300;
-                    // add a guard at these coordinates
-                    addGuard(500,400);
-                    // generate 5 random coins
-                    for(var i =0; i<5; i++){
-                        var Coin = Coins.create(game.rnd.integerInRange(150, 900),game.rnd.integerInRange(150, 700),'atlas', 'Coin');
-                    }
-                    // increase the level
-                    level += 1;
-                }
-            }
-        }   // end of level 2
-
-        if( level == 3 ) {
-            // if 5 coins are collected
-            if(coinsCollected >= 5) {
-                //  if sign doesn't exist, add the exit arrow animation and set the isSign var true
-                if(!isSign){
-                    addExitArrow(door.x,door.y);
-                    isSign=true;
-                }
-                //  if the player collides with the door, event Pexit becomes true, level resets
-                if(Pexit==true){
-                    // kill the arrow exit
-                    exitArrow.kill();
-                    // set isSign to false
-                    isSign=false;
-                    // play rewind sound
-                    Rewind.play();
-                    // stop level1 music
-                    Level1.stop();
-                    // play level2 music
-                    Level2.play();
-                    // set coinsCollected to 0
-                    coinsCollected=0;
-                    // set new player coordinates
-                    player.body.x=75;
-                    player.body.y=300;
-                    // add a guard at these coordinates
-                    addGuard(800,600);
-                    // generate 5 random coins
-                    for(var i =0; i<5; i++){
-                        var Coin = Coins.create(game.rnd.integerInRange(150, 900),game.rnd.integerInRange(150, 700),'atlas', 'Coin');
-                    }
-                    // increase the level
-                    level += 1;
-                }
-            }
-        }   // end of level 3
-
        
         if(game.input.keyboard.justPressed(Phaser.Keyboard.G)){
             addGuard(500,500);
@@ -471,11 +406,7 @@ PlayGround.prototype={
         if(game.input.keyboard.justPressed(Phaser.Keyboard.C)){
             coinsCollected+=1;
         }
-        
-        if(game.input.keyboard.justPressed(Phaser.Keyboard.S)){
-           
-           addCamera(500,500); 
-        }        
+
         if(game.input.keyboard.justPressed(Phaser.Keyboard.L)){
             skipToLevel1();
         }
