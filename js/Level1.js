@@ -86,10 +86,10 @@ Level1.prototype={
 
         lightBitmap.blendMode = Phaser.blendModes.MULTIPLY;
 
-
-        //adding coins
+		//adding coins
         Coins = game.add.group();
         Coins.enableBody=true;
+        
 
         //Update Coin display text
         coinText=game.add.text(16,16,'', {fontSize: '32px', fill:'#000'});

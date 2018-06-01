@@ -1,4 +1,4 @@
-621a1cc94bf3b40eef573a8a9d3d69bd60bd5fbbfunction Guard(game, key, frame, scale, rotation, x, y){
+function Guard(game, key, frame, scale, rotation, x, y){
  	//Set up the sprite call for the guard
 	Phaser.Sprite.call(this, game, x, y, key, frame);
 
@@ -50,7 +50,9 @@ Guard.prototype.update=function() {
             var Coin = Coins.create(game.rnd.integerInRange(150, 900),game.rnd.integerInRange(150, 700),'atlas', 'Coin');
         }
         // kill the arrow exit
+		if(exitArrow){
             exitArrow.kill();
+		}
             // set isSign to false
             isSign=false;
             // play rewind sound
@@ -208,6 +210,7 @@ cameras.forEach(function(camera){
 if(game.input.keyboard.justPressed(Phaser.Keyboard.SPACEBAR)){
 	guards.remove(guards.children[1]);
 }
+
 function setFillCamera(x,y){
 			var PointPush=false;
             var points=[];
@@ -237,6 +240,7 @@ function setFillCamera(x,y){
             
             draw(points);
         }
+
 function setFill(x,y){
             var points=[];
             for(var a = 0; a < Math.PI*2; a += Math.PI/360) {

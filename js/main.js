@@ -94,13 +94,12 @@ Mainmenu.prototype ={
         if(move){
             if(game.input.keyboard.justPressed(Phaser.Keyboard.SPACEBAR)){
                 if(selected==0){
-<<<<<<< HEAD
+
                     //get rid of this when game is ready
                     game.state.start('PlayGround');
                     //^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-=======
->>>>>>> 527f2a903231fd8973d607a778700e8e6173a040
+
                     move=false;
                     line=new Phaser.Line(fakePlayer.body.x,fakePlayer.body.y,Coin.body.x,Coin.body.y);
                     //Update the fakePlayers angle to the line
@@ -205,6 +204,10 @@ PlayGround.prototype={
         guard = new Guard(game, 'atlas', 'Enemy', 1, 0, 900, 650);
         game.add.existing(guard);
 		guards.add(guard);
+		
+		//adding coins
+        Coins = game.add.group();
+        Coins.enableBody=true;
 
 
         // Create a bitmap texture for drawing light cones
