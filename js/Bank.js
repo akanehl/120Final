@@ -40,19 +40,28 @@ Bank.prototype={
         // solid walls
         Swalls = game.add.group();
         Swalls.enableBody = true;
-        var Midwall = Swalls.create(400, 380, 'wallAtlas','shortwall');   // middle wall
-        Midwall.body.immovable = true;
-        Midwall.scale.setTo(1.3,1);
-        var Botwall = Swalls.create(150, 570, 'wallAtlas','shortwall');   // bottom left wall
-        Botwall.body.immovable = true;   
-        Botwall.scale.setTo(1.1,1.5);
-        var roomLeftWall = Swalls.create(610, -80, 'wallAtlas','sidewall');   // left wall in top room
-        roomLeftWall.body.immovable = true;
-        roomLeftWall.scale.setTo(1,.35);
-        var roomBotWall = Swalls.create(770, 200, 'wallAtlas','shortwall');   // bottom wall in top room
-        roomBotWall.body.immovable = true;
-        roomBotWall.scale.setTo(1.7,1);
-
+        var Wall = Swalls.create(0, game.height-200, 'wallAtlas','shortwall');   // middle wall
+        Wall.body.immovable=true;
+        Wall = Swalls.create(300, game.height-200, 'wallAtlas','sidewall');
+        Wall.body.immovable=true;
+        
+        Wall = Swalls.create(0, game.height-500, 'wallAtlas','shortwall');   // middle wall
+        Wall.body.immovable=true;
+        Wall.scale.setTo(1.5,1);
+        Wall = Swalls.create(525, 0, 'wallAtlas','sidewall');   // middle wall
+        Wall.body.immovable=true;
+        Wall.scale.setTo(1,.455);
+        Wall = Swalls.create(400, 0, 'wallAtlas','sidewall');   // middle wall
+        Wall.body.immovable=true;
+        Wall.scale.setTo(1,.455);
+        Wall = Swalls.create(625, 400, 'wallAtlas','sidewall');   // middle wall
+        Wall.body.immovable=true;
+        Wall.scale.setTo(1,.3);
+        Wall = Swalls.create(625, 400, 'wallAtlas','topwall');   // middle wall
+        Wall.body.immovable=true;
+        Wall = Swalls.create(625, game.height-100, 'wallAtlas','sidewall');   // middle wall
+        Wall.body.immovable=true;
+        Wall.scale.setTo(1,.3);
         //adding moveable walls
         //adding Push Walls (Green)
         Gwalls = game.add.group();
