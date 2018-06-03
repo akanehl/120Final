@@ -1,5 +1,5 @@
-// Level1.js
-var Level1 = function(game){};
+// Bank.js
+var Bank = function(game){};
 //var map, Walllayer, Floorlayer;
 var camera, exitArrow;
 //var level = 1;
@@ -7,18 +7,19 @@ var camera, exitArrow;
 var newLevel = false;
 var tutorialWallsExist = false;
 var Swalls;
+var level = 0;
 
 
-Level1.prototype={
+Bank.prototype={
     preload:function(){
-        console.log('Level1: preload');
+        console.log('Bank: preload');
         game.load.image('coin', 'assets/img/pngformat/coin.png');
         game.load.atlas('wallAtlas', 'assets/img/wallatlas.png', 'assets/img/wallatlas.json');
         game.load.atlas('atlas', 'assets/img/atlas.png', 'assets/img/atlas.json');
     },
 
     create:function(){
-        console.log('Level1: create');
+        console.log('Bank: create');
         game.stage.backgroundColor = "#4488AA";
 
         //Start arcade physics
@@ -31,11 +32,12 @@ Level1.prototype={
         players.add(player);
 
         //Create the guards group
-		guards=game.add.group();
+        guards=game.add.group();
         guard = new Guard(game, 'atlas', 'Enemy', 1, 0, 650, 700);
         game.add.existing(guard);
-		guards.add(guard);
+        guards.add(guard);
 
+        // solid walls
         Swalls = game.add.group();
         Swalls.enableBody = true;
         var Midwall = Swalls.create(400, 380, 'wallAtlas','shortwall');   // middle wall
@@ -86,28 +88,28 @@ Level1.prototype={
 
         lightBitmap.blendMode = Phaser.blendModes.MULTIPLY;
 
-
         //adding coins
         Coins = game.add.group();
         Coins.enableBody=true;
+        
 
         //Update Coin display text
         coinText=game.add.text(16,16,'', {fontSize: '32px', fill:'#000'});
-		coinsCollected=0;
-		door = game.add.sprite( 100, 400, 'door');
+        coinsCollected=0;
+        door = game.add.sprite( 100, 400, 'door');
         game.physics.arcade.enable(door);
-		door.body.immovable=true;
+        door.body.immovable=true;
 
-		Coin = Coins.create( 100,100,'coin');		// top left coin
-		Coin = Coins.create( 300,660,'coin');		// bottom left coin
-		Coin = Coins.create( 500,320,'coin');		// middle coin
-		Coin = Coins.create( 950,40,'coin');		// top right coin
-		Coin = Coins.create( 925,700,'coin');		// bottom right coin 
+        Coin = Coins.create( 100,100,'coin');       // top left coin
+        Coin = Coins.create( 300,660,'coin');       // bottom left coin
+        Coin = Coins.create( 500,320,'coin');       // middle coin
+        Coin = Coins.create( 950,40,'coin');        // top right coin
+        Coin = Coins.create( 925,700,'coin');       // bottom right coin 
 
     },
     update:function(){
 
-    	game.physics.arcade.collide(player, Swalls);
+        game.physics.arcade.collide(player, Swalls);
 
         // constantly fill the bitmap 
         bitmap.context.fillStyle = 'rgb(100, 100, 100)';
@@ -140,23 +142,23 @@ Level1.prototype={
 
         // when the player collects a coin, play a sound, kill coin, update score
         function collectCoin(player, Coin){
-        	CoinPU.play();
+            CoinPU.play();
             Coin.kill();
             coinsCollected+=1;
         }
 
         // should take x, y coordinates so we can manually place guards
         function addGuard(x,y){
-        	guard = new Guard(game, 'atlas', 'Enemy', 1, 0, x, y);
-        	game.add.existing(guard);
-			guards.add(guard);
+            guard = new Guard(game, 'atlas', 'Enemy', 1, 0, x, y);
+            game.add.existing(guard);
+            guards.add(guard);
         }
 
          // places arrow animation/sprite at x and y, above the door       
         function addExitArrow(x,y) {
-        	exitArrow = game.add.sprite( x+1, y - 100, 'exitArrow');
-           	var arrow = exitArrow.animations.add('arrow');
-           	exitArrow.animations.play('arrow', 1, true);
+            exitArrow = game.add.sprite( x+1, y - 100, 'exitArrow');
+            var arrow = exitArrow.animations.add('arrow');
+            exitArrow.animations.play('arrow', 1, true);
         }
 
 
@@ -193,11 +195,11 @@ Level1.prototype={
                     // add a guard at these coordinates
                     addGuard(300,200);
                     // generate 5 coins
-					Coin = Coins.create(game.rnd.integerInRange(150, 900),game.rnd.integerInRange(150, 700),'atlas', 'coin');
-					Coin = Coins.create(game.rnd.integerInRange(150, 900),game.rnd.integerInRange(150, 700),'atlas', 'coin');
-					Coin = Coins.create(game.rnd.integerInRange(150, 900),game.rnd.integerInRange(150, 700),'atlas', 'coin');
-					Coin = Coins.create(game.rnd.integerInRange(150, 900),game.rnd.integerInRange(150, 700),'atlas', 'coin');
-					Coin = Coins.create(game.rnd.integerInRange(150, 900),game.rnd.integerInRange(150, 700),'atlas', 'coin');
+                    Coin = Coins.create( 100,100,'coin');       // top left coin
+                    Coin = Coins.create( 300,660,'coin');       // bottom left coin
+                    Coin = Coins.create( 500,320,'coin');       // middle coin
+                    Coin = Coins.create( 950,40,'coin');        // top right coin
+                    Coin = Coins.create( 925,700,'coin');       // bottom right coin 
                     // increase the level
                     level += 1;
                 }
@@ -236,12 +238,12 @@ Level1.prototype={
                     player.body.y=125;
                     // add a guard at these coordinates
                     addGuard(500,500);
-                    // generate 5 random coins
-                    Coin = Coins.create(game.rnd.integerInRange(150, 900),game.rnd.integerInRange(150, 700),'atlas', 'coin');
-                    Coin = Coins.create(game.rnd.integerInRange(150, 900),game.rnd.integerInRange(150, 700),'atlas', 'coin');
-                    Coin = Coins.create(game.rnd.integerInRange(150, 900),game.rnd.integerInRange(150, 700),'atlas', 'coin');
-                    Coin = Coins.create(game.rnd.integerInRange(150, 900),game.rnd.integerInRange(150, 700),'atlas', 'coin');
-                    Coin = Coins.create(game.rnd.integerInRange(150, 900),game.rnd.integerInRange(150, 700),'atlas', 'coin');
+                    // generate 5 coins
+                    Coin = Coins.create( 100,100,'coin');       // top left coin
+                    Coin = Coins.create( 300,660,'coin');       // bottom left coin
+                    Coin = Coins.create( 500,320,'coin');       // middle coin
+                    Coin = Coins.create( 950,40,'coin');        // top right coin
+                    Coin = Coins.create( 925,700,'coin');       // bottom right coin 
                     // increase the level
                     level += 1;
                 }
@@ -276,7 +278,8 @@ Level1.prototype={
                     // set coinsCollected to 0
                     coinsCollected=0;
 
-                    // begin level2.js
+                    // begin Temple.js
+
 
                     // increase the level
                     level += 1;
@@ -294,4 +297,4 @@ Level1.prototype={
         }
     }
 }
-game.state.add('Level1', Level1);
+game.state.add('Bank', Bank);

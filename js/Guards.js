@@ -1,4 +1,5 @@
 Guard(game, key, frame, scale, rotation, x, y){
+function Guard(game, key, frame, scale, rotation, x, y){
  	//Set up the sprite call for the guard
 	Phaser.Sprite.call(this, game, x, y, key, frame);
 
@@ -40,17 +41,20 @@ Guard.prototype.update=function() {
 	
 
 	if(GhitPlayer){
-		Coins.callAll('kill');
+		// kill all coins
+		//Coins.callAll('kill');
+		// stop the music
 		Level1.stop();
 		Level2.stop();
+		/*
 		if(level<0){
 			level-=1;
-		}
-		for(var i =0; i<5; i++){
-            var Coin = Coins.create(game.rnd.integerInRange(150, 900),game.rnd.integerInRange(150, 700),'atlas', 'Coin');
-        }
+		}*/
+
         // kill the arrow exit
+		if(exitArrow){
             exitArrow.kill();
+		}
             // set isSign to false
             isSign=false;
             // play rewind sound
@@ -59,17 +63,22 @@ Guard.prototype.update=function() {
             Level1.stop();
             // play level2 music
             Level2.play();
-            // set coinsCollected to 0t
-            coinsCollected=0;
             // set new player coordinates
             player.body.x=75;
             player.body.y=300;
 		//End game upon guard collision with player
 		//game.state.start('GameOver');
-		coinsCollected = 0;
+		//coinsCollected = 0;
 		newLevel = true;
+
 		if(level == 0) {
-			spawnTutorialWalls = true;
+			player.body.x = 100;
+			player.body.y = 400;
+		}
+		// if the player loses on level 1 or 2 or 3, reset them to 1
+		if( level == 1 || level == 2 || level == 3 ) {
+			game.state.start('Museum');
+			level = 1;
 		}
 	}
 	//Guard Chase AI
@@ -193,21 +202,15 @@ Guard.prototype.update=function() {
 			this.xpos=this.x;
 			this.ypos=this.y;
 		}
-	
-	//^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 	
 },this);
 
-/*
-//camera start here
-cameras.forEach(function(camera){
-	setFillCamera(camera.x+15,camera.y+3);
-},this);
-*/
+
 if(game.input.keyboard.justPressed(Phaser.Keyboard.SPACEBAR)){
 	guards.remove(guards.children[1]);
 }
+
 function setFillCamera(x,y){
 			var PointPush=false;
             var points=[];
@@ -237,6 +240,7 @@ function setFillCamera(x,y){
             
             draw(points);
         }
+
 function setFill(x,y){
             var points=[];
             for(var a = 0; a < Math.PI*2; a += Math.PI/360) {

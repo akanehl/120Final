@@ -25,7 +25,6 @@ Mainmenu.prototype ={
         game.load.atlas('camera', 'assets/img/camera.png', 'assets/img/camera.json');
         game.load.image('door', 'assets/img/pngformat/door.png');
         game.load.atlas('exitArrow', 'assets/img/ExitArrow.png', 'assets/img/ExitArrow.json');
-        //game.load.image('player','assets/img/pngformat/player.png');
 		
         game.load.audio('safe', 'assets/sound/Safe.mp3');
         game.load.audio('alert', 'assets/sound/Alert.mp3');
@@ -94,13 +93,12 @@ Mainmenu.prototype ={
         if(move){
             if(game.input.keyboard.justPressed(Phaser.Keyboard.SPACEBAR)){
                 if(selected==0){
-<<<<<<< HEAD
+
                     //get rid of this when game is ready
                     game.state.start('PlayGround');
                     //^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-=======
->>>>>>> 527f2a903231fd8973d607a778700e8e6173a040
+
                     move=false;
                     line=new Phaser.Line(fakePlayer.body.x,fakePlayer.body.y,Coin.body.x,Coin.body.y);
                     //Update the fakePlayers angle to the line
@@ -142,13 +140,11 @@ var PlayGround = function(game) {};
 
 // Load images and sounds
 
-
 var map, Walllayer, Floorlayer;
 var camera, exitArrow;
 var level = 0;
 var isSign=false;
 var newLevel = false;
-var tutorialWallsExist = false;
 
 PlayGround.prototype={
     preload:function(){
@@ -173,8 +169,6 @@ PlayGround.prototype={
         map.addTilesetImage('TotalTileset','tiles');
         Floorlayer = map.createLayer('Floor');
         Walllayer = map.createLayer('Walls');
-
-
 
         //the lower the second number is the better performance we have. 
         //but it has to. be high enough to include all the tiles we want collision with.
@@ -205,7 +199,10 @@ PlayGround.prototype={
         guard = new Guard(game, 'atlas', 'Enemy', 1, 0, 900, 650);
         game.add.existing(guard);
 		guards.add(guard);
-
+		
+		//adding coins
+        Coins = game.add.group();
+        Coins.enableBody=true;
 
         // Create a bitmap texture for drawing light cones
         bitmap = this.game.add.bitmapData(this.game.width, this.game.height);
@@ -246,10 +243,9 @@ PlayGround.prototype={
         PinkWall.scale.setTo(2,16);
         PinkWall.body.collideWorldBounds=true;
 
-        Cameras = game.add.group();
+        // Solid wall group
         Swalls = game.add.group();
         Swalls.enableBody = true;
-        
         var Ltopwall = Swalls.create(62, 190, 'wallAtlas','shortwalUDl');
         Ltopwall.scale.setTo(1.18,1);
         Ltopwall.body.immovable = true;   
@@ -281,13 +277,14 @@ PlayGround.prototype={
         //Update Coin display text
         coinText=game.add.text(16,16,'', {fontSize: '32px', fill:'#000'});
 		coinsCollected=0;
-		door = game.add.sprite( -50, -50, 'door');
+		door = game.add.sprite( 600, 700, 'door');
         game.physics.arcade.enable(door);
 		door.body.immovable=true;
     },
 
 // The update() method is called every frame
     update:function() {
+        // player collision with tiled layer
     	game.physics.arcade.collide(player, Walllayer);
 
         // constantly fill the bitmap 
@@ -299,9 +296,8 @@ PlayGround.prototype={
         var hitPwalls=game.physics.arcade.collide(player, Pwalls);
         var hitCoins=game.physics.arcade.overlap(player, Coins, collectCoin, null, this);
         var hitSwalls = game.physics.arcade.overlap(player, Swalls);
-
         var hitWalls = game.physics.arcade.overlap(player, Walllayer);
-        
+        // Player collides with door
         var Pexit = game.physics.arcade.collide(player, door);
         
         //green wall collision
@@ -316,6 +312,7 @@ PlayGround.prototype={
         var SwallHitGwall = game.physics.arcade.collide(Swalls, Gwalls);
         var SwallHitPwall = game.physics.arcade.collide(Swalls, Pwalls);
 
+        // update score
         coinText.text="coins: "+coinsCollected;
 
         // when the player collects a coin, play a sound, kill coin, update score
@@ -332,14 +329,6 @@ PlayGround.prototype={
 			guards.add(guard);
         }
 
-        // places camera animation/sprite at x and y
-        function addCamera(x,y) {
-            camera = game.add.sprite( x, y, 'camera');
-            var record = camera.animations.add('record');
-            camera.animations.play('record', 3, true);
-            cameras.add(camera);
-        }
-
          // places arrow animation/sprite at x and y, above the door       
         function addExitArrow(x,y) {
         	exitArrow = game.add.sprite( x+1, y - 100, 'exitArrow');
@@ -347,23 +336,15 @@ PlayGround.prototype={
            	exitArrow.animations.play('arrow', 1, true);
         }
 
-        function addCoin(x,y) {
-            Coin = Coins.create( x,y, 'atlas', 'Coin');
-        }
 
         // tutorial level
         if( level == 0 ) {
-            // set new door coordinates
-        	door.x = 700;
-        	door.y = 700;
-
             // if 5 coins are collected
             if(coinsCollected >= 5) {
                 //  if sign doesn't exist, add the exit arrow animation and set the isSign var true
                 if(isSign == false ){
                     addExitArrow(door.x,door.y);
                     isSign=true;
-                    //spawnTutorialWalls();
                 }
                 //  if the player collides with the door, event Pexit becomes true, level resets
             if(Pexit==true){
@@ -381,21 +362,13 @@ PlayGround.prototype={
                 // set coinsCollected to 0t
                 coinsCollected=0;
                 // set new player coordinates
-                player.body.x=75;
-                player.body.y=300;
-                // add a guard at these coordinates
-                //addGuard(300,200);
-                // generate 5 random coins
-                    
-                for(var i =0; i<5; i++){
-                    var Coin = Coins.create(game.rnd.integerInRange(150, 900),game.rnd.integerInRange(150, 700),'atlas', 'Coin');
-                }
-
-                
+                player.body.x=100;
+                player.body.y=400;
 
                 // increase the level
                 level += 1;
-                game.state.start('Level1')
+                // start Museum level
+                game.state.start('Museum');
                 }
             }
         }   // end of level 0
@@ -408,12 +381,8 @@ PlayGround.prototype={
         }
 
         if(game.input.keyboard.justPressed(Phaser.Keyboard.L)){
-            skipToLevel1();
+            game.state.start('Museum');
         }
-        function skipToLevel1() {
-            game.state.start('Level1');
-        }
-
 
 /*----------------------------------------------------------------------
                              Start of the Light Code
@@ -423,7 +392,7 @@ PlayGround.prototype={
             // with a bright white color. When multiplied with the background,
             // the white color will allow the full color of the background to
             // shine through.
-        debug();
+        //debug();
     } // end of update function
     
 } // end of playground
@@ -555,7 +524,6 @@ GameOver.prototype={
 game.state.add('Mainmenu', Mainmenu);
 game.state.add('PlayGround', PlayGround);
 game.state.add('GameOver', GameOver);
-//game.state.add('Level1', Level1);
 
 game.state.start('Mainmenu');
 
