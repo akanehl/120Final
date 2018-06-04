@@ -70,6 +70,7 @@ Mainmenu.prototype ={
         PlayText=game.add.text(420, 200, 'Play',MenuStyle);
         CreditsText=game.add.text(400,260, 'Credits', MenuStyle);
 		controlsText= game.add.text(400,450, 'Controls\nArrow Keys to move things \nSpacebar to do things', ControlsStyle);
+		
     },
     update:function(){
         coinCollide=game.physics.arcade.collide(fakePlayer, Coin);
@@ -280,6 +281,9 @@ PlayGround.prototype={
 		door = game.add.sprite( 600, 700, 'door');
         game.physics.arcade.enable(door);
 		door.body.immovable=true;
+		
+		
+		
     },
 
 // The update() method is called every frame

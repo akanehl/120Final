@@ -13,17 +13,81 @@ function Guard(game, key, frame, scale, rotation, x, y){
 	this.xpos=0;
 	this.ypos=0;
 	
-
 	game.physics.enable(this);
 	this.body.collideWorldBounds = true;
 	this.body.allowRotation=true;
+	
+	this.rotateCheck=game.time.create(false);
+	this.rotateCheck.loop(100, guardRotationCheck);
+	this.rotateCheck.start();
+	function guardRotationCheck(){
+	guards.forEach(function(guard){
+
+/*if y pos not move go left or right depend on angle
+	if x pos not move go up or down depend on angle*/
+		if(guard.xpos==guard.x){
+			if(guard.angle<-90||guard.angle>90){
+				//facing left
+				if(guard.angle<-90){
+					//go up
+					guard.angle+=20;
+				}else{
+					//go down
+					guard.angle-=20;
+				}
+			}else{
+				//facing right
+				if(guard.angle<0){
+					//go up
+					guard.angle-=20;
+				}else{
+					//go down
+					guard.angle+=20;
+				}
+			}
+		}
+		else if(guard.ypos==guard.y){
+			if(guard.angle<0){
+				//facing up
+				if(guard.angle<-90){
+					//go left
+					guard.angle-=20;
+				}else{
+					//go right
+					guard.angle+=20;
+				}
+			}else{
+				//facing down
+				if(guard.angle>90){
+					//go left
+					guard.angle+=20;
+				}else{
+					//go right
+					guard.angle-=20;
+				}
+			}
+		}
+		else{
+			guard.xpos=guard.x;
+			guard.ypos=guard.y;
+		}
+	})
+	};
+	
+	
+
+	
 }
 //Override the guard constructor
 Guard.prototype = Object.create(Phaser.Sprite.prototype);
 Guard.prototype.constructor = Guard;
 
+
+
 //Override the update function for guard
 Guard.prototype.update=function() {
+	
+
 	guards.forEach(function(guard){
 	//Collision booleans for AI 
 	//Has to be guards with an 's' if not in the guards.forEach loop
@@ -153,57 +217,12 @@ Guard.prototype.update=function() {
 	
 	setFill(guard.x,guard.y);
 	
-/*if y pos not move go left or right depend on angle
-	if x pos not move go up or down depend on angle*/
-		if(this.xpos==this.x){
-			if(this.angle<-90||this.angle>90){
-				//facing left
-				if(this.angle<-90){
-					//go up
-					this.angle+=10;
-				}else{
-					//go down
-					this.angle-=10;
-				}
-			}else{
-				//facing right
-				if(this.angle<0){
-					//go up
-					this.angle-=10;
-				}else{
-					//go down
-					this.angle+=10;
-				}
-			}
-		}
-		else if(this.ypos==this.y){
-			if(this.angle<0){
-				//facing up
-				if(this.angle<-90){
-					//go left
-					this.angle-=10;
-				}else{
-					//go right
-					this.angle+=10;
-				}
-			}else{
-				//facing down
-				if(this.angle>90){
-					//go left
-					this.angle+=10;
-				}else{
-					//go right
-					this.angle-=10;
-				}
-			}
-		}
-		else{
-			this.xpos=this.x;
-			this.ypos=this.y;
-		}
-
+	//Timer//////////////////////////////////////////
+	
+	
 	
 },this);
+
 
 
 if(game.input.keyboard.justPressed(Phaser.Keyboard.SPACEBAR)){
@@ -272,4 +291,7 @@ function setFill(x,y){
                 // This just tells the engine it should update the texture cache
                 bitmap.dirty = true;
         }
+}
+function guardRotateCheck(Guards){
+
 }
