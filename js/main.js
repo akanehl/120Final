@@ -26,6 +26,7 @@ Mainmenu.prototype ={
         game.load.image('door', 'assets/img/pngformat/door.png');
         game.load.atlas('exitArrow', 'assets/img/ExitArrow.png', 'assets/img/ExitArrow.json');
         game.load.image('player', 'assets/img/pngformat/player.png');
+        game.load.image('guard', 'assets/img/pngformat/Guard.png');
 		
         game.load.audio('safe', 'assets/sound/Safe.mp3');
         game.load.audio('alert', 'assets/sound/Alert.mp3');
@@ -41,7 +42,7 @@ Mainmenu.prototype ={
 
         //create sprites that run around in the background
         fakePlayer=game.add.sprite( 300, 400, 'player');
-        fakeGuard=game.add.sprite(400,300, 'atlas', 'Enemy');
+        fakeGuard=game.add.sprite(400,300, 'guard');
         game.physics.arcade.enable(fakeGuard);
         game.physics.arcade.enable(fakePlayer);
         fakePlayer.anchor.setTo(.5,.5);
@@ -198,7 +199,7 @@ PlayGround.prototype={
 
         //Create the guards group
 		guards=game.add.group();
-        guard = new Guard(game, 'atlas', 'Enemy', 1, 0, 900, 650);
+        guard = new Guard(game, 'guard', 1, 0, 900, 650);
         game.add.existing(guard);
 		guards.add(guard);
 		
@@ -207,11 +208,7 @@ PlayGround.prototype={
         Coins.enableBody=true;
 
         // Create a bitmap texture for drawing light cones
-        bitmap = this.game.add.bitmapData(this.game.width, this.game.height);
-        bitmap.context.fillStyle = 'rgb(255, 255, 255)';
-        bitmap.context.strokeStyle = 'rgb(255, 255, 255)';
-        lightBitmap = this.game.add.image(0, 0, bitmap);
-        game.physics.enable(lightBitmap);
+        
 
         /* This bitmap is drawn onto the screen using the MULTIPLY blend mode.
         Since this bitmap is over the background, dark areas of the bitmap
@@ -220,7 +217,7 @@ PlayGround.prototype={
         only supported in WebGL. If your browser doesn't support WebGL then
         you'll see gray shadows and white light instead of colors and it
         generally won't look nearly as cool. So use a browser with WebGL. */
-        lightBitmap.blendMode = Phaser.blendModes.MULTIPLY;
+        
 
         //Create generic game walls before the sprites are ready
 
@@ -264,7 +261,14 @@ PlayGround.prototype={
         var Rbotwall = Swalls.create(737, 512, 'wallAtlas', 'shortwall');
         Rbotwall.body.immovable = true;   
         Rbotwall.scale.setTo(1.17,1);
-
+		bitmap = this.game.add.bitmapData(this.game.width, this.game.height);
+		
+		//light enabled after walls spawned in so the walls are not lit up
+        bitmap.context.fillStyle = 'rgb(255, 255, 255)';
+        bitmap.context.strokeStyle = 'rgb(255, 255, 255)';
+        lightBitmap = this.game.add.image(0, 0, bitmap);
+        game.physics.enable(lightBitmap);
+        lightBitmap.blendMode = Phaser.blendModes.MULTIPLY;
         //adding coins
         Coins = game.add.group();
         Coins.enableBody=true;
@@ -329,7 +333,7 @@ PlayGround.prototype={
 
         // should take x, y coordinates so we can manually place guards
         function addGuard(x,y){
-        	guard = new Guard(game, 'atlas', 'Enemy', 1, 0, x, y);
+        	guard = new Guard(game, 'guard', 1, 0, x, y);
         	game.add.existing(guard);
 			guards.add(guard);
         }

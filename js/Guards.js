@@ -1,6 +1,6 @@
-function Guard(game, key, frame, scale, rotation, x, y){
+function Guard(game, key, scale, rotation, x, y){
  	//Set up the sprite call for the guard
-	Phaser.Sprite.call(this, game, x, y, key, frame);
+	Phaser.Sprite.call(this, game, x, y, key);
 
 	//Set up basic guard stats
 	this.anchor.set(0.5, 0.5);

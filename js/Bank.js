@@ -32,7 +32,7 @@ Bank.prototype={
 
         //Create the guards group
         guards=game.add.group();
-        guard = new Guard(game, 'atlas', 'Enemy', 1, 0, 650, 700);
+        guard = new Guard(game, 'guard', 1, 0, 650, 700);
         game.add.existing(guard);
         guards.add(guard);
 
@@ -158,7 +158,7 @@ Bank.prototype={
 
         // should take x, y coordinates so we can manually place guards
         function addGuard(x,y){
-            guard = new Guard(game, 'atlas', 'Enemy', 1, 0, x, y);
+            guard = new Guard(game, 'guard', 1, 0, x, y);
             game.add.existing(guard);
             guards.add(guard);
         }
