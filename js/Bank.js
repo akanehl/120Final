@@ -42,9 +42,10 @@ Bank.prototype={
         var Wall = Swalls.create(0, game.height-200, 'wallAtlas','shortwall');   // middle wall
         Wall.body.immovable=true;
         Wall = Swalls.create(300, game.height-200, 'wallAtlas','sidewall');
+        Wall.scale.setTo(1,.3);
         Wall.body.immovable=true;
         
-        Wall = Swalls.create(0, game.height-500, 'wallAtlas','shortwall');   // middle wall
+        Wall = Swalls.create(0, game.height-500, 'wallAtlas','shortwall');   // top left
         Wall.body.immovable=true;
         Wall.scale.setTo(1.5,1);
         Wall = Swalls.create(525, 0, 'wallAtlas','sidewall');   // middle wall
@@ -66,13 +67,13 @@ Bank.prototype={
         Gwalls = game.add.group();
         Gwalls.enableBody = true;
         // top left green wall
-        GreenWall = Gwalls.create(150, 100,'atlas', 'GreenWall');
-        GreenWall.scale.setTo(18,12);
+        GreenWall = Gwalls.create(290, game.height-500,'atlas', 'GreenWall');
+        GreenWall.scale.setTo(13.5,8);
         GreenWall.body.collideWorldBounds = true;
         GreenWall.body.drag.set(175);
         // bottom right green wall
-        GreenWall = Gwalls.create(700, 610, 'atlas', 'GreenWall');
-        GreenWall.scale.setTo(18,12);
+        GreenWall = Gwalls.create(625, 640, 'atlas', 'GreenWall');
+        GreenWall.scale.setTo(8,7.5);
         GreenWall.body.collideWorldBounds = true;
         GreenWall.body.drag.set(175);
 
