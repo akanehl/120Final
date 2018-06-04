@@ -1,10 +1,9 @@
 // Bank.js
 var Bank = function(game){};
-//var map, Walllayer, Floorlayer;
+var map, Walllayer, Floorlayer;
 var camera, exitArrow;
-//var level = 1;
-//var isSign=false;
-var newLevel = false;
+var isSign=false;
+var newLevel = true;
 var tutorialWallsExist = false;
 var Swalls;
 var level = 0;
@@ -26,7 +25,7 @@ Bank.prototype={
         game.physics.startSystem(Phaser.Physics.ARCADE);
 
         //Create the player object
-        player = new Player(game, 'atlas', 'Player', 1, 0, 100, 650);
+        player = new Player(game, 'player', 1, 0, 100, 650);
         players=game.add.group();
         game.add.existing(player);
         players.add(player);
@@ -172,12 +171,14 @@ Bank.prototype={
 
 
         if( level == 1 ) {
+        
             if(newLevel == true) {
                 console.log('This is level 1');
                 newLevel = false;
             }
             // if 5 coins are collected
             if(coinsCollected >= 5) {
+            
                 //  if sign doesn't exist, add the exit arrow animation and set the isSign var true
                 if(!isSign){
                     addExitArrow(door.x,door.y);
@@ -215,86 +216,7 @@ Bank.prototype={
             }
         }   // end of level 1
 
-        if( level == 2 ) {
-            if(newLevel == true) {
-                console.log('This is level 2');
-                newLevel = false;
-            }
-            // if 5 coins are collected
-            if(coinsCollected >= 5) {
-                //  if sign doesn't exist, add the exit arrow animation and set the isSign var true
-                if(!isSign){
-                    addExitArrow(door.x,door.y);
-                    isSign=true;
-                }
-                //  if the player collides with the door, event Pexit becomes true, level resets
-                if(Pexit==true){
-                    coinReset = true;
-                    // kill the arrow exit
-                    exitArrow.kill();
-                    // set isSign to false
-                    isSign=false;
-                    // play rewind sound
-                    Rewind.play();
-                    // stop level1 music
-                    Level1.stop();
-                    // play level2 music
-                    Level2.play();
-                    // set coinsCollected to 0
-                    coinsCollected=0;
-                    // set new player coordinates
-                    player.body.x=125;
-                    player.body.y=125;
-                    // add a guard at these coordinates
-                    addGuard(500,500);
-                    // generate 5 coins
-                    Coin = Coins.create( 100,100,'coin');       // top left coin
-                    Coin = Coins.create( 300,660,'coin');       // bottom left coin
-                    Coin = Coins.create( 500,320,'coin');       // middle coin
-                    Coin = Coins.create( 950,40,'coin');        // top right coin
-                    Coin = Coins.create( 925,700,'coin');       // bottom right coin 
-                    // increase the level
-                    level += 1;
-                }
-            }
-        }   // end of level 2
-
-         if( level == 3 ) {
-            if(newLevel == true) {
-                console.log('This is level 3');
-                newLevel = false;
-            }
-            // if 5 coins are collected
-            if(coinsCollected >= 5) {
-                //  if sign doesn't exist, add the exit arrow animation and set the isSign var true
-                if(!isSign){
-                    addExitArrow(door.x,door.y);
-                    isSign=true;
-                }
-                //  if the player collides with the door, event Pexit becomes true, level resets
-                if(Pexit==true){
-                    coinReset = true;
-                    // kill the arrow exit
-                    exitArrow.kill();
-                    // set isSign to false
-                    isSign=false;
-                    // play rewind sound
-                    Rewind.play();
-                    // stop level1 music
-                    Level1.stop();
-                    // play level2 music
-                    Level2.play();
-                    // set coinsCollected to 0
-                    coinsCollected=0;
-
-                    // begin Temple.js
-
-
-                    // increase the level
-                    level += 1;
-                }
-            }
-        }   // end of level 1
+        
         if(game.input.keyboard.isDown(Phaser.Keyboard.SPACEBAR)){
             game.state.start('Mainmenu');
         }

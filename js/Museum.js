@@ -25,7 +25,7 @@ Museum.prototype={
         game.physics.startSystem(Phaser.Physics.ARCADE);
 
         //Create the player object
-        player = new Player(game, 'atlas', 'Player', 1, 0, 100, 650);
+        player = new Player(game, 'player', 1, 0, 100, 650);
         players=game.add.group();
         game.add.existing(player);
         players.add(player);

@@ -25,6 +25,7 @@ Mainmenu.prototype ={
         game.load.atlas('camera', 'assets/img/camera.png', 'assets/img/camera.json');
         game.load.image('door', 'assets/img/pngformat/door.png');
         game.load.atlas('exitArrow', 'assets/img/ExitArrow.png', 'assets/img/ExitArrow.json');
+        game.load.image('player', 'assets/img/pngformat/player.png');
 		
         game.load.audio('safe', 'assets/sound/Safe.mp3');
         game.load.audio('alert', 'assets/sound/Alert.mp3');
@@ -39,7 +40,7 @@ Mainmenu.prototype ={
         game.add.tileSprite(0,0,game.width,game.height,'floor');
 
         //create sprites that run around in the background
-        fakePlayer=game.add.sprite( 300, 400, 'atlas', 'Player');
+        fakePlayer=game.add.sprite( 300, 400, 'player');
         fakeGuard=game.add.sprite(400,300, 'atlas', 'Enemy');
         game.physics.arcade.enable(fakeGuard);
         game.physics.arcade.enable(fakePlayer);
@@ -190,7 +191,7 @@ PlayGround.prototype={
         game.physics.startSystem(Phaser.Physics.ARCADE);
 
         //Create the player object
-        player = new Player(game, 'atlas', 'Player', 1, 0, 100, 400);
+        player = new Player(game, 'player', 1, 0, 100, 400);
         players=game.add.group();
         game.add.existing(player);
         players.add(player);
@@ -385,6 +386,7 @@ PlayGround.prototype={
         }
 
         if(game.input.keyboard.justPressed(Phaser.Keyboard.L)){
+        	level+=1;
             game.state.start('Museum');
         }
 
@@ -396,7 +398,10 @@ PlayGround.prototype={
             // with a bright white color. When multiplied with the background,
             // the white color will allow the full color of the background to
             // shine through.
-        //debug();
+        if(game.input.keyboard.justPressed(Phaser.Keyboard.D)){
+            debug();
+        }
+        //
     } // end of update function
     
 } // end of playground
