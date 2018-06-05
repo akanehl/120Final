@@ -9,6 +9,7 @@ Light ray bug fixed
 var game = new Phaser.Game(1024,800,Phaser.AUTO);
 var coinsCollected=0;
 var coinText;
+var scoreImage;
 var Swalls;
 
 var Mainmenu = function(game){};
@@ -25,8 +26,12 @@ Mainmenu.prototype ={
         game.load.atlas('camera', 'assets/img/camera.png', 'assets/img/camera.json');
         game.load.image('door', 'assets/img/pngformat/door.png');
         game.load.atlas('exitArrow', 'assets/img/ExitArrow.png', 'assets/img/ExitArrow.json');
+
         game.load.image('player', 'assets/img/pngformat/player.png');
         game.load.image('guard', 'assets/img/pngformat/Guard.png');
+
+        game.load.image('emptybag', 'assets/img/moneybagempty.png');
+        game.load.image('fullbag', 'assets/img/moneybagfull.png');
 		
         game.load.audio('safe', 'assets/sound/Safe.mp3');
         game.load.audio('alert', 'assets/sound/Alert.mp3');
@@ -156,9 +161,6 @@ PlayGround.prototype={
         game.load.image('Wall', 'assets/img/pngformat/Walls/topwall.png');
         game.load.tilemap('bank','assets/img/Bank.json',null, Phaser.Tilemap.TILED_JSON);
         game.load.image('tiles','assets/img/pngformat/TotalTileset.png');
-        game.load.atlas('camera', 'assets/img/camera.png', 'assets/img/camera.json');
-        game.load.atlas('cameralight', 'assets/img/cameralight.png', 'assets/img/cameralight.json');
-        
         game.load.image('coin', 'assets/img/pngformat/coin.png');
         game.load.atlas('wallAtlas', 'assets/img/wallatlas.png', 'assets/img/wallatlas.json');
     },
@@ -282,6 +284,7 @@ PlayGround.prototype={
 
         //Update Coin display text
         coinText=game.add.text(16,16,'', {fontSize: '32px', fill:'#000'});
+        scoreImage = game.add.sprite(145,6,'emptybag');
 		coinsCollected=0;
 		door = game.add.sprite( 600, 700, 'door');
         game.physics.arcade.enable(door);
@@ -346,12 +349,15 @@ PlayGround.prototype={
         }
 
 
+
         // tutorial level
         if( level == 0 ) {
             // if 5 coins are collected
             if(coinsCollected >= 5) {
                 //  if sign doesn't exist, add the exit arrow animation and set the isSign var true
                 if(isSign == false ){
+                    scoreImage.kill();
+                    scoreImage = game.add.sprite(145,6,'fullbag');
                     addExitArrow(door.x,door.y);
                     isSign=true;
                 }
@@ -360,6 +366,7 @@ PlayGround.prototype={
                 newLevel = true;
                 // kill the arrow exit
                 exitArrow.kill();
+                scoreImage.kill();
                 // set isSign to false
                 isSign=false;
                 // play rewind sound
@@ -392,6 +399,9 @@ PlayGround.prototype={
         if(game.input.keyboard.justPressed(Phaser.Keyboard.L)){
         	level+=1;
             game.state.start('Museum');
+        }
+        if(game.input.keyboard.justPressed(Phaser.Keyboard.B)){
+            game.state.start('Bank');
         }
 
 /*----------------------------------------------------------------------
