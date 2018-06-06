@@ -11,6 +11,7 @@ var coinsCollected=0;
 var coinText;
 var scoreImage;
 var Swalls;
+var state='PlayGround'
 
 var Mainmenu = function(game){};
 var map, Floorlayer;
@@ -193,11 +194,7 @@ PlayGround.prototype={
         //Start arcade physics
         game.physics.startSystem(Phaser.Physics.ARCADE);
 
-        //Create the player object
-        player = new Player(game, 'player', 1, 0, 100, 400);
-        players=game.add.group();
-        game.add.existing(player);
-        players.add(player);
+        
 
         //Create the guards group
 		guards=game.add.group();
@@ -271,6 +268,13 @@ PlayGround.prototype={
         lightBitmap = this.game.add.image(0, 0, bitmap);
         game.physics.enable(lightBitmap);
         lightBitmap.blendMode = Phaser.blendModes.MULTIPLY;
+
+        //Create the player object
+        player = new Player(game, 'player', 1, 0, 100, 400);
+        players=game.add.group();
+        game.add.existing(player);
+        players.add(player);
+        
         //adding coins
         Coins = game.add.group();
         Coins.enableBody=true;
@@ -384,7 +388,8 @@ PlayGround.prototype={
                 // increase the level
                 level += 1;
                 // start Museum level
-                game.state.start('Museum');
+                state='Museum';
+                game.state.start(state);
                 }
             }
         }   // end of level 0
@@ -398,10 +403,12 @@ PlayGround.prototype={
 
         if(game.input.keyboard.justPressed(Phaser.Keyboard.L)){
         	level+=1;
-            game.state.start('Museum');
+        	state='Museum';
+            game.state.start(state);
         }
         if(game.input.keyboard.justPressed(Phaser.Keyboard.B)){
-            game.state.start('Bank');
+        	state='Bank';
+            game.state.start(state);
         }
 
 /*----------------------------------------------------------------------

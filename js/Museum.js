@@ -24,17 +24,13 @@ Museum.prototype={
         //Start arcade physics
         game.physics.startSystem(Phaser.Physics.ARCADE);
 
-        //Create the player object
-        player = new Player(game, 'player', 1, 0, 100, 650);
-        players=game.add.group();
-        game.add.existing(player);
-        players.add(player);
+        
 
         //Create the guards group
 		guards=game.add.group();
-        guard = new Guard(game, 'guard', 1, 0, 650, 700);
+        guard = new DumbGuard(game, 'guard', 1, 0, 650, 700, [650,500,650,700,650,500,650,700]);
         game.add.existing(guard);
-		guards.add(guard);
+        guards.add(guard);
 
         // solid walls
         Swalls = game.add.group();
@@ -87,6 +83,12 @@ Museum.prototype={
 
         lightBitmap.blendMode = Phaser.blendModes.MULTIPLY;
 
+        //Create the player object
+        player = new Player(game, 'player', 1, 0, 100, 650);
+        players=game.add.group();
+        game.add.existing(player);
+        players.add(player);
+        
 		//adding coins
         Coins = game.add.group();
         Coins.enableBody=true;
@@ -148,9 +150,9 @@ Museum.prototype={
 
         // should take x, y coordinates so we can manually place guards
         function addGuard(x,y){
-        	guard = new Guard(game, 'guard', 1, 0, x, y);
+        	guard = new DumbGuard(game, 'guard', 1, 0, 200, 200, [500,200,350,300,350,300,200,200]);
         	game.add.existing(guard);
-			guards.add(guard);
+        	guards.add(guard);
         }
 
          // places arrow animation/sprite at x and y, above the door       
@@ -295,6 +297,7 @@ Museum.prototype={
             coinsCollected+=1;
         }
         if(game.input.keyboard.justPressed(Phaser.Keyboard.L)){
+        	state='Bank';
             game.state.start('Bank');
         }
     }

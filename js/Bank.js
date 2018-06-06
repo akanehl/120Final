@@ -25,14 +25,14 @@ Bank.prototype={
         game.physics.startSystem(Phaser.Physics.ARCADE);
 
         //Create the player object
-        player = new Player(game, 'player', 1, 0, 100, 650);
-        players=game.add.group();
-        game.add.existing(player);
-        players.add(player);
+        
 
         //Create the guards group
         guards=game.add.group();
-        guard = new Guard(game, 'guard', 1, 0, 650, 700);
+        //guard = new Guard(game, 'guard', 1, 0, 650, 700);
+        //game.add.existing(guard);
+        //guards.add(guard);
+        guard = new DumbGuard(game, 'guard', 1, 0, 950, 50, [600,50,600,500,600,50,950,50]);
         game.add.existing(guard);
         guards.add(guard);
 
@@ -87,9 +87,9 @@ Bank.prototype={
         botWall.scale.setTo(.5,.5);
 
         // top right room quadrant
-        var leftwall = Swalls.create(710, 50, 'wallAtlas','sidewall');   // left wall
+        var leftwall = Swalls.create(710, 100, 'wallAtlas','sidewall');   // left wall
         leftwall.body.immovable = true;   
-        leftwall.scale.setTo(.8,.41);
+        leftwall.scale.setTo(.8,.30);
         var Botwall = Swalls.create(710, 300, 'wallAtlas','shortwall');   // bottom wall
         Botwall.body.immovable = true;   
         Botwall.scale.setTo(1.1,1);
@@ -164,6 +164,13 @@ Bank.prototype={
         lightBitmap.blendMode = Phaser.blendModes.MULTIPLY;
 
         //adding coins
+
+player = new Player(game, 'player', 1, 0, 100, 700);
+        players=game.add.group();
+        game.add.existing(player);
+        players.add(player);
+
+        
         Coins = game.add.group();
         Coins.enableBody=true;
         
@@ -223,10 +230,10 @@ Bank.prototype={
         }
 
         // should take x, y coordinates so we can manually place guards
-        function addGuard(x,y){
-            guard = new Guard(game, 'guard', 1, 0, x, y);
-            game.add.existing(guard);
-            guards.add(guard);
+        function addGuard(){
+            guard = new DumbGuard(game, 'guard', 1, 0, 950, 750, [950,750,950,600,950,750,950,600]);
+        	game.add.existing(guard);
+        	guards.add(guard);
         }
 
          // places arrow animation/sprite at x and y, above the door       
@@ -267,10 +274,10 @@ Bank.prototype={
                     // set coinsCollected to 0
                     coinsCollected=0;
                     // set new player coordinates
-                    player.body.x=125;
-                    player.body.y=125;
+                    player.body.x=100;
+                    player.body.y=700;
                     // add a guard at these coordinates
-                    addGuard(300,200);
+                    addGuard();
                     // generate 5 coins
                     Coin = Coins.create( 100,100,'coin');       // top left coin
                     Coin = Coins.create( 300,660,'coin');       // bottom left coin
