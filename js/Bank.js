@@ -6,7 +6,7 @@ var isSign=false;
 var newLevel = true;
 var tutorialWallsExist = false;
 var Swalls;
-var level = 0;
+var level = 1;
 
 
 Bank.prototype={
@@ -15,11 +15,15 @@ Bank.prototype={
         game.load.image('coin', 'assets/img/pngformat/coin.png');
         game.load.atlas('wallAtlas', 'assets/img/wallatlas.png', 'assets/img/wallatlas.json');
         game.load.atlas('atlas', 'assets/img/atlas.png', 'assets/img/atlas.json');
+
+        game.load.image('floor', 'assets/img/pngformat/floor.png');
+
     },
 
     create:function(){
         console.log('Bank: create');
         game.stage.backgroundColor = "#4488AA";
+        game.add.tileSprite(0,0,game.width,game.height,'floor');
 
         //Start arcade physics
         game.physics.startSystem(Phaser.Physics.ARCADE);
@@ -29,7 +33,7 @@ Bank.prototype={
 
         //Create the guards group
         guards=game.add.group();
-        guard = new DumbGuard(game, 'guard', 1, 0, 950, 50, [600,50,600,500,600,50,950,50]);
+        guard = new DumbGuard(game, 'guard', 1, 0, 950, 50, [600,50,600,500,125,500,125,50,125,500,600,500,600,50,950,50]);
         game.add.existing(guard);
         guards.add(guard);
 
@@ -142,7 +146,7 @@ player = new Player(game, 'player', 1, 0, 100, 700);
         //Update Coin display text
         coinText=game.add.text(16,16,'', {fontSize: '32px', fill:'#000'});
         coinsCollected=0;
-        door = game.add.sprite( 100, 400, 'door');
+        door = game.add.sprite( 828, 155, 'door');
         game.physics.arcade.enable(door);
         door.body.immovable=true;
 
