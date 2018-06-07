@@ -29,9 +29,6 @@ Bank.prototype={
 
         //Create the guards group
         guards=game.add.group();
-        //guard = new Guard(game, 'guard', 1, 0, 650, 700);
-        //game.add.existing(guard);
-        //guards.add(guard);
         guard = new DumbGuard(game, 'guard', 1, 0, 950, 50, [600,50,600,500,600,50,950,50]);
         game.add.existing(guard);
         guards.add(guard);
@@ -39,31 +36,7 @@ Bank.prototype={
         // solid walls
         Swalls = game.add.group();
         Swalls.enableBody = true;
-        /*
-        var Wall = Swalls.create(0, game.height-200, 'wallAtlas','shortwall');   // middle wall
-        Wall.body.immovable=true;
-        Wall = Swalls.create(300, game.height-200, 'wallAtlas','sidewall');
-        Wall.scale.setTo(1,.3);
-        Wall.body.immovable=true;
-        
-        Wall = Swalls.create(0, game.height-500, 'wallAtlas','shortwall');   // top left
-        Wall.body.immovable=true;
-        Wall.scale.setTo(1.5,1);
-        Wall = Swalls.create(525, 0, 'wallAtlas','sidewall');   // middle wall
-        Wall.body.immovable=true;
-        Wall.scale.setTo(1,.455);
-        Wall = Swalls.create(400, 0, 'wallAtlas','sidewall');   // middle wall
-        Wall.body.immovable=true;
-        Wall.scale.setTo(1,.455);
-        Wall = Swalls.create(625, 400, 'wallAtlas','sidewall');   // middle wall
-        Wall.body.immovable=true;
-        Wall.scale.setTo(1,.3);
-        Wall = Swalls.create(625, 400, 'wallAtlas','topwall');   // middle wall
-        Wall.body.immovable=true;
-        Wall = Swalls.create(625, game.height-100, 'wallAtlas','sidewall');   // middle wall
-        Wall.body.immovable=true;
-        Wall.scale.setTo(1,.3);
-*/
+
         //*Evs Crap
         // top left area
         var leftMidWallPiece = Swalls.create(0, 400, 'wallAtlas','shortwall');   // left middle wall
@@ -109,21 +82,12 @@ Bank.prototype={
         botPiece.scale.setTo(.3,.13);
         
 
-//>>>>>>> Stashed changes
+
         //adding moveable walls
         //adding Push Walls (Green)
         Gwalls = game.add.group();
         Gwalls.enableBody = true;
-//<<<<<<< Updated upstream
-        // top left green wall
-        GreenWall = Gwalls.create(290, game.height-500,'atlas', 'GreenWall');
-        GreenWall.scale.setTo(13.5,8);
-        GreenWall.body.collideWorldBounds = true;
-        GreenWall.body.drag.set(175);
-        // bottom right green wall
-        GreenWall = Gwalls.create(625, 640, 'atlas', 'GreenWall');
-        GreenWall.scale.setTo(8,7.5);
-//=======
+
         // bot left green wall
         GreenWall = Gwalls.create(10, 660,'atlas', 'GreenWall');
         GreenWall.scale.setTo(12,2);

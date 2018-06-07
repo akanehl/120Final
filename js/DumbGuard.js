@@ -67,7 +67,7 @@ function DumbGuard(game, key, scale, rotation, x, y, points){
 		if(Math.floor(guard.body.x)<guard.points[guard.pointRef]+5&&Math.floor(guard.body.x)>guard.points[guard.pointRef]-5){
 			if(Math.floor(guard.body.y)<guard.points[guard.pointRef+1]+5&&Math.floor(guard.body.y)>guard.points[guard.pointRef+1]-5){
 				guard.pointRef+=2;
-				if(guard.pointRef==8){
+				if(guard.pointRef==guard.points.length){
 					guard.pointRef=0;
 				}
 			console.log('here');

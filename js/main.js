@@ -19,7 +19,6 @@ Mainmenu.prototype ={
     preload:function(){
         console.log('Mainmenu: preload');
         game.load.atlas('atlas', 'assets/img/atlas.png', 'assets/img/atlas.json');
-		game.load.atlas('MenuAtlas', 'assets/img/MenuSprites/menuSheet.png', 'assets/img/MenuSprites/menuSprites.json');
 		game.load.image('Wall', 'assets/img/pngformat/Walls/topwall.png');
         game.load.tilemap('bank','assets/img/Bank.json',null, Phaser.Tilemap.TILED_JSON);
         game.load.image('floor', 'assets/img/pngformat/floor.png');
