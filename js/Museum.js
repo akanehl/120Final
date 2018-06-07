@@ -15,12 +15,13 @@ Museum.prototype={
         game.load.image('coin', 'assets/img/pngformat/coin.png');
         game.load.atlas('wallAtlas', 'assets/img/wallatlas.png', 'assets/img/wallatlas.json');
         game.load.atlas('atlas', 'assets/img/atlas.png', 'assets/img/atlas.json');
+        game.load.atlas('masterAtlas', 'assets/img/MasterAtlas.png', 'assets/img/MasterAtlas.json');
     },
 
     create:function(){
         console.log('Museum: create');
-        game.stage.backgroundColor = "#4488AA";
-
+        //game.stage.backgroundColor = "#4488AA";
+        game.add.tileSprite(0,0,game.width,game.height,'masterAtlas', '2floor');
         //Start arcade physics
         game.physics.startSystem(Phaser.Physics.ARCADE);
 
@@ -35,6 +36,8 @@ Museum.prototype={
         // solid walls
         Swalls = game.add.group();
         Swalls.enableBody = true;
+
+        
         var Midwall = Swalls.create(400, 380, 'wallAtlas','shortwall');   // middle wall
         Midwall.body.immovable = true;
         Midwall.scale.setTo(1.3,1);
