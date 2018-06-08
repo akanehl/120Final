@@ -11,7 +11,9 @@ var coinsCollected=0;
 var coinText;
 var scoreImage;
 var Swalls;
+var level = 0;
 var state='PlayGround'
+
 
 var Mainmenu = function(game){};
 var map, Floorlayer;
@@ -23,9 +25,10 @@ Mainmenu.prototype ={
         game.load.tilemap('bank','assets/img/Bank.json',null, Phaser.Tilemap.TILED_JSON);
         game.load.image('floor', 'assets/img/pngformat/floor.png');
         game.load.image('tiles','assets/img/pngformat/TotalTileset.png');
-        game.load.atlas('camera', 'assets/img/camera.png', 'assets/img/camera.json');
+
         game.load.image('door', 'assets/img/pngformat/door.png');
         game.load.atlas('exitArrow', 'assets/img/ExitArrow.png', 'assets/img/ExitArrow.json');
+        game.load.atlas('masterAtlas', 'assets/img/MasterAtlas.png', 'assets/img/MasterAtlas.json');
 
         game.load.image('player', 'assets/img/pngformat/player.png');
         game.load.image('guard', 'assets/img/pngformat/Guard.png');
@@ -150,7 +153,6 @@ var PlayGround = function(game) {};
 
 var map, Walllayer, Floorlayer;
 var camera, exitArrow;
-var level = 0;
 var isSign=false;
 var newLevel = false;
 
