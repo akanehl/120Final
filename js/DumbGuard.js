@@ -32,7 +32,7 @@ function DumbGuard(game, key, scale, rotation, x, y, points){
 //Guard Chase AI
         	var LoS= new Phaser.Line(guard.x, guard.y, player.x, player.y);
         	var LoSInter = getWallIntersection(LoS);
-        	if(LoSInter||LoS.length>127){
+        	if(LoSInter||LoS.length>multi){
         		guard.chase=false;
         		if(guard.safe==false){
         			guard.safe=true;
@@ -40,7 +40,7 @@ function DumbGuard(game, key, scale, rotation, x, y, points){
         			Safe.play();
         			console.log('safe');
         		}
-        	}else if(LoS.length<=127){
+        	}else if(LoS.length<=multi){
         		guard.chase=true;
         		if(guard.alert==false){
         			guard.alert=true;

@@ -14,6 +14,7 @@ var Swalls;
 var level = 0;
 var setting='tutorial';
 var state='PlayGround';
+var multi=125;
 
 var Mainmenu = function(game){};
 var map, Floorlayer;
@@ -209,7 +210,7 @@ PlayGround.prototype={
 
         //Create the guards group
 		guards=game.add.group();
-        guard = new Guard(game, 'guard', 1, 0, 900, 650);
+        guard = new Guard(game, 'guard', 1, 0, 800, 300);
         game.add.existing(guard);
 		guards.add(guard);
 		

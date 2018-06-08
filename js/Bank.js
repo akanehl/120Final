@@ -353,6 +353,10 @@ Bank.prototype={
 
                     // increase the level
                     level += 1;
+					console.log('Game Over, You Win!');
+					// game over function go here
+					game.state.start('YouWin');
+					//^^^^^^^^^^^^^^^^^^^^^^^^^^^
                 }
             }
         }   // end of level 2
@@ -420,6 +424,9 @@ Bank.prototype={
         if(game.input.keyboard.justPressed(Phaser.Keyboard.C)){
             coinsCollected+=1;
         }
+		if(game.input.keyboard.justPressed(Phaser.Keyboard.L)){
+			game.state.start('YouWin');
+		}
     }
 }
 game.state.add('Bank', Bank);
