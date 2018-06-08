@@ -14,7 +14,7 @@ Bank.prototype={
         game.load.image('coin', 'assets/img/pngformat/coin.png');
         game.load.atlas('wallAtlas', 'assets/img/wallatlas.png', 'assets/img/wallatlas.json');
         game.load.atlas('atlas', 'assets/img/atlas.png', 'assets/img/atlas.json');
-
+        game.load.atlas('masterAtlas', 'assets/img/MasterAtlas.png', 'assets/img/MasterAtlas.json');
         game.load.image('floor', 'assets/img/pngformat/floor.png');
 
     },
@@ -41,49 +41,79 @@ Bank.prototype={
         Swalls.enableBody = true;
 
         //*Evs Crap
-        // top left area
-        var leftMidWallPiece = Swalls.create(0, 400, 'wallAtlas','shortwall');   // left middle wall
-        leftMidWallPiece.body.immovable = true;
-        leftMidWallPiece.scale.setTo(.6,1);
-        var rightMidWallPiece = Swalls.create(200, 400, 'wallAtlas','shortwall');   // right mid wall
-        rightMidWallPiece.body.immovable = true;   
-        rightMidWallPiece.scale.setTo(1.5,1);
-        var LHallway = Swalls.create(300, 90, 'wallAtlas','sidewall');   // left hallway wall
-        LHallway.body.immovable = true;   
-        LHallway.scale.setTo(.9,.51);
-        var RHallway = Swalls.create(440, -60, 'wallAtlas','sidewall');   // right hallway wall
-        RHallway.body.immovable = true;   
-        RHallway.scale.setTo(.8,.5);
+        // borders
+        var top = Swalls.create(0, 0, 'masterAtlas','topwall');
+        top.body.immovable = true;
+        var bot = Swalls.create(0, game.height -64, 'masterAtlas','bottomwall');
+        bot.body.immovable = true;
+        var left = Swalls.create(0, 0, 'masterAtlas','blankside');
+        left.body.immovable = true;
+        var right = Swalls.create(game.width, 0, 'masterAtlas','blankside');
+        right.body.immovable = true;
+        right.scale.setTo(-1,1);
 
-        var rightWall = Swalls.create(180, 650, 'wallAtlas','sidewall');   // right wall in small room
-        rightWall.body.immovable = true;
-        rightWall.scale.setTo(.4,.3);
-        var botWall = Swalls.create(110, 650, 'wallAtlas','shortwall');   // top/bot wall in small room
-        botWall.body.immovable = true;
-        botWall.scale.setTo(.5,.5);
+        //corners
+        topmid = Swalls.create(512,0, 'masterAtlas', '1corner');
+        topmid.body.immovable = true;
+        topmid.scale.setTo(-1,1);
+        leftmid = Swalls.create(0,416, 'masterAtlas', '1corner');
+        leftmid.body.immovable = true;
+        leftmid.scale.setTo(1,-1);
+        botleft = Swalls.create(292,game.height, 'masterAtlas', '1corner');
+        botleft.body.immovable = true;
+        botleft.scale.setTo(-1,-1);
 
-        // top right room quadrant
-        var leftwall = Swalls.create(710, 100, 'wallAtlas','sidewall');   // left wall
-        leftwall.body.immovable = true;   
-        leftwall.scale.setTo(.8,.30);
-        var Botwall = Swalls.create(710, 300, 'wallAtlas','shortwall');   // bottom wall
-        Botwall.body.immovable = true;   
-        Botwall.scale.setTo(1.1,1);
-        var block = Swalls.create(815, 170, 'wallAtlas','shortwall');   // block wall
-        block.body.immovable = true;   
-        block.scale.setTo(.45,1.2);
+        rightbot = Swalls.create(game.width,544, 'masterAtlas', '1corner');
+        rightbot.body.immovable = true;
+        rightbot.scale.setTo(-1,1);
 
-        // bottom right room quadrant
-        var Topwall= Swalls.create(710, 530, 'wallAtlas','shortwall');   // top wall
-        Topwall.body.immovable = true;   
-        Topwall.scale.setTo(1.7,1);
-        var topPiece = Swalls.create(710, 550, 'wallAtlas','sidewall');   // left top piece wall
-        topPiece.body.immovable = true;   
-        topPiece.scale.setTo(.3,.13);
-        var botPiece = Swalls.create(710, 710, 'wallAtlas','sidewall');   // left bot piece wall
-        botPiece.body.immovable = true;   
-        botPiece.scale.setTo(.3,.13);
-        
+
+        //top right
+        cornerright = Swalls.create(game.width-320,352, 'masterAtlas', '1corner');
+        cornerright.scale.setTo(1,-1);
+        cornerright.body.immovable = true;
+        smallboi4 = Swalls.create(game.width-256,160, 'masterAtlas', 'endcapmini');
+        smallboi4.scale.setTo(-1,1);
+        smallboi4.body.immovable = true;
+        smallboi3 = Swalls.create(game.width-256,288, 'masterAtlas', 'minismall');
+        smallboi3.body.immovable = true;
+        doorpiece =  Swalls.create(game.width-196,160, 'masterAtlas', 'singlewall');
+        doorpiece.body.immovable = true;
+        //top left
+        cornertop = Swalls.create(384,416, 'masterAtlas', '1corner');
+        cornertop.scale.setTo(-1,-1);
+        cornertop.body.immovable = true;
+        smallboi1 = Swalls.create(64,352, 'masterAtlas', 'minismall');
+        smallboi1.body.immovable = true;
+        smallboi2 = Swalls.create(384,352, 'masterAtlas', 'minismall');
+        smallboi2.body.immovable = true;
+        vert1 = Swalls.create(320,352, 'masterAtlas', 'verttopleft');
+        vert1.scale.setTo(1,-1);
+        vert1.body.immovable = true;
+        topsmall = Swalls.create(320,416, 'masterAtlas', 'singlewall');
+        topsmall.scale.setTo(-1,-1);
+        topsmall.body.immovable = true;
+        vert2 = Swalls.create(448,64, 'masterAtlas', 'verttopleft');
+        vert2.body.immovable = true;
+        //bottom left
+        singlebot = Swalls.create(228,game.height-256, 'masterAtlas', 'singlewall');
+        singlebot.scale.setTo(-1,1);
+        singlebot.body.immovable = true;
+        cornerbot = Swalls.create(292,game.height-256, 'masterAtlas', '1corner');
+        cornerbot.scale.setTo(-1,1);
+        cornerbot.body.immovable = true;
+        mini = Swalls.create(228,game.height-192, 'masterAtlas', 'mini');
+        mini.body.immovable = true;
+        //bottom right
+        cornerright = Swalls.create(game.width-320,544, 'masterAtlas', '1corner'); 
+        cornerright.body.immovable = true;
+        lastboi = Swalls.create(game.width-256,544, 'masterAtlas', 'lastboi'); 
+        lastboi.body.immovable = true;
+        singular = Swalls.create(game.width-320,608, 'masterAtlas', 'singlewall');
+        singular.body.immovable = true; 
+
+
+
 
 
         //adding moveable walls
