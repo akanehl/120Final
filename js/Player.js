@@ -18,6 +18,8 @@ Player.prototype.constructor = Player;
 
 //Override the update function for player to have the movement keys
 Player.prototype.update=function() {
+	
+	
 	cursors = game.input.keyboard.createCursorKeys();
     player.body.velocity.copyFrom(game.physics.arcade.velocityFromAngle(player.angle, 0));
 
