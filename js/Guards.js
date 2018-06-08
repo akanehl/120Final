@@ -109,10 +109,6 @@ Guard.prototype.update=function() {
 		// stop the music
 		Level1.stop();
 		Level2.stop();
-		/*
-		if(level<0){
-			level-=1;
-		}*/
 
         // kill the arrow exit
 		if(exitArrow){

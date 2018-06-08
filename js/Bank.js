@@ -6,7 +6,6 @@ var isSign=false;
 var newLevel = true;
 var tutorialWallsExist = false;
 var Swalls;
-var level = 1;
 
 
 Bank.prototype={
@@ -131,14 +130,14 @@ Bank.prototype={
 
         lightBitmap.blendMode = Phaser.blendModes.MULTIPLY;
 
-        //adding coins
+        
 
-player = new Player(game, 'player', 1, 0, 100, 700);
+        player = new Player(game, 'player', 1, 0, 100, 700);
         players=game.add.group();
         game.add.existing(player);
         players.add(player);
 
-        
+        //adding coins
         Coins = game.add.group();
         Coins.enableBody=true;
         
@@ -146,10 +145,15 @@ player = new Player(game, 'player', 1, 0, 100, 700);
         //Update Coin display text
         coinText=game.add.text(16,16,'', {fontSize: '32px', fill:'#000'});
         coinsCollected=0;
+        // empty bag on load out
+        scoreImageEmpty = game.add.sprite(145,6,'emptybag');
+        // full bag offscreen
+        scoreImageFull = game.add.sprite(-100,-100,'fullbag');
         door = game.add.sprite( 828, 155, 'door');
         game.physics.arcade.enable(door);
         door.body.immovable=true;
 
+        // create the coins at specific coordinates
         Coin = Coins.create( 100,100,'coin');       // top left coin
         Coin = Coins.create( 300,660,'coin');       // bottom left coin
         Coin = Coins.create( 500,320,'coin');       // middle coin
@@ -190,6 +194,7 @@ player = new Player(game, 'player', 1, 0, 100, 700);
 
         coinText.text="coins: "+coinsCollected;
 
+
         // when the player collects a coin, play a sound, kill coin, update score
         function collectCoin(player, Coin){
             CoinPU.play();
@@ -220,10 +225,17 @@ player = new Player(game, 'player', 1, 0, 100, 700);
             }
             // if 5 coins are collected
             if(coinsCollected >= 5) {
-            
                 //  if sign doesn't exist, add the exit arrow animation and set the isSign var true
                 if(!isSign){
+                    // move empty bag sprite offscreen
+                    scoreImageEmpty.x = -200;
+                    scoreImageEmpty.y = -200;
+                    // move full bag sprite in its place
+                    scoreImageFull.x = 145;
+                    scoreImageFull.y = 3;
+                    // add the arrow above the door
                     addExitArrow(door.x,door.y);
+                    // set is sign to true to exit this loop
                     isSign=true;
                 }
                 //  if the player collides with the door, event Pexit becomes true, level resets
@@ -246,6 +258,12 @@ player = new Player(game, 'player', 1, 0, 100, 700);
                     player.body.y=700;
                     // add a guard at these coordinates
                     addGuard();
+                                        // move full bag sprite offscreen
+                    scoreImageFull.x = -200;
+                    scoreImageFull.y = -200;
+                    // move empty bag sprite in its place
+                    scoreImageEmpty.x = 145;
+                    scoreImageEmpty.y = 3;
                     // generate 5 coins
                     Coin = Coins.create( 100,100,'coin');       // top left coin
                     Coin = Coins.create( 300,660,'coin');       // bottom left coin
@@ -257,6 +275,109 @@ player = new Player(game, 'player', 1, 0, 100, 700);
                 }
             }
         }   // end of level 1
+
+        // if the player is on the 2nd level, run this code
+         if( level == 2 ) {
+            // just a variable that reads the level
+            if(newLevel == true) {
+                console.log('This is level 2');
+                newLevel = false;
+            }
+            // if 5 coins are collected
+            if(coinsCollected >= 5) {
+                //  if sign doesn't exist, add the exit arrow animation and set the isSign var true
+                if(!isSign){
+                    // move empty bag sprite offscreen
+                    scoreImageEmpty.x = -200;
+                    scoreImageEmpty.y = -200;
+                    // move full bag sprite in its place
+                    scoreImageFull.x = 145;
+                    scoreImageFull.y = 3;
+                    // add the arrow above the door
+                    addExitArrow(door.x,door.y);
+                    // set is sign to true to exit this loop
+                    isSign=true;
+                }
+                //  if the player collides with the door, event Pexit becomes true, level resets
+                if(Pexit==true){
+                    coinReset = true;
+                    // kill the arrow exit
+                    exitArrow.kill();
+                    // set isSign to false
+                    isSign=false;
+                    // play rewind sound
+                    Rewind.play();
+                    // stop level1 music
+                    Level1.stop();
+                    // play level2 music
+                    Level2.play();
+                    // set coinsCollected to 0
+                    coinsCollected=0;
+                    // move full bag sprite offscreen
+                    scoreImageFull.x = -200;
+                    scoreImageFull.y = -200;
+                    // move empty bag sprite in its place
+                    scoreImageEmpty.x = 145;
+                    scoreImageEmpty.y = 3;
+
+                    // increase the level
+                    level += 1;
+                }
+            }
+        }   // end of level 2
+
+        // if the player is on the last level, run this code
+         if( level == 3 ) {
+            // just a variable that reads the level
+            if(newLevel == true) {
+                console.log('This is level 3');
+                newLevel = false;
+            }
+            // if 5 coins are collected
+            if(coinsCollected >= 5) {
+                //  if sign doesn't exist, add the exit arrow animation and set the isSign var true
+                if(!isSign){
+                     // move empty bag sprite offscreen
+                    scoreImageEmpty.x = -200;
+                    scoreImageEmpty.y = -200;
+                    // move full bag sprite in its place
+                    scoreImageFull.x = 145;
+                    scoreImageFull.y = 3;
+                    // add the arrow above the door
+                    addExitArrow(door.x,door.y);
+                    // set is sign to true to exit this loop
+                    isSign=true;
+                }
+                //  if the player collides with the door, event Pexit becomes true, level resets
+                if(Pexit==true){
+                    coinReset = true;
+                    // kill the arrow exit
+                    exitArrow.kill();
+                    // set isSign to false
+                    isSign=false;
+                    // play rewind sound
+                    Rewind.play();
+                    // stop level1 music
+                    Level1.stop();
+                    // play level2 music
+                    Level2.play();
+                    // set coinsCollected to 0
+                    coinsCollected=0;
+                    // move full bag sprite offscreen
+                    scoreImageFull.x = -200;
+                    scoreImageFull.y = -200;
+                    // move empty bag sprite in its place
+                    scoreImageEmpty.x = 145;
+                    scoreImageEmpty.y = 3;
+
+                    // increase the level
+                    level += 1;
+                }
+            }
+        }   // end of level 3
+        
+        
+        
 
         
         if(game.input.keyboard.isDown(Phaser.Keyboard.SPACEBAR)){
