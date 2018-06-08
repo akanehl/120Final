@@ -26,11 +26,9 @@ Museum.prototype={
         //Start arcade physics
         game.physics.startSystem(Phaser.Physics.ARCADE);
 
-        
-
         //Create the guards group
 		guards=game.add.group();
-        guard = new DumbGuard(game, 'guard', 1, 0, 650, 700, [650,500,650,700,650,500,650,700]);
+        guard = new DumbGuard(game, 'guard', 1, 0, 600, 700, [600,450,900,450,600,450,600,700]);
         game.add.existing(guard);
         guards.add(guard);
 
@@ -38,19 +36,28 @@ Museum.prototype={
         Swalls = game.add.group();
         Swalls.enableBody = true;
 
+        var top2 = Swalls.create(0,0,'masterAtlas','2topwall');
+        top2.body.immovable = true;
+        var bot2 = Swalls.create(0,game.height-64,'masterAtlas','2bottomwall');
+        bot2.body.immovable = true;
+        var left2 = Swalls.create(0,0,'masterAtlas','2leftwall');
+        left2.body.immovable = true;
+        var right2 = Swalls.create(game.width-64,0,'masterAtlas','2rightwall');
+        right2.body.immovable = true;
+
+        var mediumWall = Swalls.create(64,512,'masterAtlas','mediumwall2');
+        mediumWall.body.immovable = true;
+        var mediumWall2 =Swalls.create(640,512,'masterAtlas','mediumwall2');
+        mediumWall2.body.immovable = true;
+
+        var longWall = Swalls.create(384,64,'masterAtlas','longwall2');
+        longWall.body.immovable = true;
         
-        var Midwall = Swalls.create(400, 380, 'wallAtlas','shortwall');   // middle wall
-        Midwall.body.immovable = true;
-        Midwall.scale.setTo(1.3,1);
-        var Botwall = Swalls.create(150, 570, 'wallAtlas','shortwall');   // bottom left wall
-        Botwall.body.immovable = true;   
-        Botwall.scale.setTo(1.1,1.5);
-        var roomLeftWall = Swalls.create(610, -80, 'wallAtlas','sidewall');   // left wall in top room
-        roomLeftWall.body.immovable = true;
-        roomLeftWall.scale.setTo(1,.35);
-        var roomBotWall = Swalls.create(770, 200, 'wallAtlas','shortwall');   // bottom wall in top room
-        roomBotWall.body.immovable = true;
-        roomBotWall.scale.setTo(1.7,1);
+        longWall.angle = 90;
+
+
+        
+
 
         //adding moveable walls
         //adding Push Walls (Green)
@@ -112,7 +119,7 @@ Museum.prototype={
 		Coin = Coins.create( 100,100,'coin');		// top left coin
 		Coin = Coins.create( 300,660,'coin');		// bottom left coin
 		Coin = Coins.create( 500,320,'coin');		// middle coin
-		Coin = Coins.create( 950,40,'coin');		// top right coin
+		Coin = Coins.create( 925,73,'coin');		// top right coin
 		Coin = Coins.create( 925,700,'coin');		// bottom right coin 
 
     },
