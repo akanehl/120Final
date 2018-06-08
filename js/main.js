@@ -159,10 +159,9 @@ PlayGround.prototype={
         console.log('PlayGround: preload');
 
         game.load.image('Wall', 'assets/img/pngformat/Walls/topwall.png');
-        game.load.tilemap('bank','assets/img/Bank.json',null, Phaser.Tilemap.TILED_JSON);
-        game.load.image('tiles','assets/img/pngformat/TotalTileset.png');
         game.load.image('coin', 'assets/img/pngformat/coin.png');
         game.load.atlas('wallAtlas', 'assets/img/wallatlas.png', 'assets/img/wallatlas.json');
+        game.load.atlas('masterAtlas', 'assets/img/MasterAtlas.png', 'assets/img/MasterAtlas.json');
     },
 
 
@@ -243,22 +242,39 @@ PlayGround.prototype={
         // Solid wall group
         Swalls = game.add.group();
         Swalls.enableBody = true;
-        var Ltopwall = Swalls.create(62, 190, 'wallAtlas','shortwalUDl');
-        Ltopwall.scale.setTo(1.18,1);
-        Ltopwall.body.immovable = true;   
-        var Lbotwall = Swalls.create(62, 512, 'wallAtlas','shortwall');
-        Lbotwall.scale.setTo(1.18,1);
-        Lbotwall.body.immovable = true;   
-        var Mtopwall = Swalls.create(417, 190, 'wallAtlas', 'shortwalUDl');
+
+        var top = Swalls.create(0,0,'masterAtlas','topwall');
+        top.body.immovable = true;
+        var bot = Swalls.create(0,game.height,'masterAtlas','topwall');
+        bot.body.immovable=true;
+        bot.scale.setTo(1,-1);
+
+        var left = Swalls.create(0,0,'masterAtlas','sidewall');
+        left.body.immovable=true;
+        var right = Swalls.create(game.width,0,'masterAtlas','sidewall');
+        right.body.immovable=true;
+        right.scale.setTo(-1,1);
+
+        var Ltopwall = Swalls.create(62, 256, 'masterAtlas','singlewall');
+        Ltopwall.body.immovable = true;
+        Ltopwall.scale.setTo(3.5,-1);
+        var Lbotwall = Swalls.create(62, 511.5, 'masterAtlas','singlewall');
+        Lbotwall.body.immovable = true; 
+        Lbotwall.scale.setTo(3.5,1); 
+
+        var Mtopwall = Swalls.create(417, 256, 'masterAtlas', 'shortwall');
         Mtopwall.body.immovable = true;   
-        var Mbotwall = Swalls.create(417, 512, 'wallAtlas', 'shortwall');
-        Mbotwall.body.immovable = true;   
-        var Rtopwall = Swalls.create(737, 190, 'wallAtlas', 'shortwalUDl');
+        Mtopwall.scale.setTo(1,-1);
+        var Mbotwall = Swalls.create(417, 512, 'masterAtlas', 'shortwall');
+        Mbotwall.body.immovable = true;  
+
+        var Rtopwall = Swalls.create(961, 256, 'masterAtlas', 'singlewall');
         Rtopwall.body.immovable = true;   
-        Rtopwall.scale.setTo(1.17,1);
-        var Rbotwall = Swalls.create(737, 512, 'wallAtlas', 'shortwall');
+        Rtopwall.scale.setTo(-3.5,-1);
+        var Rbotwall = Swalls.create(961, 512, 'masterAtlas', 'singlewall');
         Rbotwall.body.immovable = true;   
-        Rbotwall.scale.setTo(1.17,1);
+        Rbotwall.scale.setTo(-3.5,1);
+
 		bitmap = this.game.add.bitmapData(this.game.width, this.game.height);
 		
 		//light enabled after walls spawned in so the walls are not lit up
@@ -289,7 +305,7 @@ PlayGround.prototype={
         coinText=game.add.text(16,16,'', {fontSize: '32px', fill:'#000'});
         scoreImage = game.add.sprite(145,6,'emptybag');
 		coinsCollected=0;
-		door = game.add.sprite( 600, 700, 'door');
+		door = game.add.sprite( 600, 722, 'door');
         game.physics.arcade.enable(door);
 		door.body.immovable=true;
 		
