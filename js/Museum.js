@@ -10,6 +10,7 @@ var Swalls;
 var scoreImage;
 
 
+
 Museum.prototype={
     preload:function(){
         console.log('Museum: preload');
@@ -17,10 +18,12 @@ Museum.prototype={
        
         game.load.atlas('atlas', 'assets/img/atlas.png', 'assets/img/atlas.json');
         game.load.atlas('masterAtlas', 'assets/img/MasterAtlas.png', 'assets/img/MasterAtlas.json');
+		
     },
 
     create:function(){
         console.log('Museum: create');
+		setting='museum';
         //game.stage.backgroundColor = "#4488AA";
         game.add.tileSprite(0,0,game.width,game.height,'masterAtlas', '2floor');
         //Start arcade physics

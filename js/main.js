@@ -12,7 +12,8 @@ var coinText;
 var scoreImage;
 var Swalls;
 var level = 0;
-var state='PlayGround'
+var setting='tutorial';
+var state='PlayGround';
 
 var Mainmenu = function(game){};
 var map, Floorlayer;

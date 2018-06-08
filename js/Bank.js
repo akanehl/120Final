@@ -16,11 +16,12 @@ Bank.prototype={
         game.load.atlas('atlas', 'assets/img/atlas.png', 'assets/img/atlas.json');
         game.load.atlas('masterAtlas', 'assets/img/MasterAtlas.png', 'assets/img/MasterAtlas.json');
         game.load.image('floor', 'assets/img/pngformat/floor.png');
-
+		
     },
 
     create:function(){
         console.log('Bank: create');
+		setting='bank';
         game.stage.backgroundColor = "#4488AA";
         game.add.tileSprite(0,0,game.width,game.height,'floor');
 
@@ -32,7 +33,7 @@ Bank.prototype={
 
         //Create the guards group
         guards=game.add.group();
-        guard = new DumbGuard(game, 'guard', 1, 0, 950, 50, [600,50,600,500,125,500,125,50,125,500,600,500,600,50,950,50]);
+        guard = new DumbGuard(game, 'guard', 1, 0, 900, 100, [600,100,600,500,200,500,200,100,200,500,600,500,600,100,900,100]);
         game.add.existing(guard);
         guards.add(guard);
 
@@ -122,7 +123,7 @@ Bank.prototype={
         Gwalls.enableBody = true;
 
         // bot left green wall
-        GreenWall = Gwalls.create(10, 660,'atlas', 'GreenWall');
+        GreenWall = Gwalls.create(64, 544,'atlas', 'GreenWall');
         GreenWall.scale.setTo(12,2);
         GreenWall.body.collideWorldBounds = true;
         GreenWall.body.drag.set(175);
@@ -132,8 +133,8 @@ Bank.prototype={
         GreenWall.body.collideWorldBounds = true;
         GreenWall.body.drag.set(175);
         // bottom right green wall
-        GreenWall = Gwalls.create(710, 650, 'atlas', 'GreenWall');
-        GreenWall.scale.setTo(2,7);
+        GreenWall = Gwalls.create(710, 672, 'atlas', 'GreenWall');
+        GreenWall.scale.setTo(2,8);
 //>>>>>>> Stashed changes
         GreenWall.body.collideWorldBounds = true;
         GreenWall.body.drag.set(175);
@@ -186,9 +187,9 @@ Bank.prototype={
         // create the coins at specific coordinates
         Coin = Coins.create( 100,100,'coin');       // top left coin
         Coin = Coins.create( 300,660,'coin');       // bottom left coin
-        Coin = Coins.create( 500,320,'coin');       // middle coin
-        Coin = Coins.create( 950,40,'coin');        // top right coin
-        Coin = Coins.create( 925,700,'coin');       // bottom right coin 
+        Coin = Coins.create( 460,300,'coin');       // middle coin
+        Coin = Coins.create( 900,100,'coin');        // top right coin
+        Coin = Coins.create( 875,675,'coin');       // bottom right coin 
 
     },
     update:function(){
@@ -234,7 +235,7 @@ Bank.prototype={
 
         // should take x, y coordinates so we can manually place guards
         function addGuard(){
-            guard = new DumbGuard(game, 'guard', 1, 0, 950, 750, [950,750,950,600,950,750,950,600]);
+            guard = new DumbGuard(game, 'guard', 1, 0, 925, 725, [925,625,925,700]);
         	game.add.existing(guard);
         	guards.add(guard);
         }
@@ -296,10 +297,10 @@ Bank.prototype={
                     scoreImageEmpty.y = 3;
                     // generate 5 coins
                     Coin = Coins.create( 100,100,'coin');       // top left coin
-                    Coin = Coins.create( 300,660,'coin');       // bottom left coin
-                    Coin = Coins.create( 500,320,'coin');       // middle coin
-                    Coin = Coins.create( 950,40,'coin');        // top right coin
-                    Coin = Coins.create( 925,700,'coin');       // bottom right coin 
+					Coin = Coins.create( 300,660,'coin');       // bottom left coin
+					Coin = Coins.create( 460,300,'coin');       // middle coin
+					Coin = Coins.create( 900,100,'coin');        // top right coin
+					Coin = Coins.create( 875,675,'coin');       // bottom right coin 
                     // increase the level
                     level += 1;
                 }
