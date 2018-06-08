@@ -157,10 +157,6 @@ var newLevel = false;
 PlayGround.prototype={
     preload:function(){
         console.log('PlayGround: preload');
-
-        game.load.image('Wall', 'assets/img/pngformat/Walls/topwall.png');
-        game.load.image('coin', 'assets/img/pngformat/coin.png');
-        game.load.atlas('wallAtlas', 'assets/img/wallatlas.png', 'assets/img/wallatlas.json');
         game.load.atlas('masterAtlas', 'assets/img/MasterAtlas.png', 'assets/img/MasterAtlas.json');
     },
 
@@ -295,11 +291,11 @@ PlayGround.prototype={
         Coins.enableBody=true;
 
         // tutorial levels coins
-        var Coin = Coins.create(200,350,'coin');	// middle left coin
-        Coin = Coins.create(150,650,'coin');		// bot left coin
-        Coin = Coins.create(150,80,'coin');			// top left coin
-        Coin = Coins.create(900,80,'coin');			// top right coin
-        Coin = Coins.create(850,350,'coin');		// mid right coin
+        var Coin = Coins.create(200,350,'masterAtlas','coin');	// middle left coin
+        Coin = Coins.create(150,650,'masterAtlas','coin');		// bot left coin
+        Coin = Coins.create(150,80,'masterAtlas','coin');			// top left coin
+        Coin = Coins.create(900,80,'masterAtlas','coin');			// top right coin
+        Coin = Coins.create(850,350,'masterAtlas','coin');		// mid right coin
 
         //Update Coin display text
         coinText=game.add.text(16,16,'', {fontSize: '32px', fill:'#000'});

@@ -13,7 +13,7 @@ Museum.prototype={
     preload:function(){
         console.log('Museum: preload');
         game.load.image('coin', 'assets/img/pngformat/coin.png');
-        game.load.atlas('wallAtlas', 'assets/img/wallatlas.png', 'assets/img/wallatlas.json');
+       
         game.load.atlas('atlas', 'assets/img/atlas.png', 'assets/img/atlas.json');
         game.load.atlas('masterAtlas', 'assets/img/MasterAtlas.png', 'assets/img/MasterAtlas.json');
     },
@@ -49,13 +49,16 @@ Museum.prototype={
         var mediumWall2 =Swalls.create(640,512,'masterAtlas','mediumwall2');
         mediumWall2.body.immovable = true;
 
-        var longWall = Swalls.create(384,64,'masterAtlas','longwall2');
+        var longWall = Swalls.create(320,64,'masterAtlas','verticalwall2');
         longWall.body.immovable = true;
-        
-        longWall.angle = 90;
 
+        var topleft = Swalls.create(704,64,'masterAtlas','rotated2');
+        topleft.body.immovable = true;
+        topleft.scale.setTo(1,2);
 
-        
+        var topright = Swalls.create(704,320,'masterAtlas','mediumwall2');
+        topright.body.immovable = true;
+        topright.scale.setTo(1,-1);        
 
 
         //adding moveable walls
