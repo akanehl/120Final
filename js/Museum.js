@@ -281,8 +281,7 @@ Museum.prototype={
                     // set new player coordinates
                     player.body.x=125;
                     player.body.y=125;
-                    // add a guard at these coordinates
-                    addGuard(500,500);
+
                     // move full bag sprite offscreen
                     scoreImageFull.x = -200;
                     scoreImageFull.y = -200;
@@ -348,12 +347,11 @@ Museum.prototype={
             }
         }   // end of level 3
 
-        if(game.input.keyboard.isDown(Phaser.Keyboard.SPACEBAR)){
+        // Press Q to return to mainmenu
+        if(game.input.keyboard.justPressed(Phaser.Keyboard.Q)){
             game.state.start('Mainmenu');
         }
-        if(game.input.keyboard.justPressed(Phaser.Keyboard.G)){
-            addGuard(500,500);
-        }
+
         if(game.input.keyboard.justPressed(Phaser.Keyboard.C)){
             coinsCollected+=1;
         }

@@ -22,14 +22,10 @@ Bank.prototype={
     create:function(){
         console.log('Bank: create');
 		setting='bank';
-        game.stage.backgroundColor = "#4488AA";
         game.add.tileSprite(0,0,game.width,game.height,'floor');
 
         //Start arcade physics
         game.physics.startSystem(Phaser.Physics.ARCADE);
-
-        //Create the player object
-        
 
         //Create the guards group
         guards=game.add.group();
@@ -41,7 +37,6 @@ Bank.prototype={
         Swalls = game.add.group();
         Swalls.enableBody = true;
 
-        //*Evs Crap
         // borders
         var top = Swalls.create(0, 0, 'masterAtlas','topwall');
         top.body.immovable = true;
@@ -128,19 +123,18 @@ Bank.prototype={
         GreenWall.body.collideWorldBounds = true;
         GreenWall.body.drag.set(175);
         // mid left green wall
-        GreenWall = Gwalls.create(440, 310, 'atlas', 'GreenWall');
-        GreenWall.scale.setTo(2,11);
+        GreenWall = Gwalls.create(449, 289, 'atlas', 'GreenWall');
+        GreenWall.scale.setTo(2,7.9);
         GreenWall.body.collideWorldBounds = true;
         GreenWall.body.drag.set(175);
         // bottom right green wall
-        GreenWall = Gwalls.create(710, 672, 'atlas', 'GreenWall');
+        GreenWall = Gwalls.create(705, 672, 'atlas', 'GreenWall');
         GreenWall.scale.setTo(2,8);
-//>>>>>>> Stashed changes
         GreenWall.body.collideWorldBounds = true;
         GreenWall.body.drag.set(175);
         // top right green wall
-        GreenWall = Gwalls.create(950, 330, 'atlas', 'GreenWall');
-        GreenWall.scale.setTo(15,2);
+        GreenWall = Gwalls.create(896, 330, 'atlas', 'GreenWall');
+        GreenWall.scale.setTo(7.9,2);
         GreenWall.body.collideWorldBounds = true;
         GreenWall.body.drag.set(175);
     
@@ -148,8 +142,8 @@ Bank.prototype={
         //Sliding walls (Pink)
         Pwalls = game.add.group();
         Pwalls.enableBody = true;
-        PinkWall = Pwalls.create(360, 100,'atlas', 'PinkWall');
-        PinkWall.scale.setTo(10,2);
+        PinkWall = Pwalls.create(384, 125,'atlas', 'PinkWall');
+        PinkWall.scale.setTo(8,2);
         PinkWall.body.collideWorldBounds=true;
 
         // Create a bitmap texture for drawing light cones
@@ -162,7 +156,7 @@ Bank.prototype={
         lightBitmap.blendMode = Phaser.blendModes.MULTIPLY;
 
         
-
+        // start the player at these coordinates
         player = new Player(game, 'player', 1, 0, 100, 700);
         players=game.add.group();
         game.add.existing(player);
@@ -353,10 +347,6 @@ Bank.prototype={
 
                     // increase the level
                     level += 1;
-					console.log('Game Over, You Win!');
-					// game over function go here
-					game.state.start('YouWin');
-					//^^^^^^^^^^^^^^^^^^^^^^^^^^^
                 }
             }
         }   // end of level 2
@@ -407,6 +397,9 @@ Bank.prototype={
 
                     // increase the level
                     level += 1;
+                    console.log('Game Over, You Win!');
+					// game over function go here
+					game.state.start('YouWin');
                 }
             }
         }   // end of level 3

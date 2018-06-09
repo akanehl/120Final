@@ -19,15 +19,6 @@ YouWin.prototype={
 		Swalls = game.add.group();
         Swalls.enableBody = true;
 
-        
-        
-
-
-
-		
-		
-		
-		
 		
 		guards=game.add.group();
         guard = new DumbGuard(game, 'guard', 1, 0, 200, 650, [Math.random()*800+100,Math.random()*600+100,Math.random()*800+100,Math.random()*650+100,Math.random()*800+100,Math.random()*650+100,Math.random()*800+100,Math.random()*650+100]);
