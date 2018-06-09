@@ -32,7 +32,7 @@ function DumbGuard(game, key, scale, rotation, x, y, points){
 //Guard Chase AI
         	var LoS= new Phaser.Line(guard.x, guard.y, player.x, player.y);
         	var LoSInter = getWallIntersection(LoS);
-        	if(LoSInter||LoS.length>127){
+        	if(LoSInter||LoS.length>multi){
         		guard.chase=false;
         		if(guard.safe==false){
         			guard.safe=true;
@@ -40,7 +40,7 @@ function DumbGuard(game, key, scale, rotation, x, y, points){
         			Safe.play();
         			console.log('safe');
         		}
-        	}else if(LoS.length<=127){
+        	}else if(LoS.length<=multi){
         		guard.chase=true;
         		if(guard.alert==false){
         			guard.alert=true;
@@ -122,9 +122,16 @@ function DumbGuard(game, key, scale, rotation, x, y, points){
 	}
 	function setFill(x,y){
             var points=[];
+			if (setting=='bank'){
+				multi=200;
+			}else if(setting=='museum'){
+				multi=150;
+			}else{
+				multi=125;
+			}
             for(var a = 0; a < Math.PI*2; a += Math.PI/360) {
                 // Create a ray from the light to a point on the circle
-                var ray = new Phaser.Line(x, y, x+Math.cos(a)*125, y+Math.sin(a)*125);
+                var ray = new Phaser.Line(x, y, x+Math.cos(a)*multi, y+Math.sin(a)*multi);
 
                 // Check if the ray intersected any walls
                 var intersect = getWallIntersection(ray);

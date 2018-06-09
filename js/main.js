@@ -12,8 +12,9 @@ var coinText;
 var scoreImage;
 var Swalls;
 var level = 0;
-var state='PlayGround'
-
+var setting='tutorial';
+var state='PlayGround';
+var multi=125;
 
 var Mainmenu = function(game){};
 var map, Floorlayer;
@@ -45,6 +46,7 @@ Mainmenu.prototype ={
     },
     create:function(){
         console.log('Mainmenu: create');
+
         move=true;
         game.add.tileSprite(0,0,game.width,game.height,'floor');
 
@@ -60,10 +62,21 @@ Mainmenu.prototype ={
 
 
         selected=0;
-		Coin=game.add.sprite(375, 225,'atlas','Coin');
+		Coin=game.add.sprite(375, 225,'masterAtlas','coin');
         game.physics.arcade.enable(Coin);
 
-		
+		textStyle = {
+            font: 'Bungee Outline',
+            fontSize:100,
+        };
+        textStyle2 = {
+            font: 'Bungee Shade',
+            fontSize:100,
+        };
+        textStyle3 = {
+            font: 'Sarpanch',
+            fontSize:100,
+        };
 		ControlsStyle={
 			font:'Character',
 			fontSize:25,
@@ -80,6 +93,9 @@ Mainmenu.prototype ={
         PlayText=game.add.text(420, 200, 'Play',MenuStyle);
         CreditsText=game.add.text(400,260, 'Credits', MenuStyle);
 		controlsText= game.add.text(400,450, 'Controls\nArrow Keys to move things \nSpacebar to do things', ControlsStyle);
+        text=game.add.text(200,500,'COIN THIEF', textStyle);
+        text2=game.add.text(300,600,'COIN THIEF', textStyle2);
+        text3=game.add.text(400,800,'COIN THIEF', textStyle3);
 		
     },
     update:function(){
@@ -194,7 +210,7 @@ PlayGround.prototype={
 
         //Create the guards group
 		guards=game.add.group();
-        guard = new Guard(game, 'guard', 1, 0, 900, 650);
+        guard = new Guard(game, 'guard', 1, 0, 800, 300);
         game.add.existing(guard);
 		guards.add(guard);
 		
@@ -569,5 +585,4 @@ game.state.add('PlayGround', PlayGround);
 game.state.add('GameOver', GameOver);
 
 game.state.start('Mainmenu');
-
 
