@@ -139,6 +139,12 @@ PlayGround.prototype={
         game.add.existing(player);
         players.add(player);
         
+        //player animations
+        player.animations.add('left', [0, 1], 10, true);
+        player.animations.add('right', [2, 3], 10, true);
+        //player.animations.add('up', [2, 3], 10, true);
+        //player.animations.add('down', [2, 3], 10, true);
+
         //adding coins
         Coins = game.add.group();
         Coins.enableBody=true;

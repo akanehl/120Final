@@ -25,7 +25,9 @@ Player.prototype.update=function() {
 
         if(cursors.left.isDown){
             player.angle=180;
+             //player.animations.play('left');
         player.body.velocity.copyFrom(game.physics.arcade.velocityFromAngle(player.angle, 125));
+
         }
         if(cursors.right.isDown){
             player.angle=0;

@@ -15,14 +15,14 @@ Bank.prototype={
         game.load.atlas('wallAtlas', 'assets/img/wallatlas.png', 'assets/img/wallatlas.json');
         game.load.atlas('atlas', 'assets/img/atlas.png', 'assets/img/atlas.json');
         game.load.atlas('masterAtlas', 'assets/img/MasterAtlas.png', 'assets/img/MasterAtlas.json');
-        game.load.image('floor', 'assets/img/pngformat/floor.png');
+        game.load.image('bankTile', 'assets/img/banktile.png');
 		
     },
 
     create:function(){
         console.log('Bank: create');
 		setting='bank';
-        game.add.tileSprite(0,0,game.width,game.height,'floor');
+        game.add.tileSprite(0,0,game.width,game.height,'bankTile');
 
         //Start arcade physics
         game.physics.startSystem(Phaser.Physics.ARCADE);

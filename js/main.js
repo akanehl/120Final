@@ -26,6 +26,7 @@ Mainmenu.prototype ={
         game.load.tilemap('bank','assets/img/Bank.json',null, Phaser.Tilemap.TILED_JSON);
         game.load.image('floor', 'assets/img/pngformat/floor.png');
         game.load.image('tiles','assets/img/pngformat/TotalTileset.png');
+        game.load.image('MainmenuBG', 'assets/img/mainmenubg.png');
 
         game.load.image('door', 'assets/img/pngformat/door.png');
         game.load.atlas('exitArrow', 'assets/img/ExitArrow.png', 'assets/img/ExitArrow.json');
@@ -36,6 +37,8 @@ Mainmenu.prototype ={
 
         game.load.image('emptybag', 'assets/img/moneybagempty.png');
         game.load.image('fullbag', 'assets/img/moneybagfull.png');
+        game.load.image('keys', 'assets/img/keyboardkeys.png');
+        game.load.image('Qkey', 'assets/img/Qkey.png');
 		
         game.load.audio('safe', 'assets/sound/Safe.mp3');
         game.load.audio('alert', 'assets/sound/Alert.mp3');
@@ -43,26 +46,28 @@ Mainmenu.prototype ={
         game.load.audio('level1', 'assets/sound/Level1.mp3');
         game.load.audio('level2', 'assets/sound/Level2.mp3');
         game.load.audio('rewind', 'assets/sound/Rewind.mp3');
+
+        //game.load.spritesheet('player', 'assets/img/thiefSpriteSheet.png', 32, 32);
     },
     create:function(){
         console.log('Mainmenu: create');
+        var MMBG = game.add.sprite( 0,0, 'MainmenuBG');
 
         move=true;
-        game.add.tileSprite(0,0,game.width,game.height,'floor');
 
         //create sprites that run around in the background
         fakePlayer=game.add.sprite( 200, 500, 'player');
-        fakeGuard=game.add.sprite(400,300, 'guard');
+        fakeGuard=game.add.sprite(420,520, 'guard');
         game.physics.arcade.enable(fakeGuard);
         game.physics.arcade.enable(fakePlayer);
         fakePlayer.anchor.setTo(.5,.5);
-        MenuDoor=game.add.sprite(200,700, 'door');
+        MenuDoor=game.add.sprite(120,680, 'door');
         game.physics.arcade.enable(MenuDoor);
 
 
 
         selected=0;
-		Coin=game.add.sprite(250, 480,'masterAtlas','coin');
+		Coin=game.add.sprite(250, 510,'masterAtlas','coin');
         game.physics.arcade.enable(Coin);
 
 		textStyle = {
@@ -74,31 +79,45 @@ Mainmenu.prototype ={
             fontSize:150,
             wordWrap: true,
         };
-        textStyle3 = {
-            font: 'Sarpanch',
-            fontSize:100,
+
+        style = {
+             font: "25px Sarpanch", 
+             fill: "#ffffff", 
+             align: "center" 
         };
-		ControlsStyle={
-			font:'Character',
-			fontSize:25,
-		};
-        GameNameStyle={
-            font:'Character',
-            fontSize:75,
+
+        style2 = {
+             font: "35px Sarpanch", 
+             fill: "#000000", 
+             align: "center" 
         };
-        MenuStyle={
-            font:'Character',
-            fontSize:50,
-        };
-        //GameName=game.add.text(325, 110, 'Coin Thief',GameNameStyle);
+
+        /*
+        // three options
         PlayText=game.add.text(300, 470, 'Play',MenuStyle);
-        CreditsText=game.add.text(300,530, 'Credits', MenuStyle);
         //Controls =game.add.text(300,530, 'Controls', MenuStyle);
-		controlsText= game.add.text(300,590, 'Controls\nArrow Keys to move things \nSpacebar to do things', ControlsStyle);
-        //text=game.add.text(325,110,'COIN THIEF', textStyle);
-        text2=game.add.text(200,70,'COIN THIEF', textStyle2);
-        text3=game.add.text(400,800,'COIN THIEF', textStyle3);
-		
+        CreditsText=game.add.text(300,590, 'Credits', MenuStyle);
+    */
+
+        // only 2 options
+        PlayText=game.add.text(300, 507, 'PLAY', style2);
+        CreditsText=game.add.text(300,577, 'CREDITS', style2);
+
+        text2=game.add.text(game.world.centerX ,game.world.centerY - 200,'COIN THIEF', textStyle2);
+        text2.anchor.set(0.5,0.5);
+
+        // permanently display controls
+        var arrowKeys = game.add.sprite( game.world.centerX +270, game.world.centerY+100, 'keys');
+        arrowKeys.anchor.set(0.5,0.5);
+        var QtoQuit = game.add.sprite( game.world.centerX+270, game.world.centerY+280, 'Qkey');
+        QtoQuit.anchor.set(0.5,0.5);
+        // add text
+        var pressSpace = game.add.text(arrowKeys.x, arrowKeys.y + 80,'Use the ARROW KEYS to move!',style);
+        pressSpace.anchor.set(0.5,0.5);
+        var pressQ = game.add.text(QtoQuit.x, QtoQuit.y + 80,'Press Q Anytime to Quit',style);
+        pressQ.anchor.set(0.5,0.5);
+        pressSpace = game.add.text(pressQ.x - 410, pressQ.y,'Press SPACEBAR to select',style);
+        pressSpace.anchor.set(0.5,0.5);
     },
     update:function(){
         coinCollide=game.physics.arcade.collide(fakePlayer, Coin);
@@ -107,7 +126,9 @@ Mainmenu.prototype ={
         	if(game.input.keyboard.justPressed(Phaser.Keyboard.UP)){
                 if(selected>0){
                 	selected--;
-                	Coin.y-=60;
+                    // OG -60, if 3 options
+                	Coin.y-=70;   //OG -60
+
                 }
             }
         }
@@ -115,30 +136,44 @@ Mainmenu.prototype ={
             if(game.input.keyboard.justPressed(Phaser.Keyboard.DOWN)){
                 if(selected<1){
                 	selected++;
-                	Coin.y+=60
-                }
+                	Coin.y+=70;
+                }/* if three options
+                if(selected<2){
+                    selected++;
+                    Coin.y+=60
+                }*/
             }
         }
 
         if(move){
             if(game.input.keyboard.justPressed(Phaser.Keyboard.SPACEBAR)){
                 if(selected==0){
-
-                    //game.state.start('PlayGround');
-
                     move=false;
                     line=new Phaser.Line(fakePlayer.body.x,fakePlayer.body.y,Coin.body.x,Coin.body.y);
                     //Update the fakePlayers angle to the line
                     fakePlayer.angle=(line.angle/Math.PI)*180;
                     fakePlayer.body.velocity.copyFrom(game.physics.arcade.velocityFromAngle(fakePlayer.angle, 130));
-                    
 
-                	//game.state.start('PlayGround');
                 }else if(selected==1){
-                	console.log('credits');
-                	game.state.start('Credits');
-                }else if(selected==2){
-                	console.log('error with selected');
+                    
+                    game.state.start('Credits');
+
+                    /*
+                    // permanently display controls
+                    var arrowKeys = game.add.sprite( game.world.centerX +230, game.world.centerY+100, 'keys');
+                    arrowKeys.anchor.set(0.5,0.5);
+                    var QtoQuit = game.add.sprite( game.world.centerX+230, game.world.centerY+280, 'Qkey');
+                    QtoQuit.anchor.set(0.5,0.5);
+                    // add text
+                    var pressSpace = game.add.text(arrowKeys.x, arrowKeys.y + 80,'Use the ARROW KEYS to move!',style);
+                    pressSpace.anchor.set(0.5,0.5);
+                    pressSpace = game.add.text(QtoQuit.x, QtoQuit.y + 80,'Press Q Anytime to Quit',style);
+                    pressSpace.anchor.set(0.5,0.5);
+                    */
+
+                /*}else if(selected==2){
+                    move = false;
+                    game.state.start('Credits');*/
                 }
                 
             }
@@ -168,45 +203,17 @@ Credits.prototype={
 	create:function(){
 		console.log('Credits: create');
 		game.stage.backgroundColor = "#4488AA";
+        pressSpace = game.add.text(600,450,'we will add some crap',style);
 	},
 	update:function(){
-		
+        if(game.input.keyboard.justPressed(Phaser.Keyboard.SPACEBAR)){
+            game.state.start('Mainmenu');
+        }
+		move = true;
 	},
 
 
 } // end of credits
-
-// turn this into a control option
-var Tutorial = function(game) {};
-Tutorial.prototype={
-	preload:function(){
-		console.log('Tutorial: preload');
-		game.load.image('keys', 'assets/img/keyboardkeys.png');
-		game.load.image('Qkey', 'assets/img/Qkey.png');
-
-	},
-	create:function(){
-		console.log('Tutorial: create');
-
-		game.stage.backgroundColor = "#000000";
-		var style = { font: "30px Arial", fill: "#ffffff", align: "center" };
-		var pressSpace = game.add.text(200,70,'hi',style);
-		pressSpace.addColor('#ffffff',16);
-
-		arrowKeys = game.add.sprite( game.world.centerX-300,game.world.centerY+100, 'keys');
-		pressSpace = game.add.text(game.world.centerX-425,game.world.centerY+200,'Use the ARROW KEYS to move!',style);
-		QtoQuit = game.add.sprite( game.world.centerX-300, 400, 'Qkey');
-		pressSpace = game.add.text(600,450,'Press Q Anytime to Quit and return to the Main Menu',style);
-	},
-	update:function(){
-		// press space to start the game!
-		if(game.input.keyboard.isDown(Phaser.Keyboard.SPACEBAR)){
-        	game.state.start('PlayGround');
-        }
-	},
-
-
-} // end of Tutorial
 
 var GameOver = function(game){};
 GameOver.prototype={
@@ -226,7 +233,7 @@ GameOver.prototype={
     }
 }
 game.state.add('Mainmenu', Mainmenu);
-game.state.add('Tutorial', Tutorial);
+//game.state.add('Tutorial', Tutorial);
 game.state.add('Credits', Credits);
 
 game.state.add('GameOver', GameOver);
