@@ -24,7 +24,7 @@ Museum.prototype={
 
         //Create the guards group
 		guards=game.add.group();
-        guard = new DumbGuard(game, 'guard', 1, 0, 600, 700, [600,450,900,450,600,450,600,700]);
+        guard = new DumbGuard(game, 'guardWalk01', 'guardAtlas', 1, 0, 600, 700, [600,450,900,450,600,450,600,700]);
         game.add.existing(guard);
         guards.add(guard);
 
@@ -171,7 +171,7 @@ Museum.prototype={
 
         // should take x, y coordinates so we can manually place guards
         function addGuard(x,y){
-        	guard = new DumbGuard(game, 'guard', 1, 0, 200, 200, [500,200,350,300,350,300,200,200]);
+        	guard = new DumbGuard(game, 'guardWalk01', 'guardAtlas', 1, 0, 200, 200, [500,200,350,300,350,300,200,200]);
         	game.add.existing(guard);
         	guards.add(guard);
         }
@@ -227,11 +227,11 @@ Museum.prototype={
                     scoreImageEmpty.x = 145;
                     scoreImageEmpty.y = 3;
                     // generate 5 coins
-                    Coin = Coins.create( 100,100,'coin');       // top left coin
-                    Coin = Coins.create( 300,660,'coin');       // bottom left coin
-                    Coin = Coins.create( 500,320,'coin');       // middle coin
-                    Coin = Coins.create( 950,40,'coin');        // top right coin
-                    Coin = Coins.create( 925,700,'coin');       // bottom right coin 
+                    Coin = Coins.create( 100,100,'masterAtlas','coin');     // top left coin
+        Coin = Coins.create( 300,660,'masterAtlas','coin');     // bottom left coin
+        Coin = Coins.create( 500,320,'masterAtlas','coin');     // middle coin
+        Coin = Coins.create( 925,73,'masterAtlas','coin');      // top right coin
+        Coin = Coins.create( 925,700,'masterAtlas','coin');     // bottom right coin 
                     // increase the level
                     level += 1;
                 }
@@ -269,60 +269,6 @@ Museum.prototype={
                     Level2.play();
                     // set coinsCollected to 0
                     coinsCollected=0;
-                    // set new player coordinates
-                    player.body.x=125;
-                    player.body.y=125;
-
-                    // move full bag sprite offscreen
-                    scoreImageFull.x = -200;
-                    scoreImageFull.y = -200;
-                    // move empty bag sprite in its place
-                    scoreImageEmpty.x = 145;
-                    scoreImageEmpty.y = 3;
-                    // generate 5 coins
-                    Coin = Coins.create( 100,100,'coin');       // top left coin
-                    Coin = Coins.create( 300,660,'coin');       // bottom left coin
-                    Coin = Coins.create( 500,320,'coin');       // middle coin
-                    Coin = Coins.create( 950,40,'coin');        // top right coin
-                    Coin = Coins.create( 925,700,'coin');       // bottom right coin 
-                    // increase the level
-                    level += 1;
-                }
-            }
-        }   // end of level 2
-
-        // if the player is on the last level, run this code
-         if( level == 3 ) {
-            // if 5 coins are collected
-            if(coinsCollected >= 5) {
-                //  if sign doesn't exist, add the exit arrow animation and set the isSign var true
-                if(!isSign){
-                    // move empty bag sprite offscreen
-                    scoreImageEmpty.x = -200;
-                    scoreImageEmpty.y = -200;
-                    // move full bag sprite in its place
-                    scoreImageFull.x = 145;
-                    scoreImageFull.y = 3;
-                    // add the arrow above the door
-                    addExitArrow(door.x,door.y);
-                    // set is sign to true to exit this loop
-                    isSign=true;
-                }
-                //  if the player collides with the door, event Pexit becomes true, level resets
-                if(Pexit==true){
-                    coinReset = true;
-                    // kill the arrow exit
-                    exitArrow.kill();
-                    // set isSign to false
-                    isSign=false;
-                    // play rewind sound
-                    Rewind.play();
-                    // stop level1 music
-                    Level1.stop();
-                    // play level2 music
-                    Level2.play();
-                    // set coinsCollected to 0
-                    coinsCollected=0;
 
                     //set level to 1 for bank
                     level = 1;
@@ -330,7 +276,8 @@ Museum.prototype={
                     game.state.start('Bank');
                 }
             }
-        }   // end of level 3
+        }   // end of level 2
+
 
         // Press Q to return to mainmenu
         if(game.input.keyboard.justPressed(Phaser.Keyboard.Q)){

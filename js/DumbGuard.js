@@ -1,6 +1,6 @@
-function DumbGuard(game, key, scale, rotation, x, y, points){
+function DumbGuard(game, key, atlas, scale, rotation, x, y, points){
  	//Set up the sprite call for the guard
-	Phaser.Sprite.call(this, game, x, y, key, points);
+	Phaser.Sprite.call(this, game, x, y, atlas, key, points);
 
 	//Set up basic guard stats
 	this.anchor.set(0.5, 0.5);
@@ -13,6 +13,8 @@ function DumbGuard(game, key, scale, rotation, x, y, points){
 	this.points=points;
 	this.pointRef=0;
 	
+	this.animations.add('walk', Phaser.Animation.generateFrameNames('guardWalk',1,8,'',2),6,true);
+	this.animations.play('walk');
 	
 	game.physics.enable(this);
 	this.body.collideWorldBounds = true;

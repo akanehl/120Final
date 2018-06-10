@@ -20,7 +20,7 @@ Bank.prototype={
 
         //Create the guards group
         guards=game.add.group();
-        guard = new DumbGuard(game, 'guard', 1, 0, 900, 100, [600,100,600,500,200,500,200,100,200,500,600,500,600,100,900,100]);
+        guard = new DumbGuard(game, 'guardWalk01', 'guardAtlas', 1, 0, 900, 100, [600,100,600,500,200,500,200,100,200,500,600,500,600,100,900,100]);
         game.add.existing(guard);
         guards.add(guard);
 
@@ -222,7 +222,7 @@ Bank.prototype={
 
         // should take x, y coordinates so we can manually place guards
         function addGuard(){
-            guard = new DumbGuard(game, 'guard', 1, 0, 925, 725, [925,625,925,700]);
+            guard = new DumbGuard(game, 'guardWalk01', 'guardAtlas', 1, 0, 925, 725, [925,625,925,700]);
         	game.add.existing(guard);
         	guards.add(guard);
         }
@@ -278,11 +278,11 @@ Bank.prototype={
                     scoreImageEmpty.x = 145;
                     scoreImageEmpty.y = 3;
                     // generate 5 coins
-                    Coin = Coins.create( 100,100,'coin');       // top left coin
-					Coin = Coins.create( 300,660,'coin');       // bottom left coin
-					Coin = Coins.create( 460,300,'coin');       // middle coin
-					Coin = Coins.create( 900,100,'coin');        // top right coin
-					Coin = Coins.create( 875,675,'coin');       // bottom right coin 
+                    Coin = Coins.create( 100,100,'masterAtlas','coin');       // top left coin
+                    Coin = Coins.create( 300,660,'masterAtlas','coin');       // bottom left coin
+                    Coin = Coins.create( 460,300,'masterAtlas','coin');       // middle coin
+                    Coin = Coins.create( 900,100,'masterAtlas','coin');        // top right coin
+                    Coin = Coins.create( 875,675,'masterAtlas','coin');       // bottom right coin 
                     // increase the level
                     level += 1;
                 }

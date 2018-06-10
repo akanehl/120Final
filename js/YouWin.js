@@ -20,13 +20,13 @@ YouWin.prototype={
 
 		
 		guards=game.add.group();
-        guard = new DumbGuard(game, 'guard', 1, 0, 200, 650, [Math.random()*800+100,Math.random()*600+100,Math.random()*800+100,Math.random()*650+100,Math.random()*800+100,Math.random()*650+100,Math.random()*800+100,Math.random()*650+100]);
+        guard = new DumbGuard(game, 'guardWalk01', 'guardAtlas', 1, 0, 200, 650, [Math.random()*800+100,Math.random()*600+100,Math.random()*800+100,Math.random()*650+100,Math.random()*800+100,Math.random()*650+100,Math.random()*800+100,Math.random()*650+100]);
         game.add.existing(guard);
         guards.add(guard);
-		guard = new DumbGuard(game, 'guard', 1, 0, 800, 175, [Math.random()*800+100,Math.random()*650+100,Math.random()*800+100,Math.random()*650+100,Math.random()*800+100,Math.random()*650+100,Math.random()*800+100,Math.random()*650+100]);
+		guard = new DumbGuard(game, 'guardWalk01', 'guardAtlas', 1, 0, 800, 175, [Math.random()*800+100,Math.random()*650+100,Math.random()*800+100,Math.random()*650+100,Math.random()*800+100,Math.random()*650+100,Math.random()*800+100,Math.random()*650+100]);
         game.add.existing(guard);
         guards.add(guard);
-		guard = new DumbGuard(game, 'guard', 1, 0, 200, 175, [Math.random()*800+100,Math.random()*650+100,Math.random()*800+100,Math.random()*650+100,Math.random()*800+100,Math.random()*650+100,Math.random()*800+100,Math.random()*650+100]);
+		guard = new DumbGuard(game, 'guardWalk01', 'guardAtlas', 1, 0, 200, 175, [Math.random()*800+100,Math.random()*650+100,Math.random()*800+100,Math.random()*650+100,Math.random()*800+100,Math.random()*650+100,Math.random()*800+100,Math.random()*650+100]);
         game.add.existing(guard);
         guards.add(guard);
 		bitmap = this.game.add.bitmapData(this.game.width, this.game.height);
