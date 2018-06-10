@@ -6,19 +6,19 @@ YouWin.prototype={
 	},
     create:function(){
 		setting='YouWin';
-		
+		state='Credits';
 		Style={
             font:'Character',
             fontSize:75,
         };
 		
         //game.add.tileSprite(0,0,game.width,game.height,'floor');
-        game.stage.backgroundColor = "#191919";
+        game.stage.backgroundColor = "#000000";
 		
 		Swalls = game.add.group();
         Swalls.enableBody = true;
 
-		
+		//add three guards the wander randomly
 		guards=game.add.group();
         guard = new DumbGuard(game, 'guardWalk01', 'guardAtlas', 1, 0, 200, 650, [Math.random()*800+100,Math.random()*600+100,Math.random()*800+100,Math.random()*650+100,Math.random()*800+100,Math.random()*650+100,Math.random()*800+100,Math.random()*650+100]);
         game.add.existing(guard);
@@ -29,6 +29,7 @@ YouWin.prototype={
 		guard = new DumbGuard(game, 'guardWalk01', 'guardAtlas', 1, 0, 200, 175, [Math.random()*800+100,Math.random()*650+100,Math.random()*800+100,Math.random()*650+100,Math.random()*800+100,Math.random()*650+100,Math.random()*800+100,Math.random()*650+100]);
         game.add.existing(guard);
         guards.add(guard);
+
 		bitmap = this.game.add.bitmapData(this.game.width, this.game.height);
 		
 		//light enabled after walls spawned in so the walls are not lit up
@@ -38,6 +39,7 @@ YouWin.prototype={
         game.physics.enable(lightBitmap);
         lightBitmap.blendMode = Phaser.blendModes.MULTIPLY;
 		
+        //add player
 		player = new Player(game, 'playerWalk01', 'playerAtlas', 1, 0, 500, 400);
         players=game.add.group();
         game.add.existing(player);
@@ -62,7 +64,7 @@ YouWin.prototype={
         var Pexit = game.physics.arcade.collide(player, door);
         // if spacebar is pressed return back to mainmenu
         if(game.input.keyboard.justPressed(Phaser.Keyboard.SPACEBAR)){
-            game.state.start('Mainmenu');
+            game.state.start('Credits');
         }
 	}
 }

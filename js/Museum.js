@@ -171,7 +171,7 @@ Museum.prototype={
 
         // should take x, y coordinates so we can manually place guards
         function addGuard(x,y){
-        	guard = new DumbGuard(game, 'guardWalk01', 'guardAtlas', 1, 0, 200, 200, [500,200,350,300,350,300,200,200]);
+        	guard = new DumbGuard(game, 'guardWalk01', 'guardAtlas', 1, 0, 200, 200, [250,475,500,500,500,200,500,500,250,475,200,250]);
         	game.add.existing(guard);
         	guards.add(guard);
         }
@@ -216,8 +216,8 @@ Museum.prototype={
                     // set coinsCollected to 0
                     coinsCollected=0;
                     // set new player coordinates
-                    player.body.x=125;
-                    player.body.y=125;
+                    player.body.x=100;
+                    player.body.y=650;
                     // add a guard at these coordinates
                     addGuard(300,200);
                     // move full bag sprite offscreen

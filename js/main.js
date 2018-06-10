@@ -60,6 +60,7 @@ Mainmenu.prototype ={
         game.physics.arcade.enable(fakeGuard);
         game.physics.arcade.enable(fakePlayer);
         fakePlayer.anchor.setTo(.5,.5);
+        fakeGuard.anchor.setTo(.5,.5);
         MenuDoor=game.add.sprite(120,680, 'masterAtlas','door');
         game.physics.arcade.enable(MenuDoor);
 
@@ -117,6 +118,8 @@ Mainmenu.prototype ={
         coinCollide=game.physics.arcade.collide(fakePlayer, Coin);
         // allow the fakeplayer to collide with the menudoor/ fake door
         playerExitDoor=game.physics.arcade.collide(fakePlayer, MenuDoor);
+        //
+        guardGetPlayer=game.physics.arcade.collide(fakeGuard, fakePlayer);
 
         // if the player can move around the menu select
         if(move){
@@ -159,11 +162,18 @@ Mainmenu.prototype ={
                 // if the player selected the second option (CREDITS)
                 }else if(selected==1){
                     // move to the credits screen
-                    game.state.start('Credits');
+                    move=false;
+                    Gline=new Phaser.Line(fakeGuard.body.x,fakeGuard.body.y, fakePlayer.body.x,fakePlayer.body.y);
+                    fakeGuard.angle=(Gline.angle/Math.PI)*180;
+                    fakeGuard.body.velocity.copyFrom(game.physics.arcade.velocityFromAngle(fakeGuard.angle, 130));
+                    
                 } // end of credits option
             }
         } // end of the spacebar/select
+        if(guardGetPlayer){
 
+            game.state.start('Credits');
+        }
         // if the coinCollide variable is activated
         if(coinCollide){
             // kill the  oin sprite
@@ -196,7 +206,7 @@ Credits.prototype={
         // change the BG color
 		game.stage.backgroundColor = "#4488AA";
         // Some text
-        pressSpace = game.add.text(600,450,'we will add some crap',style);
+        pressSpace = game.add.text(300,200,'Programming: Alex, Evelyn\nArt: Evelyn, Aaron\n Sound: Alex\nAnimations: Aaron, Alex\nMenu Designs: Evelyn',style);
 	},
 	update:function(){
         // if spacebar is pressed return back to mainmenu
