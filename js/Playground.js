@@ -3,21 +3,16 @@ var PlayGround = function(game) {};
 // Load images and sounds
 
 var map, Walllayer, Floorlayer;
-var camera, exitArrow;
+var exitArrow;
 var isSign=false;
 var newLevel = false;
 
 PlayGround.prototype={
     preload:function(){
-        console.log('PlayGround: preload');
-        game.load.atlas('masterAtlas', 'assets/img/MasterAtlas.png', 'assets/img/MasterAtlas.json');
     },
-
-
-// Setup the example
+    // Setup the example
     create:function() {
-        console.log('PlayGround: create');
-
+        // tiles + tilemaps to load the 'BG'
         map = game.add.tilemap('bank');
         map.addTilesetImage('TotalTileset','tiles');
         Floorlayer = map.createLayer('Floor');
@@ -28,6 +23,7 @@ PlayGround.prototype={
         //map.setCollisionBetween(1,THIS NUMBER, true, 'Walls');
         map.setCollisionBetween(1,28,true,'Walls');
 
+        // SFX
         Alert = game.add.audio('alert');
     	Safe = game.add.audio('safe');
     	CoinPU = game.add.audio('coinPU');
@@ -36,12 +32,11 @@ PlayGround.prototype={
     	Rewind = game.add.audio('rewind');
     	Level1.loop=true;
     	Level2.loop=true;
+        // play the music!
     	Level1.play();
 
         //Start arcade physics
         game.physics.startSystem(Phaser.Physics.ARCADE);
-
-        
 
         //Create the guards group
 		guards=game.add.group();
@@ -53,19 +48,6 @@ PlayGround.prototype={
         Coins = game.add.group();
         Coins.enableBody=true;
 
-        // Create a bitmap texture for drawing light cones
-        
-
-        /* This bitmap is drawn onto the screen using the MULTIPLY blend mode.
-        Since this bitmap is over the background, dark areas of the bitmap
-        will make the background darker. White areas of the bitmap will allow
-        the normal colors of the background to show through. Blend modes are
-        only supported in WebGL. If your browser doesn't support WebGL then
-        you'll see gray shadows and white light instead of colors and it
-        generally won't look nearly as cool. So use a browser with WebGL. */
-        
-
-        //Create generic game walls before the sprites are ready
 
         //adding moveable walls
         //adding Push Walls (Green)
@@ -124,9 +106,11 @@ PlayGround.prototype={
         Rbotwall.body.immovable = true;   
         Rbotwall.scale.setTo(-3.5,1);
 
+        // enable bitmap to the size of our game
 		bitmap = this.game.add.bitmapData(this.game.width, this.game.height);
 		
 		//light enabled after walls spawned in so the walls are not lit up
+        // the circles will be white and placed over the game, multiply mode enabled
         bitmap.context.fillStyle = 'rgb(255, 255, 255)';
         bitmap.context.strokeStyle = 'rgb(255, 255, 255)';
         lightBitmap = this.game.add.image(0, 0, bitmap);
@@ -152,23 +136,24 @@ PlayGround.prototype={
         // tutorial levels coins
         var Coin = Coins.create(200,350,'masterAtlas','coin');	// middle left coin
         Coin = Coins.create(150,650,'masterAtlas','coin');		// bot left coin
-        Coin = Coins.create(150,80,'masterAtlas','coin');			// top left coin
-        Coin = Coins.create(900,80,'masterAtlas','coin');			// top right coin
+        Coin = Coins.create(150,80,'masterAtlas','coin');		// top left coin
+        Coin = Coins.create(900,80,'masterAtlas','coin');		// top right coin
         Coin = Coins.create(850,350,'masterAtlas','coin');		// mid right coin
 
         //Update Coin display text
-        coinText=game.add.text(16,16,'', {fontSize: '32px', fill:'#000'});
-        scoreImage = game.add.sprite(145,6,'emptybag');
+        coinText=game.add.text(32,16,'', style);
+        scoreImage = game.add.sprite(145,6, 'decoration', 'moneybagempty');
 		coinsCollected=0;
-		door = game.add.sprite( 600, 722, 'door');
+
+        // update level display text
+        levelText=game.add.text(900,16,'', style);
+        
+        // add the door and allow the player to collide with it but not let it float away
+		door = game.add.sprite( 600, 722, 'masterAtlas', 'door');
         game.physics.arcade.enable(door);
 		door.body.immovable=true;
-		
-		
-		
-    },
+    },  // end of create
 
-// The update() method is called every frame
     update:function() {
         // player collision with tiled layer
     	game.physics.arcade.collide(player, Walllayer);
@@ -180,6 +165,7 @@ PlayGround.prototype={
         // Player collision with all walls and coins 
         var hitGwalls=game.physics.arcade.collide(player, Gwalls);
         var hitPwalls=game.physics.arcade.collide(player, Pwalls);
+        // call collectCoin function when player collides with coin
         var hitCoins=game.physics.arcade.overlap(player, Coins, collectCoin, null, this);
         var hitSwalls = game.physics.arcade.overlap(player, Swalls);
         var hitWalls = game.physics.arcade.overlap(player, Walllayer);
@@ -200,6 +186,8 @@ PlayGround.prototype={
 
         // update score
         coinText.text="coins: "+coinsCollected;
+        // update level
+        levelText.text = "level: " + level;
 
         // when the player collects a coin, play a sound, kill coin, update score
         function collectCoin(player, Coin){
@@ -222,51 +210,52 @@ PlayGround.prototype={
            	exitArrow.animations.play('arrow', 1, true);
         }
 
-
-
         // tutorial level
         if( level == 0 ) {
             // if 5 coins are collected
             if(coinsCollected >= 5) {
                 //  if sign doesn't exist, add the exit arrow animation and set the isSign var true
                 if(isSign == false ){
+                    // just kill the empty bag image
                     scoreImage.kill();
-                    scoreImage = game.add.sprite(145,6,'fullbag');
+                    // add the full bag
+                    scoreImage = game.add.sprite(145,6,'decoration', 'moneybagfull');
+                    // scale it down
+                    scoreImage.scale.setTo(.8,.8);
+                    // call the exit arrow function to play the animation over it
                     addExitArrow(door.x,door.y);
+                    // set isSign back to true to end this statement
                     isSign=true;
                 }
-                //  if the player collides with the door, event Pexit becomes true, level resets
-            if(Pexit==true){
-                newLevel = true;
-                // kill the arrow exit
-                exitArrow.kill();
-                scoreImage.kill();
-                // set isSign to false
-                isSign=false;
-                // play rewind sound
-                Rewind.play();
-                // stop level1 music
-                Level1.stop();
-                // play level2 music
-                Level2.play();
-                // set coinsCollected to 0t
-                coinsCollected=0;
-                // set new player coordinates
-                player.body.x=100;
-                player.body.y=400;
+                //  if the player collides with the door with 5 or more coins, event Pexit becomes true, go to museum level
+                if(Pexit==true){
+                    newLevel = true;
+                    // kill the arrow exit
+                    exitArrow.kill();
+                    scoreImage.kill();
+                    // set isSign to false
+                    isSign=false;
+                    // play rewind sound
+                    Rewind.play();
+                    // stop level1 music
+                    Level1.stop();
+                    // play level2 music
+                    Level2.play();
+                    // set coinsCollected to 0t
+                    coinsCollected=0;
+                    // set new player coordinates
+                    player.body.x=100;
+                    player.body.y=400;
 
-                // increase the level
-                level += 1;
-                // start Museum level
-                state='Museum';
-                game.state.start(state);
-                }
-            }
+                    // increase the level
+                    level += 1;
+                    // start Museum level
+                    state='Museum';
+                    game.state.start(state);
+                } // end of Pexit
+            } // end of coinsCollected
         }   // end of level 0
        
-        if(game.input.keyboard.justPressed(Phaser.Keyboard.G)){
-            addGuard(500,500);
-        }
         if(game.input.keyboard.justPressed(Phaser.Keyboard.C)){
             coinsCollected+=1;
         }
@@ -278,32 +267,18 @@ PlayGround.prototype={
         }
         if(game.input.keyboard.justPressed(Phaser.Keyboard.B)){
         	state='Bank';
+            level+=1;
             game.state.start(state);
         }
-
-/*----------------------------------------------------------------------
-                             Start of the Light Code
-----------------------------------------------------------------------*/
-        
-            // Connect the dots and fill in the shape, which are cones of light,
-            // with a bright white color. When multiplied with the background,
-            // the white color will allow the full color of the background to
-            // shine through.
-        if(game.input.keyboard.justPressed(Phaser.Keyboard.D)){
-            debug();
+        // Press Q to return to mainmenu
+        if(game.input.keyboard.justPressed(Phaser.Keyboard.Q)){
+            game.state.start('Mainmenu');
         }
-        //
+
     } // end of update function
     
 } // end of playground
-function debug(){
-    game.debug.spriteInfo(guard, 32, 32);
-    game.debug.text('velc' + game.physics.arcade.velocityFromAngle(guard.angle, 60), 32, 168);
-    game.debug.text('angularVelocity: ' + guard.body.angularVelocity, 32, 200);
-    game.debug.text('angularAcceleration: ' + guard.body.angularAcceleration, 32, 232);
-    game.debug.text('angularDrag: ' + guard.body.angularDrag, 32, 264);
-    game.debug.text('deltaZ: ' + guard.body.deltaZ(), 32, 296);
-    }
+
 // Given a ray, this function iterates through all of the walls and
 // returns the closest wall intersection from the start of the ray
 // or null if the ray does not intersect any walls.
@@ -395,7 +370,4 @@ function getWallIntersection (ray) {
          return closestIntersection;
      }
 
-/*----------------------------------------------------------------------
-End of the Light Code
-----------------------------------------------------------------------*/
 game.state.add('PlayGround', PlayGround);

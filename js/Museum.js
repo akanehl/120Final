@@ -1,30 +1,23 @@
-// Museum.js
+
+/*----------------------------------------------------------
+Museum.js
+contains Museum levels, 1, 2, and 3
+----------------------------------------------------------*/
+
 var Museum = function(game){};
-//var map, Walllayer, Floorlayer;
-var camera, exitArrow;
-//var level = 1;
-//var isSign=false;
-var newLevel = false;
-var tutorialWallsExist = false;
+
+// global variables
+var exitArrow;
 var Swalls;
 var scoreImage;
 
-
-
 Museum.prototype={
-    preload:function(){
-        console.log('Museum: preload');
-        game.load.image('coin', 'assets/img/pngformat/coin.png');
-       
-        game.load.atlas('atlas', 'assets/img/atlas.png', 'assets/img/atlas.json');
-        game.load.atlas('masterAtlas', 'assets/img/MasterAtlas.png', 'assets/img/MasterAtlas.json');
-		
+    preload:function(){		
     },
 
     create:function(){
-        console.log('Museum: create');
 		setting='museum';
-        //game.stage.backgroundColor = "#4488AA";
+        // load the museum floor as a tilesprite
         game.add.tileSprite(0,0,game.width,game.height,'masterAtlas', '2floor');
         //Start arcade physics
         game.physics.startSystem(Phaser.Physics.ARCADE);
@@ -39,6 +32,7 @@ Museum.prototype={
         Swalls = game.add.group();
         Swalls.enableBody = true;
 
+        // where all of the walls are being placed
         var top2 = Swalls.create(0,0,'masterAtlas','2topwall');
         top2.body.immovable = true;
         var bot2 = Swalls.create(0,game.height-64,'masterAtlas','2bottomwall');
@@ -80,15 +74,14 @@ Museum.prototype={
         GreenWall.body.collideWorldBounds = true;
         GreenWall.body.drag.set(175);
 
-        /*
+    
         //adding pink walls
         //Sliding walls (Pink)
         Pwalls = game.add.group();
         Pwalls.enableBody = true;
-        PinkWall = Pwalls.create(300, 240,'atlas', 'PinkWall');
-        PinkWall.scale.setTo(2,16);
+        PinkWall = Pwalls.create(320, 450,'atlas', 'PinkWall');
+        PinkWall.scale.setTo(2,7);
         PinkWall.body.collideWorldBounds=true;
-        */
   
 
         // Create a bitmap texture for drawing light cones
@@ -110,23 +103,27 @@ Museum.prototype={
         Coins = game.add.group();
         Coins.enableBody=true;
         
-
-        //Update Coin display text
-        coinText=game.add.text(16,16,'', {fontSize: '32px', fill:'#000'});
+        // place Coin display text
+        coinText=game.add.text(32,16,'', style);
 		coinsCollected=0;
+        // place level display text
+        levelText=game.add.text(900,16,'', style);
         // empty bag on load out
-        scoreImageEmpty = game.add.sprite(145,6,'emptybag');
+        scoreImageEmpty = game.add.sprite(145,6,'decoration', 'moneybagempty');
         // full bag offscreen
-        scoreImageFull = game.add.sprite(-100,-100,'fullbag');
-		door = game.add.sprite( 100, 400, 'door');
+        scoreImageFull = game.add.sprite(-100,-100,'decoration', 'moneybagfull');
+        scoreImageFull.scale.setTo(.8,.8);
+        // create the door and allow physics, but dont make it move
+		door = game.add.sprite( 100, 400, 'masterAtlas','door');
         game.physics.arcade.enable(door);
 		door.body.immovable=true;
 
-		Coin = Coins.create( 100,100,'coin');		// top left coin
-		Coin = Coins.create( 300,660,'coin');		// bottom left coin
-		Coin = Coins.create( 500,320,'coin');		// middle coin
-		Coin = Coins.create( 925,73,'coin');		// top right coin
-		Coin = Coins.create( 925,700,'coin');		// bottom right coin 
+        // create the coins for this level
+		Coin = Coins.create( 100,100,'masterAtlas','coin');		// top left coin
+		Coin = Coins.create( 300,660,'masterAtlas','coin');		// bottom left coin
+		Coin = Coins.create( 500,320,'masterAtlas','coin');		// middle coin
+		Coin = Coins.create( 925,73,'masterAtlas','coin');		// top right coin
+		Coin = Coins.create( 925,700,'masterAtlas','coin');		// bottom right coin 
 
     },
     update:function(){
@@ -141,10 +138,11 @@ Museum.prototype={
         var hitGwalls=game.physics.arcade.collide(player, Gwalls);
         var hitPwalls=game.physics.arcade.collide(player, Pwalls);
         var hitSwalls=game.physics.arcade.collide(guards, Swalls);
+        // call collectCoin function when player collides with coin
         var hitCoins=game.physics.arcade.overlap(player, Coins, collectCoin, null, this);
-
+        // allow player to collide with the tiled wallayer
         var hitWalls = game.physics.arcade.overlap(player, Walllayer);
-        
+        // allow player to collide with the door
         var Pexit = game.physics.arcade.collide(player, door);
         
         //green wall collision
@@ -159,7 +157,9 @@ Museum.prototype={
         var SwallHitGwall = game.physics.arcade.collide(Swalls, Gwalls);
         var SwallHitPwall = game.physics.arcade.collide(Swalls, Pwalls);
 
-
+        // update level display text
+        levelText.text = "level: " + level;
+        // update coin display text
         coinText.text="coins: "+coinsCollected;
 
         // when the player collects a coin, play a sound, kill coin, update score
@@ -185,11 +185,6 @@ Museum.prototype={
 
 
         if( level == 1 ) {
-
-            if(newLevel == true) {
-                console.log('This is level 1');
-                newLevel = false;
-            }
             // if 5 coins are collected
             if(coinsCollected >= 5) {
                 //  if sign doesn't exist, add the exit arrow animation and set the isSign var true
@@ -244,10 +239,6 @@ Museum.prototype={
         }   // end of level 1
 
         if( level == 2 ) {
-            if(newLevel == true) {
-                console.log('This is level 2');
-                newLevel = false;
-            }
             // if 5 coins are collected
             if(coinsCollected >= 5) {
                 //  if sign doesn't exist, add the exit arrow animation and set the isSign var true
@@ -302,11 +293,6 @@ Museum.prototype={
 
         // if the player is on the last level, run this code
          if( level == 3 ) {
-            // just a variable that reads the level
-            if(newLevel == true) {
-                console.log('This is level 3');
-                newLevel = false;
-            }
             // if 5 coins are collected
             if(coinsCollected >= 5) {
                 //  if sign doesn't exist, add the exit arrow animation and set the isSign var true
@@ -342,7 +328,6 @@ Museum.prototype={
                     level = 1;
                     // begin bank level
                     game.state.start('Bank');
-
                 }
             }
         }   // end of level 3
@@ -359,6 +344,7 @@ Museum.prototype={
         	state='Bank';
             game.state.start('Bank');
         }
+
     }
 }
 game.state.add('Museum', Museum);

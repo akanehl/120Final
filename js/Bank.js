@@ -1,28 +1,19 @@
 // Bank.js
+// global variables
 var Bank = function(game){};
-var map, Walllayer, Floorlayer;
-var camera, exitArrow;
+var map, Walllayer;
+var exitArrow;
 var isSign=false;
-var newLevel = true;
-var tutorialWallsExist = false;
 var Swalls;
-
 
 Bank.prototype={
     preload:function(){
-        console.log('Bank: preload');
-        game.load.image('coin', 'assets/img/pngformat/coin.png');
-        game.load.atlas('wallAtlas', 'assets/img/wallatlas.png', 'assets/img/wallatlas.json');
-        game.load.atlas('atlas', 'assets/img/atlas.png', 'assets/img/atlas.json');
-        game.load.atlas('masterAtlas', 'assets/img/MasterAtlas.png', 'assets/img/MasterAtlas.json');
-        game.load.image('bankTile', 'assets/img/banktile.png');
-		
     },
 
     create:function(){
-        console.log('Bank: create');
 		setting='bank';
-        game.add.tileSprite(0,0,game.width,game.height,'bankTile');
+        // load the single banktile png and place it everywhere like tiled
+        game.add.tileSprite(0,0,game.width,game.height,'decoration', 'banktile');
 
         //Start arcade physics
         game.physics.startSystem(Phaser.Physics.ARCADE);
@@ -110,8 +101,6 @@ Bank.prototype={
 
 
 
-
-
         //adding moveable walls
         //adding Push Walls (Green)
         Gwalls = game.add.group();
@@ -167,23 +156,26 @@ Bank.prototype={
         Coins.enableBody=true;
         
 
-        //Update Coin display text
-        coinText=game.add.text(16,16,'', {fontSize: '32px', fill:'#000'});
+        // place Coin display text
+        coinText=game.add.text(32,16,'', style);
         coinsCollected=0;
+        // place level display text
+        levelText=game.add.text(900,16,'', style);
         // empty bag on load out
-        scoreImageEmpty = game.add.sprite(145,6,'emptybag');
+        scoreImageEmpty = game.add.sprite(145,6,'decoration', 'moneybagempty');
         // full bag offscreen
-        scoreImageFull = game.add.sprite(-100,-100,'fullbag');
-        door = game.add.sprite( 828, 155, 'door');
+        scoreImageFull = game.add.sprite(-100,-100,'decoration', 'moneybagfull');
+        scoreImageFull.scale.setTo(.8,.8);
+        door = game.add.sprite( 828, 155, 'masterAtlas','door');
         game.physics.arcade.enable(door);
         door.body.immovable=true;
 
         // create the coins at specific coordinates
-        Coin = Coins.create( 100,100,'coin');       // top left coin
-        Coin = Coins.create( 300,660,'coin');       // bottom left coin
-        Coin = Coins.create( 460,300,'coin');       // middle coin
-        Coin = Coins.create( 900,100,'coin');        // top right coin
-        Coin = Coins.create( 875,675,'coin');       // bottom right coin 
+        Coin = Coins.create( 100,100,'masterAtlas','coin');       // top left coin
+        Coin = Coins.create( 300,660,'masterAtlas','coin');       // bottom left coin
+        Coin = Coins.create( 460,300,'masterAtlas','coin');       // middle coin
+        Coin = Coins.create( 900,100,'masterAtlas','coin');        // top right coin
+        Coin = Coins.create( 875,675,'masterAtlas','coin');       // bottom right coin 
 
     },
     update:function(){
@@ -198,12 +190,11 @@ Bank.prototype={
         var hitGwalls=game.physics.arcade.collide(player, Gwalls);
         var hitPwalls=game.physics.arcade.collide(player, Pwalls);
         var hitSwalls=game.physics.arcade.collide(guards, Swalls);
+        var Pexit = game.physics.arcade.collide(player, door); 
+        var hitWalls = game.physics.arcade.overlap(player, Walllayer);
+        // call collectCoin function when player collides with coin
         var hitCoins=game.physics.arcade.overlap(player, Coins, collectCoin, null, this);
 
-        var hitWalls = game.physics.arcade.overlap(player, Walllayer);
-        
-        var Pexit = game.physics.arcade.collide(player, door);
-        
         //green wall collision
         var GwallHitWalls=game.physics.arcade.collide(Gwalls, Walllayer);
         var GwallHitGwall=game.physics.arcade.collide(Gwalls, Gwalls);
@@ -216,8 +207,10 @@ Bank.prototype={
         var SwallHitGwall = game.physics.arcade.collide(Swalls, Gwalls);
         var SwallHitPwall = game.physics.arcade.collide(Swalls, Pwalls);
 
-
+        // update coin dispay text
         coinText.text="coins: "+coinsCollected;
+        // update level display text
+        levelText.text = "level: " + level;
 
 
         // when the player collects a coin, play a sound, kill coin, update score
@@ -241,13 +234,8 @@ Bank.prototype={
             exitArrow.animations.play('arrow', 1, true);
         }
 
-
+        // first level
         if( level == 1 ) {
-        
-            if(newLevel == true) {
-                console.log('This is level 1');
-                newLevel = false;
-            }
             // if 5 coins are collected
             if(coinsCollected >= 5) {
                 //  if sign doesn't exist, add the exit arrow animation and set the isSign var true
@@ -283,7 +271,7 @@ Bank.prototype={
                     player.body.y=700;
                     // add a guard at these coordinates
                     addGuard();
-                                        // move full bag sprite offscreen
+                    // move full bag sprite offscreen
                     scoreImageFull.x = -200;
                     scoreImageFull.y = -200;
                     // move empty bag sprite in its place
@@ -303,11 +291,6 @@ Bank.prototype={
 
         // if the player is on the 2nd level, run this code
          if( level == 2 ) {
-            // just a variable that reads the level
-            if(newLevel == true) {
-                console.log('This is level 2');
-                newLevel = false;
-            }
             // if 5 coins are collected
             if(coinsCollected >= 5) {
                 //  if sign doesn't exist, add the exit arrow animation and set the isSign var true
@@ -353,11 +336,6 @@ Bank.prototype={
 
         // if the player is on the last level, run this code
          if( level == 3 ) {
-            // just a variable that reads the level
-            if(newLevel == true) {
-                console.log('This is level 3');
-                newLevel = false;
-            }
             // if 5 coins are collected
             if(coinsCollected >= 5) {
                 //  if sign doesn't exist, add the exit arrow animation and set the isSign var true
@@ -404,22 +382,17 @@ Bank.prototype={
             }
         }   // end of level 3
         
-        
-        
 
-        
-        if(game.input.keyboard.isDown(Phaser.Keyboard.SPACEBAR)){
-            game.state.start('Mainmenu');
-        }
-        if(game.input.keyboard.justPressed(Phaser.Keyboard.G)){
-            addGuard(500,500);
-        }
         if(game.input.keyboard.justPressed(Phaser.Keyboard.C)){
             coinsCollected+=1;
         }
 		if(game.input.keyboard.justPressed(Phaser.Keyboard.L)){
 			game.state.start('YouWin');
 		}
+        // Press Q to return to mainmenu
+        if(game.input.keyboard.justPressed(Phaser.Keyboard.Q)){
+            game.state.start('Mainmenu');
+        }
     }
 }
 game.state.add('Bank', Bank);

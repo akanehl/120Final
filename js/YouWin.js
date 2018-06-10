@@ -12,9 +12,8 @@ YouWin.prototype={
             fontSize:75,
         };
 		
-		
-
-        game.add.tileSprite(0,0,game.width,game.height,'floor');
+        //game.add.tileSprite(0,0,game.width,game.height,'floor');
+        game.stage.backgroundColor = "#191919";
 		
 		Swalls = game.add.group();
         Swalls.enableBody = true;
@@ -43,7 +42,7 @@ YouWin.prototype={
         players=game.add.group();
         game.add.existing(player);
         players.add(player);
-		game.add.text(300,300,'You win',Style);
+		game.add.text(300,300,'You win',style);
 	},
 	update:function(){
 		
@@ -61,6 +60,10 @@ YouWin.prototype={
         var hitWalls = game.physics.arcade.overlap(player, Walllayer);
         
         var Pexit = game.physics.arcade.collide(player, door);
+        // if spacebar is pressed return back to mainmenu
+        if(game.input.keyboard.justPressed(Phaser.Keyboard.SPACEBAR)){
+            game.state.start('Mainmenu');
+        }
 	}
 }
 game.state.add('YouWin', YouWin);
