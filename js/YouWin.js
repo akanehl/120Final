@@ -38,7 +38,7 @@ YouWin.prototype={
         game.physics.enable(lightBitmap);
         lightBitmap.blendMode = Phaser.blendModes.MULTIPLY;
 		
-		player = new Player(game, 'player', 1, 0, 500, 400);
+		player = new Player(game, 'playerWalk01', 'playerAtlas', 1, 0, 500, 400);
         players=game.add.group();
         game.add.existing(player);
         players.add(player);

@@ -146,7 +146,7 @@ Bank.prototype={
 
         
         // start the player at these coordinates
-        player = new Player(game, 'player', 1, 0, 100, 700);
+        player = new Player(game, 'playerWalk01', 'playerAtlas', 1, 0, 100, 700);
         players=game.add.group();
         game.add.existing(player);
         players.add(player);

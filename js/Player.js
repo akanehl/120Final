@@ -1,12 +1,16 @@
-function Player(game, key, scale, rotation, x, y){
+function Player(game, key, atlas, scale, rotation, x, y){
     //Set up the Sprite call
-	Phaser.Sprite.call(this, game, x, y, key);
+	Phaser.Sprite.call(this, game, x, y, atlas, key);
 
     //Set some player properties
 	this.anchor.set(0.5,0.5);
 	this.scale.x = scale;
 	this.scale.y = scale;
 	this.rotation = rotation;
+    this.xpos=0;
+    this.ypos=0;
+
+    this.animations.add('walk', Phaser.Animation.generateFrameNames('playerWalk',1,8,'',2),6,true);
 
 	game.physics.enable(this);
 	this.body.collideWorldBounds = true;
@@ -27,35 +31,48 @@ Player.prototype.update=function() {
             player.angle=180;
              //player.animations.play('left');
         player.body.velocity.copyFrom(game.physics.arcade.velocityFromAngle(player.angle, 125));
-
+        player.animations.play('walk');
         }
         if(cursors.right.isDown){
             player.angle=0;
         player.body.velocity.copyFrom(game.physics.arcade.velocityFromAngle(player.angle, 125));
+        player.animations.play('walk');
         }
         if(cursors.up.isDown){
             player.angle=-90;
         player.body.velocity.copyFrom(game.physics.arcade.velocityFromAngle(player.angle, 125));
+        player.animations.play('walk');
         }
         if(cursors.down.isDown){
             player.angle=90;
         player.body.velocity.copyFrom(game.physics.arcade.velocityFromAngle(player.angle, 125));
+        player.animations.play('walk');
         }
 
         if(cursors.down.isDown&&cursors.left.isDown){
             player.angle=135;
         player.body.velocity.copyFrom(game.physics.arcade.velocityFromAngle(player.angle, 125));
+        player.animations.play('walk');
         }
         if(cursors.down.isDown&&cursors.right.isDown){
             player.angle=45;
         player.body.velocity.copyFrom(game.physics.arcade.velocityFromAngle(player.angle, 125));
+        player.animations.play('walk');
         }
         if(cursors.up.isDown&&cursors.right.isDown){
             player.angle=-45;
         player.body.velocity.copyFrom(game.physics.arcade.velocityFromAngle(player.angle, 125));
+        player.animations.play('walk');
         }
         if(cursors.up.isDown&&cursors.left.isDown){
             player.angle=-135;
         player.body.velocity.copyFrom(game.physics.arcade.velocityFromAngle(player.angle, 125));
+        player.animations.play('walk');
+        }
+        if(player.xpos==player.body.x&&player.ypos==player.body.y){
+            player.animations.stop('walk');
+        }else{
+            player.xpos=player.body.x;
+            player.ypos=player.body.y;
         }
 }

@@ -118,7 +118,7 @@ PlayGround.prototype={
         lightBitmap.blendMode = Phaser.blendModes.MULTIPLY;
 
         //Create the player object
-        player = new Player(game, 'player', 1, 0, 100, 400);
+        player = new Player(game, 'playerWalk01', 'playerAtlas', 1, 0, 100, 400);
         players=game.add.group();
         game.add.existing(player);
         players.add(player);

@@ -30,7 +30,8 @@ Mainmenu.prototype ={
 
         game.load.atlas('exitArrow', 'assets/img/ExitArrow.png', 'assets/img/ExitArrow.json');
         game.load.atlas('masterAtlas', 'assets/img/MasterAtlas.png', 'assets/img/MasterAtlas.json');
-        game.load.atlas('guardAtlas', 'assets/img/guardWalk.png', 'assets/img/guardWalk.json')
+        game.load.atlas('guardAtlas', 'assets/img/guardWalk.png', 'assets/img/guardWalk.json');
+        game.load.atlas('playerAtlas', 'assets/img/playerWalk.png', 'assets/img/playerWalk.json');
 
         game.load.image('player', 'assets/img/pngformat/player.png');
         game.load.image('guard', 'assets/img/pngformat/Guard.png');
