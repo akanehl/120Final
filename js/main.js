@@ -13,7 +13,7 @@ var scoreImage;
 var Swalls;
 var level = 0;
 var setting='tutorial';
-var state='PlayGround';
+var state;
 var multi=125;
 
 // Mainmenu function
@@ -47,6 +47,8 @@ Mainmenu.prototype ={
     },
     create:function(){
 
+        // set the state to equal to -1 the mainmenu
+        state = -1;
         // Mainmenu Background Sprite
         var MMBG = game.add.sprite( 0,0, 'decoration', 'mainmenubg');
 
@@ -115,6 +117,7 @@ Mainmenu.prototype ={
     },
 
     update:function(){
+
         // allow the fakeplayer to collide with the coin
         coinCollide=game.physics.arcade.collide(fakePlayer, Coin);
         // allow the fakeplayer to collide with the menudoor/ fake door
@@ -190,6 +193,9 @@ Mainmenu.prototype ={
         }
         //  if the player collides with the door start the tutorial/PlayGround level
         if(playerExitDoor){
+            //change state to 0 the tutorial/playground
+            state = 0;
+            // change state to Playground
             game.state.start('PlayGround');
         }
     }// end of update

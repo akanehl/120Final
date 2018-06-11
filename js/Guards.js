@@ -135,11 +135,6 @@ Guard.prototype.update=function() {
 			guard.x = 800;
 			guard.y = 300;
 		}
-		// if the player loses on level 1 or 2 or 3, reset them to 1
-		if( level == 1 || level == 2 || level == 3 ) {
-			game.state.start(state);
-			level = 1;
-		}
 	}
 	//Guard Chase AI
         	var LoS= new Phaser.Line(guard.x, guard.y, player.x, player.y);

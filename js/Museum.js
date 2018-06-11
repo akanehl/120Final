@@ -17,6 +17,7 @@ Museum.prototype={
 
     create:function(){
 		setting='museum';
+
         // load the museum floor as a tilesprite
         game.add.tileSprite(0,0,game.width,game.height,'masterAtlas', '2floor');
         //Start arcade physics
@@ -271,8 +272,8 @@ Museum.prototype={
                     coinsCollected=0;
                     //set level to 1 for bank
                     level = 1;
-                    // set the state variable to bank, so if the player gets caught it will reset bank
-                    state = 'Bank';
+                    // change state to bank, 2
+                    state = 2;
                     // begin bank level
                     game.state.start('Bank');
                 }
@@ -286,7 +287,6 @@ Museum.prototype={
         	game.sound.stopAll();
             game.state.start('Mainmenu');
         }
-
     }
 }
 game.state.add('Museum', Museum);

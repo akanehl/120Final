@@ -12,6 +12,9 @@ Bank.prototype={
 
     create:function(){
 		setting='bank';
+        // change state to bank
+        //state = 'Bank';
+
         // load the single banktile png and place it everywhere like tiled
         game.add.tileSprite(0,0,game.width,game.height,'decoration', 'banktile');
 
@@ -179,6 +182,7 @@ Bank.prototype={
 
     },
     update:function(){
+
 
         game.physics.arcade.collide(player, Swalls);
 
@@ -384,6 +388,8 @@ Bank.prototype={
 
                     // increase the level
                     level += 1;
+                    // change state to 3, the you win screen
+                    state = 3;
 					// game over function go here
 					game.state.start('YouWin');
                 }
@@ -396,6 +402,8 @@ Bank.prototype={
         	game.sound.stopAll();
             game.state.start('Mainmenu');
         }
+
+
     }
 }
 game.state.add('Bank', Bank);

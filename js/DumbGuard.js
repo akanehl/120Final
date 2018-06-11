@@ -98,24 +98,22 @@ function DumbGuard(game, key, atlas, scale, rotation, x, y, points){
             player.body.y=300;
 		//End game upon guard collision with player
 
-		// tutorial level player coordinates
-		if(level == 0) {
-			player.body.x = 100;
-			player.body.y = 400;
-		}
 		// if the player loses on level 1 or 2 or 3, reset them to 1
 		if( level == 1 || level == 2 || level == 3 ) {
-			game.state.start(state);
-			level = 1;
-		}
-		// if the player is in youwin.js and touches a guard
-		if( level = 4 ) {
-			// stop the music to prevent looping
-			game.sound.stopAll();
-			// reset level back to 0
-			level = 0;	
-			// take them to the main menu
-			game.state.start('Mainmenu');
+			// player gets caught in the museum
+			if( state == 1) {
+				// reset level to 1
+				level = 1;
+				// reset coin and guard locations in Museum
+				game.state.start('Museum');
+			}
+			// player gets caught in Bank
+			if( state == 2) {
+				// reset level to 1
+				level = 1;
+				// reset coin and guard locations in Bank
+				game.state.start('Bank');
+			}
 		}
 	}
 	guards.forEach(function(guard){

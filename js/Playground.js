@@ -227,7 +227,6 @@ PlayGround.prototype={
                 }
                 //  if the player collides with the door with 5 or more coins, event Pexit becomes true, go to museum level
                 if(Pexit==true){
-                    newLevel = true;
                     // kill the arrow exit
                     exitArrow.kill();
                     scoreImage.kill();
@@ -247,14 +246,14 @@ PlayGround.prototype={
 
                     // increase the level
                     level += 1;
+                    // change state to 1, the museum level
+                    state = 1;
                     // start Museum level
-                    state='Museum';
-                    game.state.start(state);
+                    game.state.start('Museum');
                 } // end of Pexit
             } // end of coinsCollected
         }   // end of level 0
-       
-
+        
         // Press Q to return to mainmenu
         if(game.input.keyboard.justPressed(Phaser.Keyboard.Q)){
         	// stop the sound from looping
