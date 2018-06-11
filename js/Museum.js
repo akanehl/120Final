@@ -65,12 +65,12 @@ Museum.prototype={
         Gwalls.enableBody = true;
         // top left green wall
         GreenWall = Gwalls.create(150, 100,'atlas', 'GreenWall');
-        GreenWall.scale.setTo(18,12);
+        GreenWall.scale.setTo(12,2);
         GreenWall.body.collideWorldBounds = true;
         GreenWall.body.drag.set(175);
         // bottom right green wall
         GreenWall = Gwalls.create(700, 610, 'atlas', 'GreenWall');
-        GreenWall.scale.setTo(18,12);
+        GreenWall.scale.setTo(2,12);
         GreenWall.body.collideWorldBounds = true;
         GreenWall.body.drag.set(175);
 
@@ -109,7 +109,7 @@ Museum.prototype={
         // place level display text
         levelText=game.add.text(900,16,'', style);
         // empty bag on load out
-        scoreImageEmpty = game.add.sprite(145,6,'decoration', 'moneybagempty');
+        scoreImageEmpty = game.add.sprite(145,3,'decoration', 'moneybagempty');
         // full bag offscreen
         scoreImageFull = game.add.sprite(-100,-100,'decoration', 'moneybagfull');
         scoreImageFull.scale.setTo(.8,.8);
@@ -215,6 +215,12 @@ Museum.prototype={
                     Level2.play();
                     // set coinsCollected to 0
                     coinsCollected=0;
+                    // create the coins for this level
+					Coin = Coins.create( 100,100,'masterAtlas','coin');		// top left coin
+					Coin = Coins.create( 300,660,'masterAtlas','coin');		// bottom left coin
+					Coin = Coins.create( 500,320,'masterAtlas','coin');		// middle coin
+					Coin = Coins.create( 925,73,'masterAtlas','coin');		// top right coin
+					Coin = Coins.create( 925,700,'masterAtlas','coin');		// bottom right coin 
                     // set new player coordinates
                     player.body.x=100;
                     player.body.y=650;
@@ -226,12 +232,6 @@ Museum.prototype={
                     // move empty bag sprite in its place
                     scoreImageEmpty.x = 145;
                     scoreImageEmpty.y = 3;
-                    // generate 5 coins
-                    Coin = Coins.create( 100,100,'masterAtlas','coin');     // top left coin
-        Coin = Coins.create( 300,660,'masterAtlas','coin');     // bottom left coin
-        Coin = Coins.create( 500,320,'masterAtlas','coin');     // middle coin
-        Coin = Coins.create( 925,73,'masterAtlas','coin');      // top right coin
-        Coin = Coins.create( 925,700,'masterAtlas','coin');     // bottom right coin 
                     // increase the level
                     level += 1;
                 }
@@ -269,9 +269,10 @@ Museum.prototype={
                     Level2.play();
                     // set coinsCollected to 0
                     coinsCollected=0;
-
                     //set level to 1 for bank
                     level = 1;
+                    // set the state variable to bank, so if the player gets caught it will reset bank
+                    state = 'Bank';
                     // begin bank level
                     game.state.start('Bank');
                 }
@@ -281,6 +282,8 @@ Museum.prototype={
 
         // Press Q to return to mainmenu
         if(game.input.keyboard.justPressed(Phaser.Keyboard.Q)){
+        	// stop the sound from looping
+        	game.sound.stopAll();
             game.state.start('Mainmenu');
         }
 

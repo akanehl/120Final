@@ -44,7 +44,12 @@ YouWin.prototype={
         players=game.add.group();
         game.add.existing(player);
         players.add(player);
-		game.add.text(300,300,'You win',style);
+        // text
+		youwin = game.add.text(game.world.centerX,game.world.centerY,'You win',textStyle);
+		youwin.anchor.setTo(.5,.5);
+
+		spacetocontinue = game.add.text(game.world.centerX,game.world.centerY+200,'Press SPACE to return to mainmenu',style);
+		spacetocontinue.anchor.setTo(.5,.5);
 	},
 	update:function(){
 		
@@ -64,6 +69,11 @@ YouWin.prototype={
         var Pexit = game.physics.arcade.collide(player, door);
         // if spacebar is pressed return back to mainmenu
         if(game.input.keyboard.justPressed(Phaser.Keyboard.SPACEBAR)){
+        	// stop the sound from looping
+        	game.sound.stopAll();
+        	// set the level back to 0
+        	level = 0;
+        	// roll the credits
             game.state.start('Credits');
         }
 	}

@@ -40,7 +40,6 @@ function DumbGuard(game, key, atlas, scale, rotation, x, y, points){
         			guard.safe=true;
         			guard.alert=false;
         			Safe.play();
-        			console.log('safe');
         		}
         	}else if(LoS.length<=multi){
         		guard.chase=true;
@@ -48,7 +47,6 @@ function DumbGuard(game, key, atlas, scale, rotation, x, y, points){
         			guard.alert=true;
         			guard.safe=false;
         			Alert.play();
-        			console.log('alert');
         		}
         	}
 	//AI for guard chase
@@ -72,7 +70,6 @@ function DumbGuard(game, key, atlas, scale, rotation, x, y, points){
 				if(guard.pointRef==guard.points.length){
 					guard.pointRef=0;
 				}
-			console.log('here');
 			}
 		}
 	}
@@ -83,10 +80,6 @@ function DumbGuard(game, key, atlas, scale, rotation, x, y, points){
 		// stop the music
 		Level1.stop();
 		Level2.stop();
-		/*
-		if(level<0){
-			level-=1;
-		}*/
 
         // kill the arrow exit
 		if(exitArrow){
@@ -104,10 +97,8 @@ function DumbGuard(game, key, atlas, scale, rotation, x, y, points){
             player.body.x=75;
             player.body.y=300;
 		//End game upon guard collision with player
-		//game.state.start('GameOver');
-		//coinsCollected = 0;
-		newLevel = true;
 
+		// tutorial level player coordinates
 		if(level == 0) {
 			player.body.x = 100;
 			player.body.y = 400;
@@ -116,6 +107,15 @@ function DumbGuard(game, key, atlas, scale, rotation, x, y, points){
 		if( level == 1 || level == 2 || level == 3 ) {
 			game.state.start(state);
 			level = 1;
+		}
+		// if the player is in youwin.js and touches a guard
+		if( level = 4 ) {
+			// stop the music to prevent looping
+			game.sound.stopAll();
+			// reset level back to 0
+			level = 0;	
+			// take them to the main menu
+			game.state.start('Mainmenu');
 		}
 	}
 	guards.forEach(function(guard){

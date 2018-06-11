@@ -1,7 +1,6 @@
 /*----------------------------------------------------------
 main.js
 contains MainMenu and Credits Functions
-// Copyright © 2014 John Watson
 ----------------------------------------------------------*/
 
 // make a new game of this size
@@ -72,8 +71,10 @@ Mainmenu.prototype ={
 
         // texts and fonts
 		textStyle = {
-            font: 'Bungee Outline',
-            fontSize:100,
+            font: '40px Sarpanch',
+            fill: "#ffffff", // white
+            //align: "center", 
+            //wordWrap: true,
         };
         textStyle2 = {
             font: 'Bungee Shade',
@@ -118,7 +119,7 @@ Mainmenu.prototype ={
         coinCollide=game.physics.arcade.collide(fakePlayer, Coin);
         // allow the fakeplayer to collide with the menudoor/ fake door
         playerExitDoor=game.physics.arcade.collide(fakePlayer, MenuDoor);
-        //
+        // allow the guard to get the player
         guardGetPlayer=game.physics.arcade.collide(fakeGuard, fakePlayer);
 
         // if the player can move around the menu select
@@ -171,7 +172,6 @@ Mainmenu.prototype ={
             }
         } // end of the spacebar/select
         if(guardGetPlayer){
-
             game.state.start('Credits');
         }
         // if the coinCollide variable is activated
@@ -199,14 +199,24 @@ Mainmenu.prototype ={
 var Credits = function(game) {};
 Credits.prototype={
 	preload:function(){
-		console.log('Credits: preload');
 	},
 	create:function(){
-		console.log('Credits: create');
         // change the BG color
 		game.stage.backgroundColor = "#4488AA";
         // Some text
-        pressSpace = game.add.text(300,200,'Programming: Alex, Evelyn\nArt: Evelyn, Aaron\n Sound: Alex\nAnimations: Aaron, Alex\nMenu Designs: Evelyn',style);
+        credits = game.add.text(game.world.centerX,game.world.centerY - 300,'CREDITS',textStyle);
+        credits.anchor.set(0.5,0.5);
+
+        creditsText = game.add.text(game.world.centerX-50,game.world.centerY-150,'Programming: Alex, Evelyn \nArt: Evelyn, Aaron\nSound: Alex\nAnimations: Aaron, Alex\nMenu Designs: Evelyn',textStyle);
+		creditsText.anchor.set(0.5,0.5);
+
+		creditsText = game.add.text(game.world.centerX-50,game.world.centerY+150,'Thanks To:\nProfessor Nathan\nProfessor Elizabeth\nOur TA Laura\nOur Playtesters\nMade in PHASER v2\nCredit to John Watson\'s raycasting code',textStyle);
+		creditsText.anchor.set(0.5,0.5);
+
+		creditsText = game.add.text(game.world.centerX,game.world.centerY+350,'PRESS SPACE TO RETURN TO MAINMENU', style2);
+		creditsText.anchor.set(0.5,0.5);
+
+
 	},
 	update:function(){
         // if spacebar is pressed return back to mainmenu
@@ -218,28 +228,9 @@ Credits.prototype={
 	},
 } // end of credits
 
-// Gameover
-var GameOver = function(game){};
-GameOver.prototype={
-    preload:function(){
-    },
-    create:function(){
-
-        OverScreen=game.add.sprite(0,0,'atlas', 'GameOver');
-        OverScreen.scale.setTo(1.28,1.34);
-
-    },
-    update:function(){
-        if(game.input.keyboard.isDown(Phaser.Keyboard.SPACEBAR)){
-            game.state.start('Mainmenu');
-        }
-    }
-}
 game.state.add('Mainmenu', Mainmenu);
 
 game.state.add('Credits', Credits);
-
-game.state.add('GameOver', GameOver);
 
 game.state.start('Mainmenu');
 

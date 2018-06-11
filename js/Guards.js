@@ -126,17 +126,18 @@ Guard.prototype.update=function() {
             player.body.x=75;
             player.body.y=300;
 		//End game upon guard collision with player
-		//game.state.start('GameOver');
-		//coinsCollected = 0;
+
 		newLevel = true;
 
 		if(level == 0) {
 			player.body.x = 100;
 			player.body.y = 400;
+			guard.x = 800;
+			guard.y = 300;
 		}
 		// if the player loses on level 1 or 2 or 3, reset them to 1
 		if( level == 1 || level == 2 || level == 3 ) {
-			game.state.start('Museum');
+			game.state.start(state);
 			level = 1;
 		}
 	}
@@ -149,7 +150,6 @@ Guard.prototype.update=function() {
         			guard.safe=true;
         			guard.alert=false;
         			Safe.play();
-        			console.log('safe');
         		}
         	}else if(LoS.length<=127){
         		guard.chase=true;
@@ -157,7 +157,6 @@ Guard.prototype.update=function() {
         			guard.alert=true;
         			guard.safe=false;
         			Alert.play();
-        			console.log('alert');
         		}
         	}
 	//AI for guard chase
@@ -213,17 +212,11 @@ Guard.prototype.update=function() {
 	
 	setFill(guard.x,guard.y);
 	
-	//Timer//////////////////////////////////////////
 	
 	
 	
 },this);
 
-
-
-if(game.input.keyboard.justPressed(Phaser.Keyboard.SPACEBAR)){
-	guards.remove(guards.children[1]);
-}
 
 function setFillCamera(x,y){
 			var PointPush=false;
@@ -287,7 +280,4 @@ function setFill(x,y){
                 // This just tells the engine it should update the texture cache
                 bitmap.dirty = true;
         }
-}
-function guardRotateCheck(Guards){
-
 }

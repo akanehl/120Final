@@ -166,7 +166,7 @@ Bank.prototype={
         // full bag offscreen
         scoreImageFull = game.add.sprite(-100,-100,'decoration', 'moneybagfull');
         scoreImageFull.scale.setTo(.8,.8);
-        door = game.add.sprite( 828, 155, 'masterAtlas','door');
+        door = game.add.sprite( 828, 165, 'masterAtlas','door');
         game.physics.arcade.enable(door);
         door.body.immovable=true;
 
@@ -321,12 +321,21 @@ Bank.prototype={
                     Level2.play();
                     // set coinsCollected to 0
                     coinsCollected=0;
+                    // set new player coordinates
+                    player.body.x=100;
+                    player.body.y=700;
                     // move full bag sprite offscreen
                     scoreImageFull.x = -200;
                     scoreImageFull.y = -200;
                     // move empty bag sprite in its place
                     scoreImageEmpty.x = 145;
                     scoreImageEmpty.y = 3;
+                    // generate 5 coins
+                    Coin = Coins.create( 100,100,'masterAtlas','coin');       // top left coin
+                    Coin = Coins.create( 300,660,'masterAtlas','coin');       // bottom left coin
+                    Coin = Coins.create( 460,300,'masterAtlas','coin');       // middle coin
+                    Coin = Coins.create( 900,100,'masterAtlas','coin');        // top right coin
+                    Coin = Coins.create( 875,675,'masterAtlas','coin');       // bottom right coin 
 
                     // increase the level
                     level += 1;
@@ -375,7 +384,6 @@ Bank.prototype={
 
                     // increase the level
                     level += 1;
-                    console.log('Game Over, You Win!');
 					// game over function go here
 					game.state.start('YouWin');
                 }
@@ -391,6 +399,8 @@ Bank.prototype={
 		}
         // Press Q to return to mainmenu
         if(game.input.keyboard.justPressed(Phaser.Keyboard.Q)){
+        	// stop the sound from looping
+        	game.sound.stopAll();
             game.state.start('Mainmenu');
         }
     }

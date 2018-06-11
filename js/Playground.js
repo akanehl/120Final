@@ -66,7 +66,7 @@ PlayGround.prototype={
         //Sliding walls (Pink)
         Pwalls = game.add.group();
         Pwalls.enableBody = true;
-        PinkWall = Pwalls.create(300, 240,'atlas', 'PinkWall');
+        PinkWall = Pwalls.create(300, 300,'atlas', 'PinkWall');
         PinkWall.scale.setTo(2,16);
         PinkWall.body.collideWorldBounds=true;
 
@@ -126,8 +126,6 @@ PlayGround.prototype={
         //player animations
         player.animations.add('left', [0, 1], 10, true);
         player.animations.add('right', [2, 3], 10, true);
-        //player.animations.add('up', [2, 3], 10, true);
-        //player.animations.add('down', [2, 3], 10, true);
 
         //adding coins
         Coins = game.add.group();
@@ -272,6 +270,8 @@ PlayGround.prototype={
         }
         // Press Q to return to mainmenu
         if(game.input.keyboard.justPressed(Phaser.Keyboard.Q)){
+        	// stop the sound from looping
+        	game.sound.stopAll();
             game.state.start('Mainmenu');
         }
 
