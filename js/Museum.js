@@ -287,14 +287,6 @@ Museum.prototype={
             game.state.start('Mainmenu');
         }
 
-        if(game.input.keyboard.justPressed(Phaser.Keyboard.C)){
-            coinsCollected+=1;
-        }
-        if(game.input.keyboard.justPressed(Phaser.Keyboard.L)){
-        	state='Bank';
-            game.state.start('Bank');
-        }
-
     }
 }
 game.state.add('Museum', Museum);

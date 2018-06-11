@@ -254,20 +254,7 @@ PlayGround.prototype={
             } // end of coinsCollected
         }   // end of level 0
        
-        if(game.input.keyboard.justPressed(Phaser.Keyboard.C)){
-            coinsCollected+=1;
-        }
 
-        if(game.input.keyboard.justPressed(Phaser.Keyboard.L)){
-        	level+=1;
-        	state='Museum';
-            game.state.start(state);
-        }
-        if(game.input.keyboard.justPressed(Phaser.Keyboard.B)){
-        	state='Bank';
-            level+=1;
-            game.state.start(state);
-        }
         // Press Q to return to mainmenu
         if(game.input.keyboard.justPressed(Phaser.Keyboard.Q)){
         	// stop the sound from looping

@@ -390,13 +390,6 @@ Bank.prototype={
             }
         }   // end of level 3
         
-
-        if(game.input.keyboard.justPressed(Phaser.Keyboard.C)){
-            coinsCollected+=1;
-        }
-		if(game.input.keyboard.justPressed(Phaser.Keyboard.L)){
-			game.state.start('YouWin');
-		}
         // Press Q to return to mainmenu
         if(game.input.keyboard.justPressed(Phaser.Keyboard.Q)){
         	// stop the sound from looping
